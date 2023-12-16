@@ -4,7 +4,7 @@ import {
   useNavigationContainerRef,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { LoginScreen, CameraPermissionScreen, EntryScreen, RegisterScreen } from "./screens";
+import { LoginScreen, CameraPermissionScreen, EntryScreen, RegisterScreenEntry, RegisterScreenBody } from "./screens";
 import { withTheme } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
@@ -24,8 +24,12 @@ const MainScreen = ({ theme }) => {
           component={LoginScreen}
         />
         <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
+          name="RegisterEntry"
+          component={RegisterScreenEntry}
+        />
+        <Stack.Screen
+          name="RegisterBody"
+          component={RegisterScreenBody}
         />
         <Stack.Screen
           name="CameraPermission"
