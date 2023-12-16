@@ -15,6 +15,7 @@ export const LoginScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const { loading, token, loginTime } = useAppSelector(selectAuthState);
   const theme = useTheme();
 
@@ -46,15 +47,21 @@ export const LoginScreen = ({ navigation }) => {
                 value={username}
                 onChangeText={setUsername}
                 placeholder="Username"
-                placeholderTextColor={theme.colors.outline}
                 style={{ width: "100%", marginBottom: 20 }}
-                />
+              />
               <TextInput
                 mode="outlined"
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Password"
-                placeholderTextColor={theme.colors.outline}
+                secureTextEntry
+                style={{ width: "100%", marginBottom: 20 }}
+              />
+              <TextInput
+                mode="outlined"
+                value={password}
+                onChangeText={setPasswordRepeat}
+                placeholder="Repeat Password"
                 secureTextEntry
                 style={{ width: "100%", marginBottom: 20 }}
               />

@@ -1,22 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import apiClient from "../../api/apiClient";
 import { setSessionState } from "./slice";
+import { auth, signInWithEmailAndPassword } from "../../firebase/firebase-config";
 
 export const loginUser = (username, password) => async (dispatch) => {
   dispatch(setSessionState({ loading: true }));
   try {
-    const response = await apiClient.post("/users/login", {
-      username,
-      password,
-    });
+    const user = await signInWithEmailAndPassword(auth, username, password);
+    console.log({ user })
 
-    const { token } = response;
-
-    await AsyncStorage.setItem("userToken", token);
     dispatch(
       setSessionState({
-        token,
-        username,
         loginTime: Date.now(),
         loading: false,
         error: null,
