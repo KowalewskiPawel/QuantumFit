@@ -36,11 +36,13 @@ export const styles = StyleSheet.create({
     text: {
       color: "#FFFFFF", // White text
       fontWeight: "bold",
+      fontFamily: "Roboto-Black",
     },
     title: {
       // color: "#FFFFFF", // White text color for contrast
       fontSize: 32, // Larger font size for prominence
-
+      fontFamily: "Roboto-Black",
+      textAlign: "center", // Center the text
       fontWeight: "900", // Extra bold font weight
       letterSpacing: 2, // Spacing out the letters for a more refined appearance
       // textShadowColor: "rgba(0, 0, 0, 0.75)", // Text shadow for depth
