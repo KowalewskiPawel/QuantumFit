@@ -15,4 +15,4 @@ npm install
 
 ```bash
 expo start
-```n
+```
