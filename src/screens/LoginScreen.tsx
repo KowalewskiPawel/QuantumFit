@@ -32,6 +32,7 @@ export const LoginScreen = ({ navigation }) => {
           <View>
             <TextInput
               mode="outlined"
+              label="Email"
               value={email}
               onChangeText={setEmail}
               placeholder="Email"
@@ -43,6 +44,7 @@ export const LoginScreen = ({ navigation }) => {
               value={password}
               onChangeText={setPassword}
               placeholder="Password"
+              label="Password"
               placeholderTextColor={theme.colors.outline}
               secureTextEntry
               style={{ width: "100%", marginBottom: 20 }}

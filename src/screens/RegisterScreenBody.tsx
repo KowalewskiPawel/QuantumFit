@@ -1,29 +1,38 @@
 import { useState } from "react";
-import {
-  Text,
-  View,
-  SafeAreaView,
-} from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
 import { Button, useTheme, TextInput } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
+import { useAppDispatch, useAppSelector } from "../app/store";
+import { selectRegisterState } from "../features/register";
+import { setRegisterState } from "../features/register/slice";
 
-export const RegisterScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordRepeat, setPasswordRepeat] = useState("");
+export const RegisterScreenBody = ({ navigation }) => {
+  const dispatch = useAppDispatch();
+  const registerStore = useAppSelector(selectRegisterState);
+  const [height, setHeight] = useState(registerStore.height || "");
+  const [weight, setWeight] = useState(registerStore.weight || "");
+  const [yearOfBirth, setYearOfBirth] = useState(
+    registerStore.yearOfBirth || ""
+  );
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
 
   const validateRegistration = () => {
-    if (password !== passwordRepeat || !username || !email || !password) {
+    if (
+      !height ||
+      !weight ||
+      !yearOfBirth ||
+      Number.isNaN(Number(height)) ||
+      Number.isNaN(Number(weight)) ||
+      Number.isNaN(Number(yearOfBirth))
+    ) {
       setIsError(true);
     } else {
       setIsError(false);
+      dispatch(setRegisterState({ height, weight, yearOfBirth }));
     }
-  }
-
+  };
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
@@ -36,36 +45,29 @@ export const RegisterScreen = ({ navigation }) => {
         <View>
           <TextInput
             mode="outlined"
-            value={username}
-            onChangeText={setUsername}
+            value={height}
+            onChangeText={setHeight}
             error={isError}
-            placeholder="Username"
+            label="Height (cm)"
+            placeholder="Height (cm)"
             style={{ width: "100%", marginBottom: 20 }}
           />
           <TextInput
             mode="outlined"
-            value={email}
-            onChangeText={setEmail}
+            value={weight}
+            onChangeText={setWeight}
             error={isError}
-            placeholder="Email"
+            placeholder="Weight (kg)"
+            label="Weight (kg)"
             style={{ width: "100%", marginBottom: 20 }}
           />
           <TextInput
             mode="outlined"
-            value={password}
-            onChangeText={setPassword}
+            value={yearOfBirth}
+            onChangeText={setYearOfBirth}
             error={isError}
-            placeholder="Password"
-            secureTextEntry
-            style={{ width: "100%", marginBottom: 20 }}
-          />
-          <TextInput
-            mode="outlined"
-            value={passwordRepeat}
-            onChangeText={setPasswordRepeat}
-            error={isError}
-            placeholder="Confirm Password"
-            secureTextEntry
+            placeholder="Year of Birth"
+            label="Year of Birth"
             style={{ width: "100%", marginBottom: 20 }}
           />
           <StackRow>
@@ -75,7 +77,7 @@ export const RegisterScreen = ({ navigation }) => {
               onPress={() => navigation.goBack()}
               style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
             >
-              Go back
+              Previous
             </Button>
             <Button
               mode="contained"
