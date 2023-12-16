@@ -31,6 +31,7 @@ export const EntryScreen = ({ navigation }) => {
                 icon="account-plus"
                 mode="contained"
                 style={{ marginTop: 20, marginBottom: 20, backgroundColor: theme.colors.primary }}
+                onPress={() => navigation.navigate('Register')}
               >
                 Sign up
               </Button>

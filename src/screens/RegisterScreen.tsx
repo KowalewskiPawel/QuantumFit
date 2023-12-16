@@ -1,84 +1,92 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Text,
   View,
   SafeAreaView,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import { Button, useTheme, TextInput } from "react-native-paper";
-import { useAppDispatch, useAppSelector } from "../app/store";
-import { selectAuthState, loginUser } from "../features/auth";
 import { styles } from "../styles/globalStyles";
+import { StackRow } from "../components";
 
-export const LoginScreen = ({ navigation }) => {
-  const dispatch = useAppDispatch();
+export const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
-  const { loading, token, loginTime } = useAppSelector(selectAuthState);
+  const [isError, setIsError] = useState(false);
   const theme = useTheme();
 
-  const sendLoginRequest = () => {
-    dispatch(loginUser(username, password));
-  };
-
-  useEffect(() => {
-    if (!token && !loginTime) return;
-
-    const didOneHourPass = Date.now() - loginTime > 3600000;
-
-    if (token && !didOneHourPass) {
-      navigation.navigate("PhotoAnalysis");
+  const validateRegistration = () => {
+    if (password !== passwordRepeat || !username || !email || !password) {
+      setIsError(true);
+    } else {
+      setIsError(false);
     }
-  }, [token, loginTime]);
+  }
+
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text style={{ ...styles.title, color: theme.colors.onBackground }}>QuantumFit</Text>
-          </View>
-          {!loading ? (
-            <View>
-              <TextInput
-                mode="outlined"
-                value={username}
-                onChangeText={setUsername}
-                placeholder="Username"
-                style={{ width: "100%", marginBottom: 20 }}
-              />
-              <TextInput
-                mode="outlined"
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Password"
-                secureTextEntry
-                style={{ width: "100%", marginBottom: 20 }}
-              />
-              <TextInput
-                mode="outlined"
-                value={password}
-                onChangeText={setPasswordRepeat}
-                placeholder="Repeat Password"
-                secureTextEntry
-                style={{ width: "100%", marginBottom: 20 }}
-              />
-              <Button
-                icon="account-key"
-                mode="contained"
-                onPress={sendLoginRequest}
-                style={{ marginTop: 20, marginBottom: 20 }}
-              >
-                Login
-              </Button>
-            </View>
-          ) : (
-            <Text>Loading...</Text>
-          )}
+      <View>
+        <View style={styles.textBackground}>
+          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
+            Registration
+          </Text>
         </View>
-      </TouchableWithoutFeedback>
+        <View>
+          <TextInput
+            mode="outlined"
+            value={username}
+            onChangeText={setUsername}
+            error={isError}
+            placeholder="Username"
+            style={{ width: "100%", marginBottom: 20 }}
+          />
+          <TextInput
+            mode="outlined"
+            value={email}
+            onChangeText={setEmail}
+            error={isError}
+            placeholder="Email"
+            style={{ width: "100%", marginBottom: 20 }}
+          />
+          <TextInput
+            mode="outlined"
+            value={password}
+            onChangeText={setPassword}
+            error={isError}
+            placeholder="Password"
+            secureTextEntry
+            style={{ width: "100%", marginBottom: 20 }}
+          />
+          <TextInput
+            mode="outlined"
+            value={passwordRepeat}
+            onChangeText={setPasswordRepeat}
+            error={isError}
+            placeholder="Confirm Password"
+            secureTextEntry
+            style={{ width: "100%", marginBottom: 20 }}
+          />
+          <StackRow>
+            <Button
+              icon="arrow-left"
+              mode="contained"
+              onPress={() => navigation.goBack()}
+              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+            >
+              Go back
+            </Button>
+            <Button
+              mode="contained"
+              onPress={validateRegistration}
+              style={{ marginTop: 20, marginBottom: 20 }}
+            >
+              Continue
+            </Button>
+          </StackRow>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
