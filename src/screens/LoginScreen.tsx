@@ -34,44 +34,42 @@ export const LoginScreen = ({ navigation }) => {
   }, [token, loginTime]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ ...styles.container, backgroundColor: theme.colors.background }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={styles.container}>
-            <View style={styles.textBackground}>
-              <Text style={styles.title}>QuantumFit</Text>
-            </View>
-            {!loading ? (
-              <View>
-                <TextInput
-                  value={username}
-                  onChangeText={setUsername}
-                  placeholder="Username"
-                  placeholderTextColor="#cccccc"
-                  style={styles.input}
-                />
-                <TextInput
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Password"
-                  placeholderTextColor="#cccccc"
-                  secureTextEntry
-                  style={styles.input}
-                />
-                <Button
-                  icon="account-key"
-                  mode="contained"
-                  onPress={sendLoginRequest}
-                  style={{ marginTop: 10 }}
-                  buttonColor={theme.colors.primary}
-                  textColor={theme.colors.onPrimary}
-                >
-                  Login
-                </Button>
-              </View>
-            ) : (
-              <Text>Loading...{/* TODO: Change to LoadingSpinner */}</Text>
-            )}
+        <View>
+          <View style={styles.textBackground}>
+            <Text style={{...styles.title, color: theme.colors.onBackground}}>QuantumFit</Text>
           </View>
+          {!loading ? (
+            <View>
+              <TextInput
+                value={username}
+                onChangeText={setUsername}
+                placeholder="Username"
+                placeholderTextColor="#cccccc"
+                style={{ ...styles.input, width: "100%", borderWidth: 1, borderColor: theme.colors.tertiary }}
+              />
+              <TextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                placeholderTextColor="#cccccc"
+                secureTextEntry
+                style={{ ...styles.input, width: "100%", borderWidth: 1, borderColor: theme.colors.tertiary }}
+              />
+              <Button
+                icon="account-key"
+                mode="contained"
+                onPress={sendLoginRequest}
+                style={{ marginTop: 10 }}
+              >
+                Login
+              </Button>
+            </View>
+          ) : (
+            <Text>Loading...</Text>
+          )}
+        </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
   );
