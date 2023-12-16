@@ -1,8 +1,4 @@
-import {
-  MD3DarkTheme, MD3Theme,
-} from 'react-native-paper';
-
-const QuantumFitDarkScheme = {
+export default {
   "colors": {
     "primary": "rgb(206, 189, 255)",
     "onPrimary": "rgb(57, 5, 144)",
@@ -46,8 +42,3 @@ const QuantumFitDarkScheme = {
     "backdrop": "rgba(50, 47, 56, 0.4)"
   }
 }
-
-export default {
-  ...MD3DarkTheme,
-  colors: { ...MD3DarkTheme.colors, ...QuantumFitDarkScheme.colors },
-} as MD3Theme;

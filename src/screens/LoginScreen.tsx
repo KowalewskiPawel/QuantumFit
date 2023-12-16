@@ -3,11 +3,10 @@ import {
   Text,
   View,
   SafeAreaView,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button, useTheme, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectAuthState, loginUser } from "../features/auth";
 import { styles } from "../styles/globalStyles";
@@ -34,34 +33,36 @@ export const LoginScreen = ({ navigation }) => {
   }, [token, loginTime]);
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor: theme.colors.background }}>
+    <SafeAreaView style={{ ...styles.container }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View>
           <View style={styles.textBackground}>
-            <Text style={{...styles.title, color: theme.colors.onBackground}}>QuantumFit</Text>
+            <Text style={{ ...styles.title, color: theme.colors.onBackground }}>QuantumFit</Text>
           </View>
           {!loading ? (
             <View>
               <TextInput
+                mode="outlined"
                 value={username}
                 onChangeText={setUsername}
                 placeholder="Username"
                 placeholderTextColor="#cccccc"
-                style={{ ...styles.input, width: "100%", borderWidth: 1, borderColor: theme.colors.tertiary }}
+                style={{ width: "100%", marginBottom: 20 }}
               />
               <TextInput
+                mode="outlined"
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Password"
                 placeholderTextColor="#cccccc"
                 secureTextEntry
-                style={{ ...styles.input, width: "100%", borderWidth: 1, borderColor: theme.colors.tertiary }}
+                style={{ width: "100%", marginBottom: 20 }}
               />
               <Button
                 icon="account-key"
                 mode="contained"
                 onPress={sendLoginRequest}
-                style={{ marginTop: 10 }}
+                style={{ marginTop: 20, marginBottom: 20 }}
               >
                 Login
               </Button>
