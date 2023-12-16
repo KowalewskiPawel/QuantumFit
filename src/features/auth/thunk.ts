@@ -1,29 +1,30 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import apiClient from "../../api/apiClient";
 import { setSessionState } from "./slice";
+import { auth, signInWithEmailAndPassword } from "../../firebase/firebase-config";
 
-export const loginUser = (username, password) => async (dispatch) => {
+export const loginUser = (username: string, password: string) => async (dispatch: any) => {
   dispatch(setSessionState({ loading: true }));
   try {
-    const response = await apiClient.post("/users/login", {
-      username,
-      password,
-    });
+    const userCredential = await signInWithEmailAndPassword(auth, username, password);
+    const user = userCredential.user;
 
-    const { token } = response;
+    const idToken = await user.getIdToken();
 
-    await AsyncStorage.setItem("userToken", token);
     dispatch(
       setSessionState({
-        token,
-        username,
+        token: idToken, 
+        username: user.email,
         loginTime: Date.now(),
         loading: false,
         error: null,
       })
     );
   } catch (error) {
-    dispatch(setSessionState({ loading: false, error: error.message }));
+    let msg = error.message;
+    if (msg.includes('invalid-credentials')) {
+      msg = "Invalid email or password";
+    }
+    dispatch(setSessionState({ loading: false, error: msg }));
   }
 };
 

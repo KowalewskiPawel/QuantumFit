@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
-import { NavigationContainer, useNavigationContainerRef } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
-  LoginScreen,
-  CameraPermissionScreen,
-} from "./screens";
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LoginScreen, CameraPermissionScreen } from "./screens";
 import { useAppDispatch, useAppSelector } from "./app/store";
 import { selectAuthState, logoutUser } from "./features/auth";
+import { withTheme } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
 
-export const Main = () => {
+const MainScreen = ({ theme }) => {
   const dispatch = useAppDispatch();
   const { token, loginTime } = useAppSelector(selectAuthState);
   const navigationRef = useNavigationContainerRef();
@@ -28,11 +29,13 @@ export const Main = () => {
   }, [token, loginTime]);
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer theme={theme} ref={navigationRef}>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Login" component={LoginScreen} />
+          name="Login"
+          component={LoginScreen}
+        />
         <Stack.Screen
           options={{ headerShown: false }}
           name="CameraPermission"
@@ -42,3 +45,5 @@ export const Main = () => {
     </NavigationContainer>
   );
 };
+
+export const Main = withTheme(MainScreen);
