@@ -4,7 +4,7 @@ export type RegisterState = {
     username: string | null;
     email: string | null;
     password: string | null;
-    sex: number | null;
+    sex: string | null;
     height: number | null;
     weight: number | null;
     yearOfBirth: number | null;

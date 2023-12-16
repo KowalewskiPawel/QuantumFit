@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Text, View, SafeAreaView } from "react-native";
-import { Button, useTheme, TextInput } from "react-native-paper";
+import { Button, useTheme, TextInput, SegmentedButtons } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
@@ -10,6 +10,7 @@ import { setRegisterState } from "../features/register/slice";
 export const RegisterScreenBody = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const registerStore = useAppSelector(selectRegisterState);
+  const [sex, setSex] = useState(registerStore.sex || "male");
   const [height, setHeight] = useState(registerStore.height || "");
   const [weight, setWeight] = useState(registerStore.weight || "");
   const [yearOfBirth, setYearOfBirth] = useState(
@@ -30,7 +31,7 @@ export const RegisterScreenBody = ({ navigation }) => {
       setIsError(true);
     } else {
       setIsError(false);
-      dispatch(setRegisterState({ height, weight, yearOfBirth }));
+      dispatch(setRegisterState({ sex, height, weight, yearOfBirth }));
     }
   };
 
@@ -43,6 +44,23 @@ export const RegisterScreenBody = ({ navigation }) => {
           </Text>
         </View>
         <View>
+        <SegmentedButtons
+        value={sex}
+        onValueChange={setSex}
+        style={{ marginTop: 20, marginBottom: 40 }}
+        buttons={[
+          {
+            value: 'male',
+            label: 'Male',
+            icon: sex === 'male' ? 'check' : null
+          },
+          {
+            value: 'female',
+            label: 'Female',
+            icon: sex === 'female' ? 'check' : null
+          },
+        ]}
+      />
           <TextInput
             mode="outlined"
             value={height}
