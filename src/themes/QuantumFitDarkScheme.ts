@@ -1,7 +1,7 @@
 export default {
   "colors": {
-    "primary": "rgb(192, 193, 255)",
-    "onPrimary": "rgb(35, 36, 120)",
+    "primary": "#034C81",
+    "onPrimary": "#FFF",
     "primaryContainer": "rgb(59, 61, 143)",
     "onPrimaryContainer": "rgb(225, 224, 255)",
     "secondary": "rgb(156, 202, 255)",
