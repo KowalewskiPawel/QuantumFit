@@ -12,13 +12,12 @@ export const styles = StyleSheet.create({
       width: "100%",
       height: "auto",
       justifyContent: "center",
-      backgroundColor: "#121212", // Dark background
+      // backgroundColor: "#121212", // Dark background
       alignItems: "center",
     },
     input: {
       width: 200,
       height: 50,
-      backgroundColor: "#1A1A1A",
       borderRadius: 25,
       color: "#FFFFFF",
       paddingHorizontal: 20,
@@ -26,7 +25,7 @@ export const styles = StyleSheet.create({
       fontSize: 16,
     },
     textBackground: {
-      backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black
+      // backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black
       paddingVertical: 5, // Adjust the padding as needed
       paddingHorizontal: 10, // Adjust the padding as needed
       borderRadius: 10, // Gives rounded corners
@@ -38,12 +37,12 @@ export const styles = StyleSheet.create({
       fontWeight: "bold",
     },
     title: {
-      color: "#FFFFFF", // White text color for contrast
+      // color: "#FFFFFF", // White text color for contrast
       fontSize: 32, // Larger font size for prominence
       fontWeight: "900", // Extra bold font weight
       textTransform: "uppercase", // Uppercase letters for a more impactful look
       letterSpacing: 2, // Spacing out the letters for a more refined appearance
-      textShadowColor: "rgba(0, 0, 0, 0.75)", // Text shadow for depth
+      // textShadowColor: "rgba(0, 0, 0, 0.75)", // Text shadow for depth
       textShadowOffset: { width: 2, height: 2 }, // Positioning of the text shadow
       textShadowRadius: 3, // Blurring the shadow for a softer look
       marginBottom: 10, // Space below the title
