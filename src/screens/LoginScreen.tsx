@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Text,
   View,
   SafeAreaView,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import { Button, useTheme, TextInput } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "../app/store";
@@ -15,26 +13,15 @@ export const LoginScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { loading, token, loginTime } = useAppSelector(selectAuthState);
+  const { loading } = useAppSelector(selectAuthState);
   const theme = useTheme();
 
   const sendLoginRequest = () => {
     dispatch(loginUser(username, password));
   };
 
-  useEffect(() => {
-    if (!token && !loginTime) return;
-
-    const didOneHourPass = Date.now() - loginTime > 3600000;
-
-    if (token && !didOneHourPass) {
-      navigation.navigate("PhotoAnalysis");
-    }
-  }, [token, loginTime]);
-
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View>
           <View style={styles.textBackground}>
             <Text style={{ ...styles.title, color: theme.colors.onBackground }}>QuantumFit</Text>
@@ -71,7 +58,6 @@ export const LoginScreen = ({ navigation }) => {
             <Text>Loading...</Text>
           )}
         </View>
-      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
