@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { NavigationContainer, useNavigationContainerRef } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
-  LoginScreen,
-  CameraPermissionScreen,
-} from "./screens";
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LoginScreen, CameraPermissionScreen } from "./screens";
 import { useAppDispatch, useAppSelector } from "./app/store";
 import { selectAuthState, logoutUser } from "./features/auth";
 import { withTheme } from "react-native-paper";
@@ -32,10 +32,12 @@ const MainScreen = ({ theme }) => {
     <NavigationContainer theme={theme} ref={navigationRef}>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
-          // options={{ headerShown: false }}
-          name="Login" component={LoginScreen} />
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginScreen}
+        />
         <Stack.Screen
-          // options={{ headerShown: false }}
+          options={{ headerShown: false }}
           name="CameraPermission"
           component={CameraPermissionScreen}
         />
