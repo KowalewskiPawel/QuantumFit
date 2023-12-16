@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Text,
   View,
+  Image,
   SafeAreaView,
 } from "react-native";
 import { Button, useTheme, TextInput } from "react-native-paper";
@@ -15,6 +16,7 @@ export const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const { loading } = useAppSelector(selectAuthState);
   const theme = useTheme();
+  const LogoEntry = require('../assets/logoEntry.png');
 
   const sendLoginRequest = () => {
     dispatch(loginUser(username, password));
@@ -25,6 +27,7 @@ export const LoginScreen = ({ navigation }) => {
         <View>
           <View style={styles.textBackground}>
             <Text style={{ ...styles.title, color: theme.colors.onBackground }}>QuantumFit</Text>
+            <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
           </View>
           {!loading ? (
             <View>

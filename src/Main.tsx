@@ -14,14 +14,12 @@ const MainScreen = ({ theme }) => {
 
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen
-          options={{ headerShown: false }}
           name="Login"
           component={LoginScreen}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
           name="CameraPermission"
           component={CameraPermissionScreen}
         />

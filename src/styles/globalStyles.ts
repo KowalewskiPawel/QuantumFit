@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
       padding: 20,
       alignItems: "center",
       justifyContent: "center",
+      fontFamily: "Roboto-Black",
     },
     backgroundImage: {
       flex: 1,
@@ -39,8 +40,8 @@ export const styles = StyleSheet.create({
     title: {
       // color: "#FFFFFF", // White text color for contrast
       fontSize: 32, // Larger font size for prominence
+
       fontWeight: "900", // Extra bold font weight
-      textTransform: "uppercase", // Uppercase letters for a more impactful look
       letterSpacing: 2, // Spacing out the letters for a more refined appearance
       // textShadowColor: "rgba(0, 0, 0, 0.75)", // Text shadow for depth
       textShadowOffset: { width: 2, height: 2 }, // Positioning of the text shadow

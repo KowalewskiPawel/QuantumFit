@@ -16,7 +16,7 @@ export default {
     "onError": "rgb(105, 0, 5)",
     "errorContainer": "rgb(147, 0, 10)",
     "onErrorContainer": "rgb(255, 180, 171)",
-    "background": "rgb(28, 27, 31)",
+    "background": "#0A1420",
     "onBackground": "rgb(229, 225, 230)",
     "surface": "rgb(28, 27, 31)",
     "onSurface": "rgb(229, 225, 230)",
