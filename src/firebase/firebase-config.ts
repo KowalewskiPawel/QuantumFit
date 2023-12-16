@@ -4,10 +4,11 @@ import {
   FIREBASE_APP_ID,
   FIREBASE_PROJECT_ID,
   FIREBASE_AUTH_DOMAIN,
+  FIREBASE_MESSAGING_SENDER_ID
 } from "@env";
 import ReactNativeAsyncStorage, { AsyncStorageStatic } from '@react-native-async-storage/async-storage';
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
 
 import {
   getStorage,
@@ -23,6 +24,7 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID,
   projectId: FIREBASE_PROJECT_ID,
   authDomain: FIREBASE_AUTH_DOMAIN,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
 };
 
 if (getApps().length === 0) {
@@ -32,10 +34,11 @@ if (getApps().length === 0) {
 
 const fbApp = getApp();
 const fbStorage = getStorage();
+const auth = getAuth(fbApp);
 
-const auth = initializeAuth(fbApp, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-});
+// const auth = initializeAuth(fbApp, {
+//   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+// });
 /**
  *
  * @param {*} uri
