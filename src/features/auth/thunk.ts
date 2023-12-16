@@ -5,18 +5,23 @@ import { auth, signInWithEmailAndPassword } from "../../firebase/firebase-config
 export const loginUser = (username, password) => async (dispatch) => {
   dispatch(setSessionState({ loading: true }));
   try {
-    const user = await signInWithEmailAndPassword(auth, username, password);
+    const { user } = await signInWithEmailAndPassword(auth, username, password);
     console.log({ user })
 
     dispatch(
       setSessionState({
+        user, 
         loginTime: Date.now(),
         loading: false,
         error: null,
       })
     );
   } catch (error) {
-    dispatch(setSessionState({ loading: false, error: error.message }));
+    let msg = error.message;
+    if (msg.includes('invalid-credentials')) {
+      msg = "Invalid email or pasword"
+    }
+    dispatch(setSessionState({ loading: false, error: msg }));
   }
 };
 
