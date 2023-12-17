@@ -1,53 +1,46 @@
 import { useState } from "react";
-import { Text, View, SafeAreaView } from "react-native";
-import { Button, Dialog, Portal, useTheme } from "react-native-paper";
+import { View, SafeAreaView } from "react-native";
+import { Button, Dialog, Portal, Text, useTheme } from "react-native-paper";
+import Slider from "@react-native-community/slider";
 import { styles } from "../styles/globalStyles";
 import { CustomCard, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectRegisterState } from "../features/register";
 import { setRegisterState } from "../features/register/slice";
 
-export const RegisterScreenLifestyle = ({ navigation }) => {
+export const RegisterScreenAim = ({ navigation }) => {
   const dispatch = useAppDispatch();
 
-  const LIFESTYLES = [
+  const AIMS = [
     {
-      title: "Lack of physical activity",
-      content:
-        "Lack of exercise and sedentary lifestyle (e.g. work in the office)",
-      icon: "speedometer-slow",
+      content: "I want to lose weight",
     },
     {
-      title: "Low physical activity",
-      content:
-        "Sedentary lifestyle and having a walk or working out 1-2 times a week",
-      icon: "run",
+      content: "I want to keep my weight",
     },
     {
-      title: "Moderate physical activity",
-      content: "Moderate physical activity (e.g. working out 3-5 times a week)",
-      icon: "run-fast",
-    },
-    {
-      title: "High physical activity",
-      content: "High physical activity (e.g. working out 5-7 times a week)",
-      icon: "weight-lifter",
+      content: "I want to gain weight and muscle mass",
     },
   ];
   const registerStore = useAppSelector(selectRegisterState);
-  const [selectedLifestyle, setSelectedLifestyle] = useState(
-    registerStore.lifeStyle || ""
+  const [selectedAim, setSelectedAim] = useState(registerStore.aim || "");
+  const [selectedExerciseFrequency, setSelectedExerciseFrequency] = useState(
+    registerStore.exerciseFrequency || 1
   );
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
 
   const validateRegistration = () => {
-    if (!selectedLifestyle) {
+    if (!selectedAim || !selectedExerciseFrequency) {
       setIsError(true);
     } else {
       setIsError(false);
-      dispatch(setRegisterState({ lifeStyle: selectedLifestyle }));
-      navigation.navigate("RegisterAim");
+      dispatch(
+        setRegisterState({
+          aim: selectedAim,
+          exerciseFrequency: selectedExerciseFrequency,
+        })
+      );
     }
   };
 
@@ -56,20 +49,33 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
       <View>
         <View style={styles.textBackground}>
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            Your Lifestyle
+            Your Aim
           </Text>
         </View>
         <View style={{ display: "flex", alignItems: "center" }}>
-          {LIFESTYLES.map((lifestyle) => (
+          {AIMS.map((aim) => (
             <CustomCard
-              key={lifestyle.title}
-              title={lifestyle.title}
-              content={lifestyle.content}
-              icon={lifestyle.icon}
-              onPress={setSelectedLifestyle}
-              selected={selectedLifestyle === lifestyle.title}
+              key={aim.content}
+              content={aim.content}
+              onPress={setSelectedAim}
+              onlyContent
+              selected={selectedAim === aim.content}
             />
           ))}
+          <Text variant="bodyLarge" style={{ marginTop: 20, marginBottom: 10 }}>
+            How many days a week do you want to exercise?
+          </Text>
+          <Text variant="titleLarge">{selectedExerciseFrequency}</Text>
+          <Slider
+            style={{ width: 250, height: 20, marginTop: 10, marginBottom: 10 }}
+            minimumValue={0}
+            maximumValue={7}
+            value={selectedExerciseFrequency}
+            onValueChange={setSelectedExerciseFrequency}
+            step={1}
+            minimumTrackTintColor={theme.colors.primary}
+            maximumTrackTintColor="#000000"
+          />
           <StackRow>
             <Button
               icon="arrow-left"
@@ -96,11 +102,11 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
               backgroundColor: theme.colors.primaryContainer,
             }}
           >
-            <Dialog.Title>Please Select Lifestyle</Dialog.Title>
+            <Dialog.Title>Please Select Aim</Dialog.Title>
             <Dialog.Content>
               <Text style={{ color: "#FFF" }}>
-                Please select lifestyle that describes yours best, and then
-                click "continue".
+                Please select aim that you want to achieve, and at least 1 day
+                of exercise per week, and then click "continue".
               </Text>
             </Dialog.Content>
             <Dialog.Actions>

@@ -11,6 +11,7 @@ import {
   RegisterScreenEntry,
   RegisterScreenBody,
   RegisterScreenLifestyle,
+  RegisterScreenAim,
 } from "./screens";
 import { withTheme } from "react-native-paper";
 
@@ -37,6 +38,7 @@ const MainScreen = ({ theme }) => {
           name="RegisterLifestyle"
           component={RegisterScreenLifestyle}
         />
+        <Stack.Screen name="RegisterAim" component={RegisterScreenAim} />
         <Stack.Screen
           name="CameraPermission"
           component={CameraPermissionScreen}
