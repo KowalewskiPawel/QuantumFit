@@ -12,24 +12,24 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
 
   const LIFESTYLES = [
     {
-      title: "Lack of physical activity",
+      title: "Sedentary",
       content:
         "Lack of exercise and sedentary lifestyle (e.g. work in the office)",
-      icon: "speedometer-slow",
+      icon: "sofa-single",
     },
     {
-      title: "Low physical activity",
+      title: "Low",
       content:
         "Sedentary lifestyle and having a walk or working out 1-2 times a week",
       icon: "run",
     },
     {
-      title: "Moderate physical activity",
+      title: "Moderate",
       content: "Moderate physical activity (e.g. working out 3-5 times a week)",
       icon: "run-fast",
     },
     {
-      title: "High physical activity",
+      title: "High",
       content: "High physical activity (e.g. working out 5-7 times a week)",
       icon: "weight-lifter",
     },
@@ -53,7 +53,7 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <ScrollView>
+      <ScrollView style={{ width: 400 }}>
         <View style={{ ...styles.container }}>
           <View style={styles.textBackground}>
             <Text style={{ ...styles.title, color: theme.colors.onBackground }}>

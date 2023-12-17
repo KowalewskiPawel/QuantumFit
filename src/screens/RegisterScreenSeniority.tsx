@@ -13,22 +13,29 @@ export const RegisterScreenSeniority = ({ navigation }) => {
 
   const dispatch = useAppDispatch();
   const registerStore = useAppSelector(selectRegisterState);
+  const [registerDialog, setRegisterDialog] = useState(false);
   const [selectedExerciseFrequency, setSelectedExerciseFrequency] = useState(
     registerStore.gymExperience || 1
   );
-  const [isError, setIsError] = useState(false);
   const theme = useTheme();
 
   const validateRegistration = () => {
-    if (!selectedExerciseFrequency) {
-      setIsError(true);
-    } else {
-      setIsError(false);
       dispatch(
         setRegisterState({
           gymExperience: selectedExerciseFrequency,
         })
       );
+      setRegisterDialog(true);
+  };
+
+  const renderExerciseFrequency = () => {
+    switch (selectedExerciseFrequency) {
+      case 1:
+        return "less than 1 month";
+      case 13:
+        return "more than 12 months";
+      default:
+        return `${selectedExerciseFrequency} months`;
     }
   };
 
@@ -47,15 +54,12 @@ export const RegisterScreenSeniority = ({ navigation }) => {
             working out?
           </Text>
           <Text variant="titleLarge">
-            {selectedExerciseFrequency === 1 ? "0 up to 1" : selectedExerciseFrequency <= 24
-              ? selectedExerciseFrequency
-              : "more than 24"}{" "}
-            month(s)
+            {renderExerciseFrequency()}
           </Text>
           <Slider
             style={{ width: 250, height: 20, marginTop: 10, marginBottom: 10 }}
             minimumValue={1}
-            maximumValue={25}
+            maximumValue={13}
             value={selectedExerciseFrequency}
             onValueChange={setSelectedExerciseFrequency}
             step={1}
@@ -82,21 +86,20 @@ export const RegisterScreenSeniority = ({ navigation }) => {
         </View>
         <Portal>
           <Dialog
-            visible={isError}
-            onDismiss={() => setIsError(false)}
+            visible={registerDialog}
+            onDismiss={() => setRegisterDialog(false)}
             style={{
               backgroundColor: theme.colors.primaryContainer,
             }}
           >
-            <Dialog.Title>Please Select Seniority</Dialog.Title>
+            <Dialog.Title>Do you want to create your account?</Dialog.Title>
             <Dialog.Content>
               <Text style={{ color: "#FFF" }}>
-                Please select how many months have you been working out, and
-                then click "continue".
+                Please confirm that you want to create your account
               </Text>
             </Dialog.Content>
             <Dialog.Actions>
-              <Button textColor="#FFF" onPress={() => setIsError(false)}>
+              <Button textColor="#FFF" onPress={() => setRegisterDialog(false)}>
                 OK
               </Button>
             </Dialog.Actions>

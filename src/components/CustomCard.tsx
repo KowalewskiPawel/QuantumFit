@@ -27,7 +27,7 @@ export const CustomCard = ({
   return (
     <Card
       style={{
-        width: "90%",
+        width: "auto",
         marginTop: 10,
         marginBottom: 10,
         backgroundColor: !selected ? theme.colors.primaryContainer : "#3A5C86",
