@@ -41,6 +41,7 @@ export const RegisterScreenAim = ({ navigation }) => {
           exerciseFrequency: selectedExerciseFrequency,
         })
       );
+      navigation.navigate("RegisterSeniority");
     }
   };
 
@@ -68,7 +69,7 @@ export const RegisterScreenAim = ({ navigation }) => {
           <Text variant="titleLarge">{selectedExerciseFrequency}</Text>
           <Slider
             style={{ width: 250, height: 20, marginTop: 10, marginBottom: 10 }}
-            minimumValue={0}
+            minimumValue={1}
             maximumValue={7}
             value={selectedExerciseFrequency}
             onValueChange={setSelectedExerciseFrequency}
@@ -105,8 +106,7 @@ export const RegisterScreenAim = ({ navigation }) => {
             <Dialog.Title>Please Select Aim</Dialog.Title>
             <Dialog.Content>
               <Text style={{ color: "#FFF" }}>
-                Please select aim that you want to achieve, and at least 1 day
-                of exercise per week, and then click "continue".
+                Please select aim that you want to achieve, and then click "continue".
               </Text>
             </Dialog.Content>
             <Dialog.Actions>

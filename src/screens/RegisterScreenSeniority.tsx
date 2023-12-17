@@ -8,13 +8,13 @@ import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectRegisterState } from "../features/register";
 import { setRegisterState } from "../features/register/slice";
 
-export const RegisterScreenAim = ({ navigation }) => {
+export const RegisterScreenSeniority = ({ navigation }) => {
   const LogoEntry = require("../assets/logoEntry.png");
 
   const dispatch = useAppDispatch();
   const registerStore = useAppSelector(selectRegisterState);
   const [selectedExerciseFrequency, setSelectedExerciseFrequency] = useState(
-    registerStore.gymExperience || 0
+    registerStore.gymExperience || 1
   );
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
@@ -35,7 +35,7 @@ export const RegisterScreenAim = ({ navigation }) => {
   return (
     <SafeAreaView style={{ ...styles.container }}>
       <View>
-        <View style={styles.textBackground}>
+        <View style={{ display: "flex", alignItems: "center" }}>
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
             Welcome to QuantumFit
           </Text>
@@ -47,14 +47,14 @@ export const RegisterScreenAim = ({ navigation }) => {
             working out?
           </Text>
           <Text variant="titleLarge">
-            {selectedExerciseFrequency >= 24
+            {selectedExerciseFrequency === 1 ? "0 up to 1" : selectedExerciseFrequency <= 24
               ? selectedExerciseFrequency
-              : "+24"}{" "}
+              : "more than 24"}{" "}
             month(s)
           </Text>
           <Slider
             style={{ width: 250, height: 20, marginTop: 10, marginBottom: 10 }}
-            minimumValue={0}
+            minimumValue={1}
             maximumValue={25}
             value={selectedExerciseFrequency}
             onValueChange={setSelectedExerciseFrequency}

@@ -5,3 +5,4 @@ export { RegisterScreenEntry } from './RegisterScreenEntry';
 export { RegisterScreenBody } from './RegisterScreenBody';
 export { RegisterScreenLifestyle } from './RegisterScreenLifestyle';
 export { RegisterScreenAim } from './RegisterScreenAim';
+export { RegisterScreenSeniority } from './RegisterScreenSeniority';
