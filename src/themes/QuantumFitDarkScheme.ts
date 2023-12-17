@@ -2,7 +2,7 @@ export default {
   "colors": {
     "primary": "#034C81",
     "onPrimary": "#FFF",
-    "primaryContainer": "rgb(59, 61, 143)",
+    "primaryContainer": "#0B2749",
     "onPrimaryContainer": "rgb(225, 224, 255)",
     "secondary": "rgb(156, 202, 255)",
     "onSecondary": "rgb(0, 50, 86)",
@@ -22,7 +22,7 @@ export default {
     "onSurface": "rgb(229, 225, 230)",
     "surfaceVariant": "rgb(70, 70, 79)",
     "onSurfaceVariant": "rgb(200, 197, 208)",
-    "outline": "rgb(145, 143, 154)",
+    "outline": "#175A8B",
     "outlineVariant": "rgb(70, 70, 79)",
     "shadow": "rgb(0, 0, 0)",
     "scrim": "rgb(0, 0, 0)",
