@@ -32,6 +32,7 @@ export const RegisterScreenBody = ({ navigation }) => {
     } else {
       setIsError(false);
       dispatch(setRegisterState({ sex, height, weight, yearOfBirth }));
+      navigation.navigate("RegisterLifestyle");
     }
   };
 
