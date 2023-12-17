@@ -14,6 +14,7 @@ const initialState = {
     exerciseFrequency: null,
     photos: null,
     gymExperience: null,
+    errorMessage: null,
     loading: false,
 };
 

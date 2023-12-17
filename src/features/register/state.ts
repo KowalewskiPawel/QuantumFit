@@ -14,7 +14,7 @@ export type RegisterState = {
     photos: string[] | null;
     gymExperience: number | null;
     loading: boolean;
-    error: string | null;
+    errorMessage: string | null;
 };
 
 export const selectRegisterState = (state: RootState) => state.register;

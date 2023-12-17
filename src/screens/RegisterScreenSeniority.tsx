@@ -3,9 +3,9 @@ import { View, SafeAreaView, Image } from "react-native";
 import { Button, Dialog, Portal, Text, useTheme } from "react-native-paper";
 import Slider from "@react-native-community/slider";
 import { styles } from "../styles/globalStyles";
-import { StackRow } from "../components";
+import { LoadingSpinner, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
-import { selectRegisterState } from "../features/register";
+import { registerUser, selectRegisterState } from "../features/register";
 import { setRegisterState } from "../features/register/slice";
 
 export const RegisterScreenSeniority = ({ navigation }) => {
@@ -26,6 +26,10 @@ export const RegisterScreenSeniority = ({ navigation }) => {
         })
       );
       setRegisterDialog(true);
+  };
+
+  const createAccount = () => {
+    dispatch(registerUser());
   };
 
   const renderExerciseFrequency = () => {
@@ -98,12 +102,19 @@ export const RegisterScreenSeniority = ({ navigation }) => {
                 Please confirm that you want to create your account. You can always go back and change your information.
               </Text>
             </Dialog.Content>
+            {registerStore.errorMessage && (
+              <Dialog.Content>
+                <Text style={{ color: theme.colors.error }}>
+                  {registerStore.errorMessage}
+                </Text>
+              </Dialog.Content>
+            )}
             <Dialog.Actions>
-            <Button textColor="#FFF" onPress={() => setRegisterDialog(false)}>
+            <Button textColor="#FFF" onPress={() => setRegisterDialog(false)} disabled={registerStore.loading}>
                 Go Back
               </Button>
-              <Button textColor="#FFF" onPress={() => setRegisterDialog(false)}>
-                Create
+              <Button textColor="#FFF" onPress={createAccount} disabled={registerStore.loading}>
+                {registerStore.loading ? <LoadingSpinner /> : "Create Account"}
               </Button>
             </Dialog.Actions>
           </Dialog>

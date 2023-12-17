@@ -12,7 +12,7 @@ export default {
     "onTertiary": "rgb(0, 54, 62)",
     "tertiaryContainer": "rgb(0, 78, 89)",
     "onTertiaryContainer": "rgb(159, 239, 255)",
-    "error": "rgb(255, 180, 171)",
+    "error": "#FF0B0B",
     "onError": "rgb(105, 0, 5)",
     "errorContainer": "rgb(147, 0, 10)",
     "onErrorContainer": "rgb(255, 180, 171)",
