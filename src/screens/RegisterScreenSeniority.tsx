@@ -49,7 +49,7 @@ export const RegisterScreenSeniority = ({ navigation }) => {
           <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
         </View>
         <View style={{ display: "flex", alignItems: "center" }}>
-          <Text variant="bodyLarge" style={{ marginTop: 20, marginBottom: 10 }}>
+          <Text variant="bodyLarge" style={{ marginTop: 20, marginBottom: 10, marginHorizontal: 10 }}>
             We are almost done! Just tell us how many months, have you been
             working out?
           </Text>
