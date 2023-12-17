@@ -7,3 +7,7 @@ export { RegisterScreenLifestyle } from './RegisterScreenLifestyle';
 export { RegisterScreenAim } from './RegisterScreenAim';
 export { RegisterScreenSeniority } from './RegisterScreenSeniority';
 export { MainMenuScreen } from './MainMenuScreen';
+export { BodyAnalysisScreen } from './BodyAnalysisScreen';
+export { MyTrainingsScreen } from './MyTrainingsScreen';
+export { MyDietScreen } from './MyDietScreen';
+export { SettingsScreen } from './SettingsScreen';
