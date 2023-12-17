@@ -6,10 +6,9 @@ import {
   FIREBASE_AUTH_DOMAIN,
   FIREBASE_MESSAGING_SENDER_ID
 } from "@env";
-import ReactNativeAsyncStorage, { AsyncStorageStatic } from '@react-native-async-storage/async-storage';
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
-import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore";
 
 import {
   getStorage,
@@ -77,4 +76,4 @@ const uploadToFirebase = async (uri, name, onProgress) => {
   });
 };
 
-export { fbApp, fbStorage, db, doc, setDoc, uploadToFirebase, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };
+export { fbApp, fbStorage, db, doc, getDoc, setDoc, uploadToFirebase, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };

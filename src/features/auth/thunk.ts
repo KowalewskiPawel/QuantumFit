@@ -14,6 +14,7 @@ export const loginUser = (username: string, password: string) => async (dispatch
       setSessionState({
         token: idToken, 
         username: user.email,
+        uid: user.uid,
         loginTime: Date.now(),
         loading: false,
         error: null,

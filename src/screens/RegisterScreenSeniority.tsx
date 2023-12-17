@@ -17,6 +17,7 @@ import {
   resetRegisterState,
   setRegisterState,
 } from "../features/register/slice";
+import { loadUserInfo } from "../features/user";
 
 export const RegisterScreenSeniority = ({ navigation }) => {
   const LogoEntry = require("../assets/logoEntry.png");
@@ -49,6 +50,7 @@ export const RegisterScreenSeniority = ({ navigation }) => {
 
   const finishRegistration = () => {
     setRegisterDialog(false);
+    dispatch(loadUserInfo());
     navigation.navigate("MainMenu");
     dispatch(resetRegisterState());
   };
