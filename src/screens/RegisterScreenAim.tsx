@@ -57,6 +57,7 @@ export const RegisterScreenAim = ({ navigation }) => {
           {AIMS.map((aim) => (
             <CustomCard
               key={aim.content}
+              cardWidth={300}
               content={aim.content}
               onPress={setSelectedAim}
               onlyContent

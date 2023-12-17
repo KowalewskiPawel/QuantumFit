@@ -6,6 +6,7 @@ type CustomCardProps = {
   title?: string;
   selected?: boolean;
   onlyContent?: boolean;
+  cardWidth?: number;
   onPress?: (title: string) => void;
   content: string;
   icon?: string;
@@ -16,6 +17,7 @@ export const CustomCard = ({
   content,
   icon,
   onlyContent,
+  cardWidth,
   selected,
   onPress,
 }: CustomCardProps) => {
@@ -27,7 +29,7 @@ export const CustomCard = ({
   return (
     <Card
       style={{
-        width: "auto",
+        width: cardWidth ? cardWidth : "auto",
         marginTop: 10,
         marginBottom: 10,
         backgroundColor: !selected ? theme.colors.primaryContainer : "#3A5C86",
