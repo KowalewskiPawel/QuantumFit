@@ -1,18 +1,26 @@
 import { Camera, CameraCapturedPicture, CameraType, ImageType } from 'expo-camera';
 import { Image } from 'expo-image'
 import { useEffect, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View, ImageSourcePropType, ScrollView } from 'react-native';
-import { Button, IconButton, List, MD3Colors, Surface, Text } from 'react-native-paper'
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Button, IconButton, MD3Colors, Text } from 'react-native-paper'
 import { styles } from "../styles/globalStyles";
+import { check } from 'yargs';
 
-export const BodyAnalyzeCameraScreen = () => {
+
+export const BodyAnalyzeCameraScreen = ({ route, navigation }) => {
+    const { side } = route.params;
     const windowWidth = Dimensions.get('window').width;
+    const cameraWidth = windowWidth * 0.9;
+    const cameraHeight = cameraWidth * (4 / 3);
+    const [countdown, setCountdown] = useState(5);
+    const [showCountDown, setShowCountdown] = useState(false);
+    const countdownTimer = useRef(null);
 
     const [type, setType] = useState(CameraType.front);
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const cameraRef = useRef<Camera>(null);
-    const [takenPictures, setTakenPictures] = useState<CameraCapturedPicture[]>([]);
-    const [counter, setCounter] = useState(0);
+    const takePictureTimeout = useRef(null);
+    const [takenPicture, setTakenPicture] = useState<CameraCapturedPicture>();
 
     // const _getAvailableSizes = async () => {
     //     try {
@@ -30,31 +38,28 @@ export const BodyAnalyzeCameraScreen = () => {
     //     }
     // }
 
-    const takePicture = async () => {
-        const picture = await cameraRef.current.takePictureAsync({
-            quality: 0.75,
-            scale: 0.6,
-            imageType: ImageType.jpg,
-        });
-
-        if (takenPictures.length >= 4) {
-            alert('Max number of pictures: 4');
-            return;
-        } else {
-            console.log("Picture taken, should save");
-            const newPics = takenPictures;
-            newPics.push(picture);
-            setTakenPictures(() => {
-                // console.log("SetState Triggered");
-                return newPics
-            })
-        }
+    const takePicture = () => {
+        setShowCountdown(true);
+        setCountdown(5);
+        takePictureTimeout.current = setTimeout(async () => {
+            const picture = await cameraRef.current.takePictureAsync({
+                quality: 0.75,
+                scale: 0.6,
+                imageType: ImageType.jpg,
+            });
+            setTakenPicture(picture);
+            setShowCountdown(false);
+        }, 5000)
     }
 
-
     useEffect(() => {
-        console.log(takenPictures)
-    }, [takenPictures.length])
+        if (countdown >= 5) {
+            countdownTimer.current = setInterval(() => setCountdown((v) => v - 1), 1000);
+        }
+        if (countdown === 0) {
+            clearInterval(countdownTimer.current)
+        }
+    }, [countdown])
 
 
     if (!permission) {
@@ -75,20 +80,39 @@ export const BodyAnalyzeCameraScreen = () => {
     function toggleCameraType() {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
     }
+    if (!takenPicture) {
+        return (
+            <View style={localStyles.container}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.titleText}>{`Take a picture of your ${side}`}</Text>
+                </View>
+                <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: cameraHeight }}>
+                    <Camera useCamera2Api autoFocus ref={cameraRef} style={localStyles.camera} type={type}>
+                        <View style={localStyles.buttonContainer}>
+                            <IconButton size={26} icon="camera-flip-outline" iconColor={MD3Colors.secondary10} onPress={toggleCameraType} />
+                        </View>
+                    </Camera>
+                </View>
+                {showCountDown
+                    ? <Text style={localStyles.countdownTimer}>{countdown}</Text>
+                    : <IconButton size={60} style={{ marginTop: 16 }} icon="camera" onPress={takePicture} />
+                }
+            </View >
+        );
+    }
 
     return (
         <View style={localStyles.container}>
-            <View style={{ ...localStyles.cameraContainer, width: windowWidth, height: (windowWidth * (4 / 3)) }}>
-                <Camera useCamera2Api autoFocus ref={cameraRef} style={localStyles.camera} type={type}>
-                    <View style={localStyles.buttonContainer}>
-                        <IconButton size={26} icon="camera-flip-outline" iconColor={MD3Colors.secondary10} onPress={toggleCameraType} />
-                    </View>
-                </Camera >
+            <View style={styles.titleContainer}>
+                <Text style={styles.titleText}>{`Take a picture of your ${side}`}</Text>
             </View>
-            <IconButton size={60} style={{ marginTop: 16 }} icon="camera" onPress={takePicture} />
-            <ScrollView horizontal style={localStyles.galleryContainer} >
-                {takenPictures.map(pic => <Image style={localStyles.galleryImage} key={pic.uri} source={pic.uri} />)}
-            </ScrollView>
+            <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: cameraHeight }}>
+                <Image contentFit='contain' source={takenPicture.uri} style={localStyles.camera} />
+            </View>
+            <View style={localStyles.buttonsRow}>
+                <Button icon='cancel' mode='contained-tonal' buttonColor='red' style={{ marginRight: 16 }} onPress={() => setTakenPicture(null)}>Decline</Button>
+                <Button icon='check' mode='contained-tonal' buttonColor='green' style={{ marginLeft: 16 }} onPress={() => console.log('What\'s next')}>Accept</Button>
+            </View>
         </View >
     );
 }
@@ -103,6 +127,11 @@ const localStyles = StyleSheet.create({
     },
     cameraContainer: {
         width: "100%",
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        overflow: 'hidden'
     },
     camera: {
         flex: 1,
@@ -132,12 +161,31 @@ const localStyles = StyleSheet.create({
     },
     galleryContainer: {
         flexDirection: 'row',
-
     },
 
     galleryImage: {
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5,
         width: 50,
         height: (50 * (4 / 3)),
         margin: 10
+    },
+    bodyImage: {
+        flex: 1,
+        height: '60%',
+        width: 'auto'
+    },
+    buttonsRow: {
+        marginTop: 30,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    countdownTimer: {
+        textAlign: 'center',
+        fontSize: 40,
+        fontWeight: 'bold',
+        marginTop: 30
     }
 })

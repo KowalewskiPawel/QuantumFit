@@ -14,7 +14,8 @@ import {
   RegisterScreenAim,
   RegisterScreenSeniority,
   MainMenuScreen,
-  BodyAnalyzeCameraScreen
+  BodyAnalyzeCameraScreen,
+  BodyAnalyzePictureScreen
 } from "./screens";
 import { withTheme } from "react-native-paper";
 
@@ -26,7 +27,7 @@ const MainScreen = ({ theme }) => {
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName="BodyAnalyzeCamera"
+        initialRouteName="BodyAnalyzePictureScreen"
         screenOptions={{
           headerShown: false,
           gestureEnabled: false,
@@ -52,8 +53,13 @@ const MainScreen = ({ theme }) => {
           component={CameraPermissionScreen}
         />
         <Stack.Screen
-          name="BodyAnalyzeCamera"
+          name="BodyAnalyzeCameraScreen"
           component={BodyAnalyzeCameraScreen}
+        />
+        <Stack.Screen
+          name="BodyAnalyzePictureScreen"
+          component={BodyAnalyzePictureScreen}
+          initialParams={{ side: 'side' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

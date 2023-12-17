@@ -8,3 +8,4 @@ export { RegisterScreenAim } from './RegisterScreenAim';
 export { RegisterScreenSeniority } from './RegisterScreenSeniority';
 export { MainMenuScreen } from './MainMenuScreen';
 export { BodyAnalyzeCameraScreen } from './BodyAnalyzeCameraScreen';
+export { BodyAnalyzePictureScreen } from './BodyAnalyzePictureScreen';
