@@ -95,12 +95,15 @@ export const RegisterScreenSeniority = ({ navigation }) => {
             <Dialog.Title>Do you want to create your account?</Dialog.Title>
             <Dialog.Content>
               <Text style={{ color: "#FFF" }}>
-                Please confirm that you want to create your account
+                Please confirm that you want to create your account. You can always go back and change your information.
               </Text>
             </Dialog.Content>
             <Dialog.Actions>
+            <Button textColor="#FFF" onPress={() => setRegisterDialog(false)}>
+                Go Back
+              </Button>
               <Button textColor="#FFF" onPress={() => setRegisterDialog(false)}>
-                OK
+                Create
               </Button>
             </Dialog.Actions>
           </Dialog>
