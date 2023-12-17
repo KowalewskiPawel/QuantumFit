@@ -5,7 +5,7 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
-import { Button, useTheme, TextInput } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 
 export const EntryScreen = ({ navigation }) => {
@@ -31,6 +31,7 @@ export const EntryScreen = ({ navigation }) => {
                 icon="account-plus"
                 mode="contained"
                 style={{ marginTop: 20, marginBottom: 20, backgroundColor: theme.colors.primary }}
+                onPress={() => navigation.navigate('RegisterEntry')}
               >
                 Sign up
               </Button>

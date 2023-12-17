@@ -4,7 +4,17 @@ import {
   useNavigationContainerRef,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { LoginScreen, CameraPermissionScreen, EntryScreen } from "./screens";
+import {
+  LoginScreen,
+  CameraPermissionScreen,
+  EntryScreen,
+  RegisterScreenEntry,
+  RegisterScreenBody,
+  RegisterScreenLifestyle,
+  RegisterScreenAim,
+  RegisterScreenSeniority,
+  MainMenuScreen,
+} from "./screens";
 import { withTheme } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
@@ -14,15 +24,28 @@ const MainScreen = ({ theme }) => {
 
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
-      <Stack.Navigator initialRouteName="Entry" screenOptions={{ headerShown: false, gestureEnabled: false, animation: "none" }}>
+      <Stack.Navigator
+        initialRouteName="Entry"
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: false,
+          animation: "none",
+        }}
+      >
+        <Stack.Screen name="Entry" component={EntryScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="RegisterEntry" component={RegisterScreenEntry} />
+        <Stack.Screen name="RegisterBody" component={RegisterScreenBody} />
         <Stack.Screen
-          name="Entry"
-          component={EntryScreen}
+          name="RegisterLifestyle"
+          component={RegisterScreenLifestyle}
         />
+        <Stack.Screen name="RegisterAim" component={RegisterScreenAim} />
         <Stack.Screen
-          name="Login"
-          component={LoginScreen}
+          name="RegisterSeniority"
+          component={RegisterScreenSeniority}
         />
+        <Stack.Screen name="MainMenu" component={MainMenuScreen} />
         <Stack.Screen
           name="CameraPermission"
           component={CameraPermissionScreen}
