@@ -3,7 +3,7 @@ import { setSessionState } from "./slice";
 import { auth, signInWithEmailAndPassword } from "../../firebase/firebase-config";
 
 export const loginUser = (username: string, password: string) => async (dispatch: any) => {
-  dispatch(setSessionState({ loading: true }));
+  dispatch(setSessionState({ loading: true, error: null }));
   try {
     const userCredential = await signInWithEmailAndPassword(auth, username, password);
     const user = userCredential.user;

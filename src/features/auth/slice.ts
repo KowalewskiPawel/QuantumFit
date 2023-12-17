@@ -6,6 +6,7 @@ const initialState = {
     username: null,
     loginTime: null,
     loading: false,
+    error: null,
 };
 
 export const authSlice = createSlice({
