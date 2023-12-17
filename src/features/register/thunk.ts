@@ -1,7 +1,14 @@
-import { setRegisterState } from "./slice";
-import { auth, createUserWithEmailAndPassword } from "../../firebase/firebase-config";
+import { resetRegisterState, setRegisterState } from "./slice";
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  db,
+  doc,
+  setDoc,
+} from "../../firebase/firebase-config";
 import { AppThunk } from "../../app/store";
 import { selectRegisterState } from "./state";
+import { setSessionState } from "../auth/slice";
 
 export const registerUser = (): AppThunk => async (dispatch, getState) => {
   dispatch(setRegisterState({ loading: true }));
@@ -9,27 +16,44 @@ export const registerUser = (): AppThunk => async (dispatch, getState) => {
   const registerStore = selectRegisterState(rootState);
 
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, registerStore.email, registerStore.password);
-    console.log("userCredential", userCredential);
-    debugger;
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      registerStore.email,
+      registerStore.password
+    );
     const user = userCredential.user;
 
     const idToken = await user.getIdToken();
 
     const { uid } = user;
 
-    // dispatch(
-    //   setRegisterState({
-    //     token: idToken, 
-    //     username: user.email,
-    //     loginTime: Date.now(),
-    //     loading: false,
-    //     error: null,
-    //   })
-    // );
+    await setDoc(doc(db, "users", uid), {
+      aim: registerStore.aim,
+      exerciseFrequency: registerStore.exerciseFrequency,
+      sex: registerStore.sex,
+      weight: registerStore.weight,
+      height: registerStore.height,
+      yearOfBirth: registerStore.yearOfBirth,
+      username: registerStore.username,
+      photos: [],
+      lifestyle: registerStore.lifeStyle,
+    });
+
+    dispatch(
+      setRegisterState({ isRegistrationSuccessful: true, loading: false })
+    );
+    dispatch(
+      setSessionState({
+        token: idToken,
+        username: user.email,
+        loginTime: Date.now(),
+        loading: false,
+        error: null,
+      })
+    );
   } catch (error) {
     let msg = error.message;
-    if (msg.includes('invalid-credentials')) {
+    if (msg.includes("invalid-credentials")) {
       msg = "Invalid email or password";
     }
     dispatch(setRegisterState({ loading: false, errorMessage: msg }));

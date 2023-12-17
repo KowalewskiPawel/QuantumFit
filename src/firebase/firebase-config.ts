@@ -9,6 +9,7 @@ import {
 import ReactNativeAsyncStorage, { AsyncStorageStatic } from '@react-native-async-storage/async-storage';
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 
 import {
   getStorage,
@@ -34,6 +35,7 @@ if (getApps().length === 0) {
 
 const fbApp = getApp();
 const fbStorage = getStorage();
+const db = getFirestore(fbApp);
 const auth = getAuth(fbApp);
 
 // const auth = initializeAuth(fbApp, {
@@ -75,4 +77,4 @@ const uploadToFirebase = async (uri, name, onProgress) => {
   });
 };
 
-export { fbApp, fbStorage, uploadToFirebase, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };
+export { fbApp, fbStorage, db, doc, setDoc, uploadToFirebase, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };

@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { View, SafeAreaView, Image } from "react-native";
-import { Button, Dialog, Portal, Text, useTheme } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Dialog,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import Slider from "@react-native-community/slider";
 import { styles } from "../styles/globalStyles";
 import { LoadingSpinner, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { registerUser, selectRegisterState } from "../features/register";
-import { setRegisterState } from "../features/register/slice";
+import {
+  resetRegisterState,
+  setRegisterState,
+} from "../features/register/slice";
 
 export const RegisterScreenSeniority = ({ navigation }) => {
   const LogoEntry = require("../assets/logoEntry.png");
@@ -20,16 +30,27 @@ export const RegisterScreenSeniority = ({ navigation }) => {
   const theme = useTheme();
 
   const validateRegistration = () => {
-      dispatch(
-        setRegisterState({
-          gymExperience: selectedExerciseFrequency,
-        })
-      );
-      setRegisterDialog(true);
+    dispatch(
+      setRegisterState({
+        gymExperience: selectedExerciseFrequency,
+      })
+    );
+    setRegisterDialog(true);
   };
 
   const createAccount = () => {
     dispatch(registerUser());
+  };
+
+  const cancelRegistration = () => {
+    dispatch(setRegisterState({ errorMessage: null }));
+    setRegisterDialog(false);
+  };
+
+  const finishRegistration = () => {
+    setRegisterDialog(false);
+    navigation.navigate("MainMenu");
+    dispatch(resetRegisterState());
   };
 
   const renderExerciseFrequency = () => {
@@ -53,13 +74,14 @@ export const RegisterScreenSeniority = ({ navigation }) => {
           <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
         </View>
         <View style={{ display: "flex", alignItems: "center" }}>
-          <Text variant="bodyLarge" style={{ marginTop: 20, marginBottom: 10, marginHorizontal: 10 }}>
+          <Text
+            variant="bodyLarge"
+            style={{ marginTop: 20, marginBottom: 10, marginHorizontal: 10 }}
+          >
             We are almost done! Just tell us how many months, have you been
             working out?
           </Text>
-          <Text variant="titleLarge">
-            {renderExerciseFrequency()}
-          </Text>
+          <Text variant="titleLarge">{renderExerciseFrequency()}</Text>
           <Slider
             style={{ width: 250, height: 20, marginTop: 10, marginBottom: 10 }}
             minimumValue={1}
@@ -97,26 +119,56 @@ export const RegisterScreenSeniority = ({ navigation }) => {
             }}
           >
             <Dialog.Title>Do you want to create your account?</Dialog.Title>
-            <Dialog.Content>
-              <Text style={{ color: "#FFF" }}>
-                Please confirm that you want to create your account. You can always go back and change your information.
-              </Text>
-            </Dialog.Content>
-            {registerStore.errorMessage && (
-              <Dialog.Content>
-                <Text style={{ color: theme.colors.error }}>
-                  {registerStore.errorMessage}
-                </Text>
-              </Dialog.Content>
+            {registerStore.isRegistrationSuccessful ? (
+              <View>
+                <Dialog.Content>
+                  <Text style={{ color: "#5AF113" }}>
+                    Your account has been created successfully!
+                  </Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                  <Button textColor="#FFF" onPress={finishRegistration}>
+                    OK
+                  </Button>
+                </Dialog.Actions>
+              </View>
+            ) : (
+              <View>
+                <Dialog.Content>
+                  <Text style={{ color: "#FFF" }}>
+                    Please confirm that you want to create your account. You can
+                    always go back and change your information.
+                  </Text>
+                </Dialog.Content>
+                {registerStore.errorMessage && (
+                  <Dialog.Content>
+                    <Text style={{ color: theme.colors.error }}>
+                      {registerStore.errorMessage}
+                    </Text>
+                  </Dialog.Content>
+                )}
+                <Dialog.Actions>
+                  <Button
+                    textColor="#FFF"
+                    onPress={cancelRegistration}
+                    disabled={registerStore.loading}
+                  >
+                    Go Back
+                  </Button>
+                  <Button
+                    textColor="#FFF"
+                    onPress={createAccount}
+                    disabled={registerStore.loading}
+                  >
+                    {registerStore.loading ? (
+                      <ActivityIndicator size="large" color="#0000ff" />
+                    ) : (
+                      "Create Account"
+                    )}
+                  </Button>
+                </Dialog.Actions>
+              </View>
             )}
-            <Dialog.Actions>
-            <Button textColor="#FFF" onPress={() => setRegisterDialog(false)} disabled={registerStore.loading}>
-                Go Back
-              </Button>
-              <Button textColor="#FFF" onPress={createAccount} disabled={registerStore.loading}>
-                {registerStore.loading ? <LoadingSpinner /> : "Create Account"}
-              </Button>
-            </Dialog.Actions>
           </Dialog>
         </Portal>
       </View>
