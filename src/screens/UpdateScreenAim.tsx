@@ -113,7 +113,8 @@ export const UpdateScreenAim = ({ navigation }) => {
             <Dialog.Title>Please Select Aim</Dialog.Title>
             <Dialog.Content>
               <Text style={{ color: "#FFF" }}>
-                Please select aim that you want to achieve, and then click "update".
+                Please select aim that you want to achieve, and then click
+                "update".
               </Text>
             </Dialog.Content>
             <Dialog.Actions>

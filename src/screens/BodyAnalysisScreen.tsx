@@ -24,7 +24,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         const { response, text } = await askGeminiText(question);
         setGeminiResponse({ response, text });
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -41,7 +41,9 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         </View>
         <View>
           <Text style={{ color: theme.colors.onBackground }}>
-            {geminiResponse ? geminiResponse.text : "Your results are currently loading..."}
+            {geminiResponse
+              ? geminiResponse.text
+              : "Your results are currently loading..."}
           </Text>
         </View>
         <Button

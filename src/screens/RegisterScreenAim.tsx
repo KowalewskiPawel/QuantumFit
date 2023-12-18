@@ -107,7 +107,8 @@ export const RegisterScreenAim = ({ navigation }) => {
             <Dialog.Title>Please Select Aim</Dialog.Title>
             <Dialog.Content>
               <Text style={{ color: "#FFF" }}>
-                Please select aim that you want to achieve, and then click "continue".
+                Please select aim that you want to achieve, and then click
+                "continue".
               </Text>
             </Dialog.Content>
             <Dialog.Actions>

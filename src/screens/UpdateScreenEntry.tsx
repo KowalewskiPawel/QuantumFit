@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  SafeAreaView,
-} from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
 import { Button, useTheme, TextInput } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
@@ -25,7 +21,7 @@ export const UpdateScreenEntry = ({ navigation }) => {
       setIsError(false);
       dispatch(setUserState({ username }));
       dispatch(updateUserInfo({ username }));
-      navigation.navigate('UpdateBody');
+      navigation.navigate("UpdateBody");
     }
   };
 
@@ -37,7 +33,7 @@ export const UpdateScreenEntry = ({ navigation }) => {
             Update Information
           </Text>
         </View>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: "center" }}>
           <TextInput
             mode="outlined"
             label="Username"

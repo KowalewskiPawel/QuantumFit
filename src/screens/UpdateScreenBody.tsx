@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Text, View, SafeAreaView } from "react-native";
-import { Button, useTheme, TextInput, SegmentedButtons } from "react-native-paper";
+import {
+  Button,
+  useTheme,
+  TextInput,
+  SegmentedButtons,
+} from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
@@ -13,9 +18,7 @@ export const UpdateScreenBody = ({ navigation }) => {
   const [sex, setSex] = useState(userState.sex || "male");
   const [height, setHeight] = useState(userState.height || "");
   const [weight, setWeight] = useState(userState.weight || "");
-  const [yearOfBirth, setYearOfBirth] = useState(
-    userState.yearOfBirth || ""
-  );
+  const [yearOfBirth, setYearOfBirth] = useState(userState.yearOfBirth || "");
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
 
@@ -52,14 +55,14 @@ export const UpdateScreenBody = ({ navigation }) => {
             style={{ width: "100%", marginTop: 20, marginBottom: 40 }}
             buttons={[
               {
-                value: 'male',
-                label: 'Male',
-                icon: sex === 'male' ? 'check' : null
+                value: "male",
+                label: "Male",
+                icon: sex === "male" ? "check" : null,
               },
               {
-                value: 'female',
-                label: 'Female',
-                icon: sex === 'female' ? 'check' : null
+                value: "female",
+                label: "Female",
+                icon: sex === "female" ? "check" : null,
               },
             ]}
           />

@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Text, View, SafeAreaView } from "react-native";
-import { Button, useTheme, TextInput, SegmentedButtons } from "react-native-paper";
+import {
+  Button,
+  useTheme,
+  TextInput,
+  SegmentedButtons,
+} from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
@@ -45,23 +50,23 @@ export const RegisterScreenBody = ({ navigation }) => {
           </Text>
         </View>
         <View>
-        <SegmentedButtons
-        value={sex}
-        onValueChange={setSex}
-        style={{ marginTop: 20, marginBottom: 40 }}
-        buttons={[
-          {
-            value: 'male',
-            label: 'Male',
-            icon: sex === 'male' ? 'check' : null
-          },
-          {
-            value: 'female',
-            label: 'Female',
-            icon: sex === 'female' ? 'check' : null
-          },
-        ]}
-      />
+          <SegmentedButtons
+            value={sex}
+            onValueChange={setSex}
+            style={{ marginTop: 20, marginBottom: 40 }}
+            buttons={[
+              {
+                value: "male",
+                label: "Male",
+                icon: sex === "male" ? "check" : null,
+              },
+              {
+                value: "female",
+                label: "Female",
+                icon: sex === "female" ? "check" : null,
+              },
+            ]}
+          />
           <TextInput
             mode="outlined"
             value={height}

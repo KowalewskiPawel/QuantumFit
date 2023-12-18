@@ -4,10 +4,14 @@ import {
   FIREBASE_APP_ID,
   FIREBASE_PROJECT_ID,
   FIREBASE_AUTH_DOMAIN,
-  FIREBASE_MESSAGING_SENDER_ID
+  FIREBASE_MESSAGING_SENDER_ID,
 } from "@env";
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  getAuth,
+} from "firebase/auth";
 import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore";
 
 import {
@@ -71,4 +75,14 @@ const uploadToFirebase = async (uri, name, onProgress) => {
   });
 };
 
-export { fbStorage, db, doc, getDoc, setDoc, uploadToFirebase, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };
+export {
+  fbStorage,
+  db,
+  doc,
+  getDoc,
+  setDoc,
+  uploadToFirebase,
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+};
