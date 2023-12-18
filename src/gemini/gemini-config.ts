@@ -19,9 +19,6 @@ const fileToGenerativePart = async (file) => {
   };
 }
 
-
-
-
 export const askGeminiText = async (question: string) => {
   const model = geminiAI.getGenerativeModel({ model: "gemini-pro" });
   const result = await model.generateContent(question);
