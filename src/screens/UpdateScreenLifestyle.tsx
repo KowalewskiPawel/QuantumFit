@@ -6,34 +6,10 @@ import { CustomCard, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectUserState, updateUserInfo } from "../features/user";
 import { setUserState } from "../features/user/slice";
+import { LIFESTYLES } from "../consts/lifestyles";
 
 export const UpdateScreenLifestyle = ({ navigation }) => {
   const dispatch = useAppDispatch();
-
-  const LIFESTYLES = [
-    {
-      title: "Sedentary",
-      content:
-        "Lack of exercise and sedentary lifestyle (e.g. work in the office)",
-      icon: "sofa-single",
-    },
-    {
-      title: "Low",
-      content:
-        "Sedentary lifestyle and having a walk or working out 1-2 times a week",
-      icon: "run",
-    },
-    {
-      title: "Moderate",
-      content: "Moderate physical activity (e.g. working out 3-5 times a week)",
-      icon: "run-fast",
-    },
-    {
-      title: "High",
-      content: "High physical activity (e.g. working out 5-7 times a week)",
-      icon: "weight-lifter",
-    },
-  ];
   const userState = useAppSelector(selectUserState);
   const [selectedLifestyle, setSelectedLifestyle] = useState(
     userState.lifestyle || ""
