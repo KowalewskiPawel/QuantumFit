@@ -72,7 +72,10 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="UpdateEntry" component={UpdateScreenEntry} />
         <Stack.Screen name="UpdateBody" component={UpdateScreenBody} />
-        <Stack.Screen name="UpdateLifestyle" component={UpdateScreenLifestyle} />
+        <Stack.Screen
+          name="UpdateLifestyle"
+          component={UpdateScreenLifestyle}
+        />
         <Stack.Screen name="UpdateAim" component={UpdateScreenAim} />
         <Stack.Screen
           name="CameraPermission"

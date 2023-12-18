@@ -49,7 +49,7 @@ export const UpdateScreenLifestyle = ({ navigation }) => {
       dispatch(setUserState({ lifestyle: selectedLifestyle }));
       dispatch(updateUserInfo({ lifestyle: selectedLifestyle }));
       navigation.navigate("UpdateAim");
-    } 
+    }
   };
 
   return (

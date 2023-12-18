@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  Text,
-  View,
-  SafeAreaView,
-} from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
 import { Button, useTheme, TextInput } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
@@ -17,7 +13,9 @@ export const RegisterScreenEntry = ({ navigation }) => {
   const [username, setUsername] = useState(registerStore.username || "");
   const [email, setEmail] = useState(registerStore.email || "");
   const [password, setPassword] = useState(registerStore.password || "");
-  const [passwordRepeat, setPasswordRepeat] = useState(registerStore.password ||"");
+  const [passwordRepeat, setPasswordRepeat] = useState(
+    registerStore.password || ""
+  );
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
 
@@ -27,10 +25,9 @@ export const RegisterScreenEntry = ({ navigation }) => {
     } else {
       setIsError(false);
       dispatch(setRegisterState({ username, email, password }));
-      navigation.navigate('RegisterBody');
+      navigation.navigate("RegisterBody");
     }
-  }
-
+  };
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
