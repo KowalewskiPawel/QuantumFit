@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Text, View, SafeAreaView } from "react-native";
 import { Button, useTheme, TextInput, SegmentedButtons } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
@@ -45,24 +45,24 @@ export const UpdateScreenBody = ({ navigation }) => {
             Update Information
           </Text>
         </View>
-        <View>
-        <SegmentedButtons
-        value={sex}
-        onValueChange={setSex}
-        style={{ marginTop: 20, marginBottom: 40 }}
-        buttons={[
-          {
-            value: 'male',
-            label: 'Male',
-            icon: sex === 'male' ? 'check' : null
-          },
-          {
-            value: 'female',
-            label: 'Female',
-            icon: sex === 'female' ? 'check' : null
-          },
-        ]}
-      />
+        <View style={{ alignItems: "center" }}>
+          <SegmentedButtons
+            value={sex}
+            onValueChange={setSex}
+            style={{ width: "100%", marginTop: 20, marginBottom: 40 }}
+            buttons={[
+              {
+                value: 'male',
+                label: 'Male',
+                icon: sex === 'male' ? 'check' : null
+              },
+              {
+                value: 'female',
+                label: 'Female',
+                icon: sex === 'female' ? 'check' : null
+              },
+            ]}
+          />
           <TextInput
             mode="outlined"
             value={height}

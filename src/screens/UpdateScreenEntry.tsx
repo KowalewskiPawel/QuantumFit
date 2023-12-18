@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -27,7 +27,7 @@ export const UpdateScreenEntry = ({ navigation }) => {
       dispatch(updateUserInfo({ username }));
       navigation.navigate('UpdateBody');
     }
-  }
+  };
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
@@ -37,7 +37,7 @@ export const UpdateScreenEntry = ({ navigation }) => {
             Update Information
           </Text>
         </View>
-        <View>
+        <View style={{ alignItems: 'center' }}>
           <TextInput
             mode="outlined"
             label="Username"
