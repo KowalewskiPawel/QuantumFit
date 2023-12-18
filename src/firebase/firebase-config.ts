@@ -6,7 +6,7 @@ import {
   FIREBASE_AUTH_DOMAIN,
   FIREBASE_MESSAGING_SENDER_ID
 } from "@env";
-import { initializeApp, getApp, getApps } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore";
 
@@ -27,15 +27,10 @@ const firebaseConfig = {
   messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
 };
 
-if (getApps().length === 0) {
-  initializeApp(firebaseConfig);
-}
-
-
-const fbApp = getApp();
+const app = initializeApp(firebaseConfig);
 const fbStorage = getStorage();
-const db = getFirestore(fbApp);
-const auth = getAuth(fbApp);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 // const auth = initializeAuth(fbApp, {
 //   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
@@ -76,4 +71,4 @@ const uploadToFirebase = async (uri, name, onProgress) => {
   });
 };
 
-export { fbApp, fbStorage, db, doc, getDoc, setDoc, uploadToFirebase, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };
+export { fbStorage, db, doc, getDoc, setDoc, uploadToFirebase, auth, createUserWithEmailAndPassword, signInWithEmailAndPassword };

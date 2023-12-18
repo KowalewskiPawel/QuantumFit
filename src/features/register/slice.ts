@@ -10,7 +10,7 @@ const initialState = {
   height: null,
   weight: null,
   yearOfBirth: null,
-  lifeStyle: null,
+  lifestyle: null,
   aim: null,
   exerciseFrequency: null,
   photos: null,
@@ -27,7 +27,7 @@ export const registerSlice = createSlice({
       Object.assign(state, action.payload);
     },
     resetRegisterState(state) {
-      state = initialState;
+      Object.assign(state, initialState);
     },
   },
 });

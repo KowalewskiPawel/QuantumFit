@@ -7,7 +7,7 @@ export type UserState = {
     height: number | null;
     weight: number | null;
     yearOfBirth: number | null;
-    lifeStyle: string | null;
+    lifestyle: string | null;
     aim: string | null;
     exerciseFrequency: number | null;
     photos: string[] | null;

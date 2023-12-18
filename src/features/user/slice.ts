@@ -8,7 +8,7 @@ const initialState = {
   height: null,
   weight: null,
   yearOfBirth: null,
-  lifeStyle: null,
+  lifestyle: null,
   aim: null,
   exerciseFrequency: null,
   photos: null,
@@ -25,7 +25,7 @@ export const userSlice = createSlice({
       Object.assign(state, action.payload);
     },
     resetUserState(state) {
-      state = initialState;
+      Object.assign(state, initialState);
     },
   },
 });
