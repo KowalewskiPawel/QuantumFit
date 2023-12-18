@@ -18,6 +18,10 @@ import {
   MyTrainingsScreen,
   MyDietScreen,
   SettingsScreen,
+  UpdateScreenEntry,
+  UpdateScreenBody,
+  UpdateScreenLifestyle,
+  UpdateScreenAim,
 } from "./screens";
 import { withTheme } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./app/store";
@@ -66,6 +70,10 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen name="MyTrainings" component={MyTrainingsScreen} />
         <Stack.Screen name="MyDiet" component={MyDietScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="UpdateEntry" component={UpdateScreenEntry} />
+        <Stack.Screen name="UpdateBody" component={UpdateScreenBody} />
+        <Stack.Screen name="UpdateLifestyle" component={UpdateScreenLifestyle} />
+        <Stack.Screen name="UpdateAim" component={UpdateScreenAim} />
         <Stack.Screen
           name="CameraPermission"
           component={CameraPermissionScreen}

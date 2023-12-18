@@ -11,3 +11,7 @@ export { BodyAnalysisScreen } from './BodyAnalysisScreen';
 export { MyTrainingsScreen } from './MyTrainingsScreen';
 export { MyDietScreen } from './MyDietScreen';
 export { SettingsScreen } from './SettingsScreen';
+export { UpdateScreenEntry } from './UpdateScreenEntry';
+export { UpdateScreenBody } from './UpdateScreenBody';
+export { UpdateScreenLifestyle } from './UpdateScreenLifestyle';
+export { UpdateScreenAim } from './UpdateScreenAim';

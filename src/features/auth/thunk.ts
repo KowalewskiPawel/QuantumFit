@@ -1,6 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signOut } from "firebase/auth";
 import { setSessionState } from "./slice";
 import { auth, signInWithEmailAndPassword } from "../../firebase/firebase-config";
+import { resetRegisterState } from "../register/slice";
 
 export const loginUser = (username: string, password: string) => async (dispatch: any) => {
   dispatch(setSessionState({ loading: true, error: null }));
@@ -30,6 +31,7 @@ export const loginUser = (username: string, password: string) => async (dispatch
 };
 
 export const logoutUser = () => async (dispatch) => {
-  await AsyncStorage.removeItem("userToken");
+  signOut(auth);
+  dispatch(resetRegisterState());
   dispatch(setSessionState({ token: null, username: null, loginTime: null, loading: false, error: null }));
 };

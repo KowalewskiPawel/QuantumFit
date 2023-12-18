@@ -36,7 +36,7 @@ export const registerUser = (): AppThunk => async (dispatch, getState) => {
       yearOfBirth: registerStore.yearOfBirth,
       username: registerStore.username,
       photos: [],
-      lifestyle: registerStore.lifeStyle,
+      lifestyle: registerStore.lifestyle,
     });
 
     dispatch(
