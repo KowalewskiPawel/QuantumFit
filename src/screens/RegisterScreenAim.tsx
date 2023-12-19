@@ -7,21 +7,10 @@ import { CustomCard, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectRegisterState } from "../features/register";
 import { setRegisterState } from "../features/register/slice";
+import { AIMS } from "../consts/aims";
 
 export const RegisterScreenAim = ({ navigation }) => {
   const dispatch = useAppDispatch();
-
-  const AIMS = [
-    {
-      content: "I want to lose weight",
-    },
-    {
-      content: "I want to keep my weight",
-    },
-    {
-      content: "I want to gain weight and muscle mass",
-    },
-  ];
   const registerStore = useAppSelector(selectRegisterState);
   const [selectedAim, setSelectedAim] = useState(registerStore.aim || "");
   const [selectedExerciseFrequency, setSelectedExerciseFrequency] = useState(
