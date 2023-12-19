@@ -14,6 +14,8 @@ import {
   RegisterScreenAim,
   RegisterScreenSeniority,
   MainMenuScreen,
+  BodyAnalysisCameraScreen,
+  BodyAnalysisPictureScreen,
   BodyAnalysisScreen,
   MyTrainingsScreen,
   MyDietScreen,
@@ -45,7 +47,7 @@ const MainScreen = ({ theme }) => {
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName="Entry"
+        initialRouteName="BodyAnalyzePictureScreen"
         screenOptions={{
           headerShown: false,
           gestureEnabled: false,
@@ -80,6 +82,15 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen
           name="CameraPermission"
           component={CameraPermissionScreen}
+        />
+        <Stack.Screen
+          name="BodyAnalysisCameraScreen"
+          component={BodyAnalysisCameraScreen}
+        />
+        <Stack.Screen
+          name="BodyAnalysisPictureScreen"
+          component={BodyAnalysisPictureScreen}
+          initialParams={{ side: 'front' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

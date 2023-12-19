@@ -39,7 +39,7 @@ export const MainMenuScreen = ({ navigation }) => {
         <Button
           mode="contained"
           style={{ marginTop: 20, backgroundColor: theme.colors.primary }}
-          onPress={() => navigation.navigate("BodyAnalysis")}
+          onPress={() => navigation.navigate("BodyAnalysisPictureScreen", {side: 'front'})}
         >
           Body Analysis
         </Button>

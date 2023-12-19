@@ -5,6 +5,7 @@ import {
   db,
   doc,
   setDoc,
+  updateDoc
 } from "../../firebase/firebase-config";
 import { AppThunk } from "../../app/store";
 import { selectRegisterState } from "./state";
