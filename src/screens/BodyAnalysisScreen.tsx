@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Image, Text, View, SafeAreaView } from "react-native";
-import { Button, Surface, useTheme } from "react-native-paper";
+import { Image, View, SafeAreaView, StyleSheet } from "react-native";
+import { Button, Surface, useTheme, Text } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { askGeminiText, askGeminiVision } from "../gemini/gemini-config";
 import { selectUserState } from "../features/user";
-import { useAppSelector } from "../app/store";
+import { useAppDispatch, useAppSelector } from "../app/store";
 import { LoadingSpinner, StackRow } from "../components";
 import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
+import { resetBodyPhotosState } from "../features/bodyPhotos/slice";
 
 export const BodyAnalysisScreen = ({ navigation }) => {
   const AnalysePosture = require("../assets/analyse-body.png");
@@ -19,9 +20,11 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     sex,
     exerciseFrequency,
     gymExperience,
+    photos
   } = useAppSelector(selectUserState);
   const [geminiResponse, setGeminiResponse] = useState(null);
   const theme = useTheme();
+  const dispatch = useAppDispatch();
 
   const fetchAnalysis = async () => {
     const usersAge = new Date().getFullYear() - yearOfBirth;
@@ -38,15 +41,18 @@ export const BodyAnalysisScreen = ({ navigation }) => {
 
     try {
       // Temporarily add photo urls to second argument of askGeminiVision as a string entry to the array of possible values
-      const { text } = await askGeminiVision(bodyAnalysisPrompt, [
-        "",
-      ]);
+      const { text } = await askGeminiVision(bodyAnalysisPrompt, photos);
       const parsedText = JSON.parse(text.split("```json")[1].split("```")[0]);
       setGeminiResponse(parsedText);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  const handleComplete = () => {
+    navigation.navigate('MainMenu');
+    dispatch(resetBodyPhotosState())
+  }
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
@@ -63,7 +69,10 @@ export const BodyAnalysisScreen = ({ navigation }) => {
           </Text>
         </View>
         {!geminiResponse ? (
-          <LoadingSpinner />
+          <View style={localStyles.loadingScreen}>
+            <Text style={{marginBottom: 30}} variant="headlineMedium">Analysing your body</Text>
+            <LoadingSpinner />
+          </View>
         ) : (
           <View>
             <StackRow>
@@ -211,7 +220,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         <StackRow>
           <Button
             mode="contained"
-            onPress={() => navigation.goBack()}
+            onPress={handleComplete}
             style={{
               marginTop: 20,
               marginBottom: 20,
@@ -233,3 +242,12 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
+const localStyles = StyleSheet.create({
+  loadingScreen: {
+    height: 200,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+})

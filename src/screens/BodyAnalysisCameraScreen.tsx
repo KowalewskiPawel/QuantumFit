@@ -10,6 +10,8 @@ import { selectAuthState } from '../features/auth';
 import { setUserState } from '../features/user/slice';
 import { selectUserState } from '../features/user';
 import { updateUserInfo } from '../features/user/thunk';
+import { selectBodyPhotosState } from '../features/bodyPhotos';
+import { setBodyPhotosState } from '../features/bodyPhotos/slice';
 
 const nextSideMap = {
     front: 'side',
@@ -29,6 +31,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const countdownTimer = useRef(null);
     const { uid } = useAppSelector(selectAuthState);
     const { photos } = useAppSelector(selectUserState);
+    const bodyPhotos = useAppSelector(selectBodyPhotosState)
 
 
     const [type, setType] = useState(CameraType.front);
@@ -70,10 +73,15 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const handlePictureUpload = async () => {
         try {
             const uploadResponse: any = await uploadToFirebase(takenPicture.uri, `${uid}_${side}_${Date.now().toFixed()}`, (currentUploadStatus) => { console.log({ currentUploadStatus }) })
-            const newPhotos = [...photos, uploadResponse.downloadUrl ]
-            dispatch(setUserState({photos: newPhotos}));
+            const newPhotos = ['https://firebasestorage.googleapis.com/v0/b/quantumfit-ee5a9.appspot.com/o/images%2FmpGt8hBhQWeQzNPycKCcRUEm61M2_front_1703008652818?alt=media&token=4e8b1ea9-447e-49be-8c5a-d619ab530aeb']
+            dispatch(setBodyPhotosState([...bodyPhotos, uploadResponse.downloadUrl]));
             dispatch(updateUserInfo({photos: newPhotos}));
-            navigation.navigate('BodyAnalysisPictureScreen', { side: nextSideMap[side] })
+
+            if (side == 'back') {
+                navigation.navigate('BodyAnalysis')
+            } else {
+                navigation.navigate('BodyAnalysisPictureScreen', { side: nextSideMap[side] })
+            }
         } catch (error) {
             console.error(error.message)
         }

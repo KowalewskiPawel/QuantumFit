@@ -20,7 +20,7 @@ export const getEstimateBodyFatAndTargetPrompt = (
   aim: string,
   sex: string,
   exerciseFrequency: number,
-  gymExperience: number
+  gymExperience: number,
 ) => `
 Please follow strictly the requirements below, and always output the results in the JSON format.
 Estimate the body fat level of the person's body from the picture(s) provided.
