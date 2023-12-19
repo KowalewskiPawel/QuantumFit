@@ -10,7 +10,8 @@ import {
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectAuthState, loginUser } from "../features/auth";
 import { styles } from "../styles/globalStyles";
-import { LoadingSpinner, StackRow } from "../components";
+import { StackRow } from "../components";
+import { loadUserInfo } from "../features/user";
 
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
@@ -27,11 +28,11 @@ export const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (token) {
+      dispatch(loadUserInfo());
       navigation.navigate("MainMenu");
     }
-  }
-  , [token]);
-  
+  }, [token]);
+
   return (
     <SafeAreaView style={{ ...styles.container }}>
       <View>
@@ -74,7 +75,9 @@ export const LoginScreen = ({ navigation }) => {
             </Text>
           </StackRow>
           {error && (
-            <Text style={{ color: theme.colors.error, alignSelf: "center" }}>{error}</Text>
+            <Text style={{ color: theme.colors.error, alignSelf: "center" }}>
+              {error}
+            </Text>
           )}
           <StackRow>
             <Button

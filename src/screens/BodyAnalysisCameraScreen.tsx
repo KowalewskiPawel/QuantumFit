@@ -4,10 +4,16 @@ import { useEffect, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Button, IconButton, MD3Colors, Text } from 'react-native-paper'
 import { styles } from "../styles/globalStyles";
-import { check } from 'yargs';
+import { uploadToFirebase } from '../firebase/firebase-config';
+import { useAppDispatch, useAppSelector } from '../app/store';
+import { selectAuthState } from '../features/auth';
+import { setUserState } from '../features/user/slice';
+import { selectUserState } from '../features/user';
+import { updateUserInfo } from '../features/user/thunk';
 
 
-export const BodyAnalyzeCameraScreen = ({ route, navigation }) => {
+export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
+    const dispatch = useAppDispatch();
     const { side } = route.params;
     const windowWidth = Dimensions.get('window').width;
     const cameraWidth = windowWidth * 0.9;
@@ -15,6 +21,9 @@ export const BodyAnalyzeCameraScreen = ({ route, navigation }) => {
     const [countdown, setCountdown] = useState(5);
     const [showCountDown, setShowCountdown] = useState(false);
     const countdownTimer = useRef(null);
+    const { uid } = useAppSelector(selectAuthState);
+    const { photos } = useAppSelector(selectUserState);
+
 
     const [type, setType] = useState(CameraType.front);
     const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -22,25 +31,9 @@ export const BodyAnalyzeCameraScreen = ({ route, navigation }) => {
     const takePictureTimeout = useRef(null);
     const [takenPicture, setTakenPicture] = useState<CameraCapturedPicture>();
 
-    // const _getAvailableSizes = async () => {
-    //     try {
-    //         console.log("I am Trying motherfucker!");
-    //         const sizes = await cameraRef.current.getAvailablePictureSizesAsync();
-    //         console.log("NEXT PLACE");
-    //         setSizes(sizes);
-    //         console.log({ sizes });
-
-    //         const ratios = await cameraRef.current.getSupportedRatiosAsync();
-    //         console.log({ ratios })
-    //         setSupportedRatios(ratios)
-    //     } catch (e) {
-    //         setSizes([])
-    //     }
-    // }
-
     const takePicture = () => {
-        setShowCountdown(true);
         setCountdown(5);
+        setShowCountdown(true);
         takePictureTimeout.current = setTimeout(async () => {
             const picture = await cameraRef.current.takePictureAsync({
                 quality: 0.75,
@@ -54,12 +47,30 @@ export const BodyAnalyzeCameraScreen = ({ route, navigation }) => {
 
     useEffect(() => {
         if (countdown >= 5) {
+            clearInterval(countdownTimer.current);
             countdownTimer.current = setInterval(() => setCountdown((v) => v - 1), 1000);
         }
         if (countdown === 0) {
-            clearInterval(countdownTimer.current)
+            clearInterval(countdownTimer.current);
         }
-    }, [countdown])
+    }, [countdown]);
+
+    useEffect(() => {
+        if (!!takenPicture) {
+            clearTimeout(takePictureTimeout.current);
+        }
+    }, [takenPicture])
+
+    const handlePictureUpload = async () => {
+        try {
+            const uploadResponse: any = await uploadToFirebase(takenPicture.uri, `${uid}_${side}_${Date.now().toFixed()}`, (currentUploadStatus) => { console.log({ currentUploadStatus }) })
+            const newPhotos = [...photos, uploadResponse.downloadUrl ]
+            dispatch(setUserState({photos: newPhotos}));
+            dispatch(updateUserInfo('photos', newPhotos))
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
 
 
     if (!permission) {
@@ -111,7 +122,7 @@ export const BodyAnalyzeCameraScreen = ({ route, navigation }) => {
             </View>
             <View style={localStyles.buttonsRow}>
                 <Button icon='cancel' mode='contained-tonal' buttonColor='red' style={{ marginRight: 16 }} onPress={() => setTakenPicture(null)}>Decline</Button>
-                <Button icon='check' mode='contained-tonal' buttonColor='green' style={{ marginLeft: 16 }} onPress={() => console.log('What\'s next')}>Accept</Button>
+                <Button icon='check' mode='contained-tonal' buttonColor='green' style={{ marginLeft: 16 }} onPress={handlePictureUpload}>Accept</Button>
             </View>
         </View >
     );

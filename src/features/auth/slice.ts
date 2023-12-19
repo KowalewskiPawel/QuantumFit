@@ -4,6 +4,7 @@ import type { AuthState } from './state';
 const initialState = {
     token: null,
     username: null,
+    uid: null,
     loginTime: null,
     loading: false,
     error: null,

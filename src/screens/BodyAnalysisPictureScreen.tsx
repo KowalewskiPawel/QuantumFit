@@ -1,16 +1,14 @@
-import { Camera, CameraCapturedPicture, CameraType, ImageType } from 'expo-camera';
 import { Image } from 'expo-image'
-import { useEffect, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View, ImageSourcePropType, ScrollView } from 'react-native';
-import { Button, IconButton, List, MD3Colors, Modal, Portal, Surface, Text } from 'react-native-paper'
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-paper'
 import { styles } from "../styles/globalStyles";
 
 
-export const BodyAnalyzePictureScreen = ({ route, navigation }) => {
+export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
     const { side } = route.params;
     const windowWidth = Dimensions.get('window').width;
     const cameraWidth = windowWidth * 0.9;
-    const cameraHeight = cameraWidth * (4 / 3);
+    // const cameraHeight = cameraWidth * (4 / 3);
 
     const bodyFront = require('../assets/images/body_front.png');
     const bodyRight = require('../assets/images/body_right.png');
@@ -23,7 +21,15 @@ export const BodyAnalyzePictureScreen = ({ route, navigation }) => {
     }
 
     const navigateToPhoto = () => {
-        navigation.navigate('BodyAnalyzeCameraScreen', { side })
+        navigation.navigate('BodyAnalysisCameraScreen', { side })
+    }
+    
+    const handleSkip = () => {
+        if(side == 'back') {
+            navigation.navigate('MainMenu')
+        } else {
+            navigation.navigate('BodyAnalysisPictureScreen', { side: 'back' })
+        }
     }
 
     return (
@@ -31,7 +37,7 @@ export const BodyAnalyzePictureScreen = ({ route, navigation }) => {
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText}>{`Take a snapshot of your ${side}`}</Text>
             </View>
-            <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: cameraHeight }}>
+            <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: 400 }}>
                 <Image contentFit='contain' style={localStyles.bodyImage} source={imageSources[side]} />
             </View>
             <Button
@@ -43,6 +49,16 @@ export const BodyAnalyzePictureScreen = ({ route, navigation }) => {
                 style={{ marginTop: 40, padding: 4 }}>
                 Take a photo
             </Button>
+            {side !== 'front' &&
+                <Button
+                    onPress={handleSkip}
+                    uppercase
+                    mode='outlined'
+                    labelStyle={{ fontSize: 18 }}
+                    style={{ marginTop: 15, padding: 4 }}>
+                    Skip this part
+                </Button>
+            }
         </View >
     );
 }

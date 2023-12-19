@@ -5,13 +5,14 @@ import {
   db,
   doc,
   setDoc,
+  updateDoc
 } from "../../firebase/firebase-config";
 import { AppThunk } from "../../app/store";
 import { selectRegisterState } from "./state";
 import { setSessionState } from "../auth/slice";
 
 export const registerUser = (): AppThunk => async (dispatch, getState) => {
-  dispatch(setRegisterState({ loading: true }));
+  dispatch(setRegisterState({ loading: true, errorMessage: null }));
   const rootState = getState();
   const registerStore = selectRegisterState(rootState);
 
@@ -46,6 +47,7 @@ export const registerUser = (): AppThunk => async (dispatch, getState) => {
       setSessionState({
         token: idToken,
         username: user.email,
+        uid,
         loginTime: Date.now(),
         loading: false,
         error: null,

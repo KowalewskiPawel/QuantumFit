@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -14,15 +14,31 @@ import {
   RegisterScreenAim,
   RegisterScreenSeniority,
   MainMenuScreen,
-  BodyAnalyzeCameraScreen,
-  BodyAnalyzePictureScreen
+  BodyAnalysisCameraScreen,
+  BodyAnalysisPictureScreen,
+  BodyAnalysisScreen,
+  MyTrainingsScreen,
+  MyDietScreen,
+  SettingsScreen,
 } from "./screens";
 import { withTheme } from "react-native-paper";
+import { useAppDispatch, useAppSelector } from "./app/store";
+import { selectAuthState } from "./features/auth";
+import { loadUserInfo } from "./features/user";
 
 const Stack = createNativeStackNavigator();
 
 const MainScreen = ({ theme }) => {
   const navigationRef = useNavigationContainerRef();
+  const dispatch = useAppDispatch();
+  const { token } = useAppSelector(selectAuthState);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(loadUserInfo());
+      navigationRef.navigate("MainMenu" as never);
+    }
+  }, [token]);
 
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
@@ -48,18 +64,22 @@ const MainScreen = ({ theme }) => {
           component={RegisterScreenSeniority}
         />
         <Stack.Screen name="MainMenu" component={MainMenuScreen} />
+        <Stack.Screen name="BodyAnalysis" component={BodyAnalysisScreen} />
+        <Stack.Screen name="MyTrainings" component={MyTrainingsScreen} />
+        <Stack.Screen name="MyDiet" component={MyDietScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen
           name="CameraPermission"
           component={CameraPermissionScreen}
         />
         <Stack.Screen
-          name="BodyAnalyzeCameraScreen"
-          component={BodyAnalyzeCameraScreen}
+          name="BodyAnalysisCameraScreen"
+          component={BodyAnalysisCameraScreen}
         />
         <Stack.Screen
-          name="BodyAnalyzePictureScreen"
-          component={BodyAnalyzePictureScreen}
-          initialParams={{ side: 'side' }}
+          name="BodyAnalysisPictureScreen"
+          component={BodyAnalysisPictureScreen}
+          initialParams={{ side: 'front' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
