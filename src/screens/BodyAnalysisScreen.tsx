@@ -40,10 +40,20 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     );
 
     try {
+      const res = await fetch('https://quantumfit-vertex-api-production.up.railway.app/api/v1/gemini/text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: bodyAnalysisPrompt
+        })
+      })
+
+      console.log({ res })
+
       // Temporarily add photo urls to second argument of askGeminiVision as a string entry to the array of possible values
-      const { text } = await askGeminiVision(bodyAnalysisPrompt, photos);
-      const parsedText = JSON.parse(text.split("```json")[1].split("```")[0]);
-      setGeminiResponse(parsedText);
+      // const { text } = await askGeminiVision(bodyAnalysisPrompt, photos);
+      // const parsedText = JSON.parse(text.split("```json")[1].split("```")[0]);
+      // setGeminiResponse(parsedText);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -70,7 +80,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         </View>
         {!geminiResponse ? (
           <View style={localStyles.loadingScreen}>
-            <Text style={{marginBottom: 30}} variant="headlineMedium">Analysing your body</Text>
+            <Text style={{ marginBottom: 30 }} variant="headlineMedium">Analysing your body</Text>
             <LoadingSpinner />
           </View>
         ) : (

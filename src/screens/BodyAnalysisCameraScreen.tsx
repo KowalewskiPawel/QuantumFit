@@ -73,9 +73,9 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const handlePictureUpload = async () => {
         try {
             const uploadResponse: any = await uploadToFirebase(takenPicture.uri, `${uid}_${side}_${Date.now().toFixed()}`, (currentUploadStatus) => { console.log({ currentUploadStatus }) })
-            const newPhotos = ['https://firebasestorage.googleapis.com/v0/b/quantumfit-ee5a9.appspot.com/o/images%2FmpGt8hBhQWeQzNPycKCcRUEm61M2_front_1703008652818?alt=media&token=4e8b1ea9-447e-49be-8c5a-d619ab530aeb']
+            const newPhotos = [...photos, uploadResponse.downloadUrl]
             dispatch(setBodyPhotosState([...bodyPhotos, uploadResponse.downloadUrl]));
-            dispatch(updateUserInfo({photos: newPhotos}));
+            dispatch(updateUserInfo({ photos: newPhotos }));
 
             if (side == 'back') {
                 navigation.navigate('BodyAnalysis')
