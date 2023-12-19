@@ -37,8 +37,9 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     );
 
     try {
+      // Temporarily add photo urls to second argument of askGeminiVision as a string entry to the array of possible values
       const { text } = await askGeminiVision(bodyAnalysisPrompt, [
-        "https://firebasestorage.googleapis.com/v0/b/quantumfit-ee5a9.appspot.com/o/malebodyexample.png?alt=media&token=16309cbc-13a7-4716-be34-fdcd66b26a8d",
+        "",
       ]);
       const parsedText = JSON.parse(text.split("```json")[1].split("```")[0]);
       setGeminiResponse(parsedText);
