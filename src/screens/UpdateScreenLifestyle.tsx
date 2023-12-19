@@ -4,10 +4,10 @@ import { Button, Dialog, Portal, useTheme } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { CustomCard, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
-import { selectRegisterState } from "../features/register";
-import { setRegisterState } from "../features/register/slice";
+import { selectUserState, updateUserInfo } from "../features/user";
+import { setUserState } from "../features/user/slice";
 
-export const RegisterScreenLifestyle = ({ navigation }) => {
+export const UpdateScreenLifestyle = ({ navigation }) => {
   const dispatch = useAppDispatch();
 
   const LIFESTYLES = [
@@ -34,9 +34,9 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
       icon: "weight-lifter",
     },
   ];
-  const registerStore = useAppSelector(selectRegisterState);
+  const userState = useAppSelector(selectUserState);
   const [selectedLifestyle, setSelectedLifestyle] = useState(
-    registerStore.lifestyle || ""
+    userState.lifestyle || ""
   );
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
@@ -46,8 +46,9 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
       setIsError(true);
     } else {
       setIsError(false);
-      dispatch(setRegisterState({ lifestyle: selectedLifestyle }));
-      navigation.navigate("RegisterAim");
+      dispatch(setUserState({ lifestyle: selectedLifestyle }));
+      dispatch(updateUserInfo({ lifestyle: selectedLifestyle }));
+      navigation.navigate("UpdateAim");
     }
   };
 
@@ -57,7 +58,7 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
         <View style={{ ...styles.container }}>
           <View style={styles.textBackground}>
             <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-              Your Lifestyle
+              Update Lifestyle
             </Text>
           </View>
           <View style={{ display: "flex", alignItems: "center" }}>
@@ -78,7 +79,7 @@ export const RegisterScreenLifestyle = ({ navigation }) => {
                 onPress={() => navigation.goBack()}
                 style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
               >
-                Previous
+                Go Back
               </Button>
               <Button
                 mode="contained"

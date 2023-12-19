@@ -4,6 +4,24 @@ import { selectAuthState } from "../auth";
 import { setUserState } from "./slice";
 import { arrayUnion } from "@firebase/firestore";
 
+export const updateUserInfo =
+  (updatedFields): AppThunk =>
+  async (dispatch, getState) => {
+    dispatch(setUserState({ loading: true, errorMessage: null }));
+    const rootState = getState();
+    const authStore = selectAuthState(rootState);
+
+    try {
+      await setDoc(doc(db, "users", authStore.uid), updatedFields, {
+        merge: true,
+      });
+
+      dispatch(setUserState({ loading: false }));
+    } catch (error) {
+      dispatch(setUserState({ loading: false, errorMessage: error }));
+    }
+  };
+
 export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
   dispatch(setUserState({ loading: true, errorMessage: null }));
   const rootState = getState();
@@ -54,28 +72,28 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
   }
 };
 
-export const updateUserInfo = (key: string, value: any): AppThunk => async (dispatch, getState) => {
-  dispatch(setUserState({ loading: true, errorMessage: null }));
-  const rootState = getState();
-  const authStore = selectAuthState(rootState);
+// export const updateUserInfo = (key: string, value: any): AppThunk => async (dispatch, getState) => {
+//   dispatch(setUserState({ loading: true, errorMessage: null }));
+//   const rootState = getState();
+//   const authStore = selectAuthState(rootState);
 
-  try {
-    const userDocRef = doc(db, "users", authStore.uid);
-    const docSnap = await getDoc(userDocRef);
+//   try {
+//     const userDocRef = doc(db, "users", authStore.uid);
+//     const docSnap = await getDoc(userDocRef);
 
-    if (docSnap.exists()) {
-      console.log(authStore.uid);
-      if (Array.isArray(value)) {
-        value = arrayUnion(...value)
-      }
-      console.log(value);
-      await updateDoc(userDocRef, { [key]: value })
-      console.log("DOC SHOULD BE UPDATED");
-    } else {
-      throw new Error("No such document!");
-    }
-  } catch (error) {
-    let msg = error.message;
-    dispatch(setUserState({ loading: false, errorMessage: msg }));
-  }
-};
+//     if (docSnap.exists()) {
+//       console.log(authStore.uid);
+//       if (Array.isArray(value)) {
+//         value = arrayUnion(...value)
+//       }
+//       console.log(value);
+//       await updateDoc(userDocRef, { [key]: value })
+//       console.log("DOC SHOULD BE UPDATED");
+//     } else {
+//       throw new Error("No such document!");
+//     }
+//   } catch (error) {
+//     let msg = error.message;
+//     dispatch(setUserState({ loading: false, errorMessage: msg }));
+//   }
+// };

@@ -11,6 +11,12 @@ import { setUserState } from '../features/user/slice';
 import { selectUserState } from '../features/user';
 import { updateUserInfo } from '../features/user/thunk';
 
+const nextSideMap = {
+    front: 'side',
+    side: 'back',
+    back: 'front'
+}
+
 
 export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const dispatch = useAppDispatch();
@@ -66,7 +72,8 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
             const uploadResponse: any = await uploadToFirebase(takenPicture.uri, `${uid}_${side}_${Date.now().toFixed()}`, (currentUploadStatus) => { console.log({ currentUploadStatus }) })
             const newPhotos = [...photos, uploadResponse.downloadUrl ]
             dispatch(setUserState({photos: newPhotos}));
-            dispatch(updateUserInfo('photos', newPhotos))
+            dispatch(updateUserInfo({photos: newPhotos}));
+            navigation.navigate('BodyAnalysisPictureScreen', { side: nextSideMap[side] })
         } catch (error) {
             console.error(error.message)
         }

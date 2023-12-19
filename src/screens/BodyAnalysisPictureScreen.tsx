@@ -25,10 +25,15 @@ export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
     }
     
     const handleSkip = () => {
+        const nextScreenMap = {
+            front: 'side',
+            side: 'back',
+            back: 'front'
+        }
         if(side == 'back') {
-            navigation.navigate('MainMenu')
+            navigation.navigate('BodyAnalysis')
         } else {
-            navigation.navigate('BodyAnalysisPictureScreen', { side: 'back' })
+            navigation.navigate('BodyAnalysisPictureScreen', { side: nextScreenMap[side] })
         }
     }
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Text, View, SafeAreaView } from "react-native";
 import {
   Button,
@@ -9,18 +9,16 @@ import {
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
-import { selectRegisterState } from "../features/register";
-import { setRegisterState } from "../features/register/slice";
+import { selectUserState, updateUserInfo } from "../features/user";
+import { setUserState } from "../features/user/slice";
 
-export const RegisterScreenBody = ({ navigation }) => {
+export const UpdateScreenBody = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const registerStore = useAppSelector(selectRegisterState);
-  const [sex, setSex] = useState(registerStore.sex || "male");
-  const [height, setHeight] = useState(registerStore.height || "");
-  const [weight, setWeight] = useState(registerStore.weight || "");
-  const [yearOfBirth, setYearOfBirth] = useState(
-    registerStore.yearOfBirth || ""
-  );
+  const userState = useAppSelector(selectUserState);
+  const [sex, setSex] = useState(userState.sex || "male");
+  const [height, setHeight] = useState(userState.height || "");
+  const [weight, setWeight] = useState(userState.weight || "");
+  const [yearOfBirth, setYearOfBirth] = useState(userState.yearOfBirth || "");
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
 
@@ -36,8 +34,9 @@ export const RegisterScreenBody = ({ navigation }) => {
       setIsError(true);
     } else {
       setIsError(false);
-      dispatch(setRegisterState({ sex, height, weight, yearOfBirth }));
-      navigation.navigate("RegisterLifestyle");
+      dispatch(setUserState({ sex, height, weight, yearOfBirth }));
+      dispatch(updateUserInfo({ sex, height, weight, yearOfBirth }));
+      navigation.navigate("Settings");
     }
   };
 
@@ -46,14 +45,14 @@ export const RegisterScreenBody = ({ navigation }) => {
       <View>
         <View style={styles.textBackground}>
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            Registration
+            Update Information
           </Text>
         </View>
-        <View>
+        <View style={{ alignItems: "center" }}>
           <SegmentedButtons
             value={sex}
             onValueChange={setSex}
-            style={{ marginTop: 20, marginBottom: 40 }}
+            style={{ width: "100%", marginTop: 20, marginBottom: 40 }}
             buttons={[
               {
                 value: "male",
@@ -108,7 +107,7 @@ export const RegisterScreenBody = ({ navigation }) => {
               onPress={validateRegistration}
               style={{ marginTop: 20, marginBottom: 20 }}
             >
-              Continue
+              Update
             </Button>
           </StackRow>
         </View>

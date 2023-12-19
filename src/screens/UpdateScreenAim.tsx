@@ -5,10 +5,10 @@ import Slider from "@react-native-community/slider";
 import { styles } from "../styles/globalStyles";
 import { CustomCard, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
-import { selectRegisterState } from "../features/register";
-import { setRegisterState } from "../features/register/slice";
+import { setUserState } from "../features/user/slice";
+import { selectUserState, updateUserInfo } from "../features/user";
 
-export const RegisterScreenAim = ({ navigation }) => {
+export const UpdateScreenAim = ({ navigation }) => {
   const dispatch = useAppDispatch();
 
   const AIMS = [
@@ -22,10 +22,10 @@ export const RegisterScreenAim = ({ navigation }) => {
       content: "I want to gain weight and muscle mass",
     },
   ];
-  const registerStore = useAppSelector(selectRegisterState);
-  const [selectedAim, setSelectedAim] = useState(registerStore.aim || "");
+  const userState = useAppSelector(selectUserState);
+  const [selectedAim, setSelectedAim] = useState(userState.aim || "");
   const [selectedExerciseFrequency, setSelectedExerciseFrequency] = useState(
-    registerStore.exerciseFrequency || 1
+    userState.exerciseFrequency || 1
   );
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
@@ -36,12 +36,18 @@ export const RegisterScreenAim = ({ navigation }) => {
     } else {
       setIsError(false);
       dispatch(
-        setRegisterState({
+        setUserState({
           aim: selectedAim,
           exerciseFrequency: selectedExerciseFrequency,
         })
       );
-      navigation.navigate("RegisterSeniority");
+      dispatch(
+        updateUserInfo({
+          aim: selectedAim,
+          exerciseFrequency: selectedExerciseFrequency,
+        })
+      );
+      navigation.navigate("Settings");
     }
   };
 
@@ -50,7 +56,7 @@ export const RegisterScreenAim = ({ navigation }) => {
       <View>
         <View style={styles.textBackground}>
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            Your Aim
+            Update Aim
           </Text>
         </View>
         <View style={{ display: "flex", alignItems: "center" }}>
@@ -92,7 +98,7 @@ export const RegisterScreenAim = ({ navigation }) => {
               style={{ marginTop: 20, marginBottom: 20 }}
               onPress={validateRegistration}
             >
-              Continue
+              Update
             </Button>
           </StackRow>
         </View>
@@ -108,7 +114,7 @@ export const RegisterScreenAim = ({ navigation }) => {
             <Dialog.Content>
               <Text style={{ color: "#FFF" }}>
                 Please select aim that you want to achieve, and then click
-                "continue".
+                "update".
               </Text>
             </Dialog.Content>
             <Dialog.Actions>
