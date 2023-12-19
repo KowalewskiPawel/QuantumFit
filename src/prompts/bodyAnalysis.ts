@@ -18,6 +18,7 @@ export const getEstimateBodyFatAndTargetPrompt = (
   height: number,
   lifestyle: string,
   aim: string,
+  sex: string,
   exerciseFrequency: number,
   gymExperience: number
 ) => `
@@ -38,9 +39,10 @@ Lifestyle: ${lifestyle} - ${
   LIFESTYLES.find((style) => style.title === lifestyle).content
 }
 Aim: ${aim}
+Gender: ${sex}
 Exercise frequency: ${exerciseFrequency} times a week
 Gym experience: ${gymExperience} months
-Return the response in the following JSON format:
+Return the response in the following JSON format and ensure that it's parsable with JSON.parse() method:
 {
     current: {
         bodyFat: number,
