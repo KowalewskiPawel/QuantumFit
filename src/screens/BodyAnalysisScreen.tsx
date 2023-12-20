@@ -191,6 +191,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                   borderColor: theme.colors.tertiary,
                   padding: 12,
                   marginBottom: 32,
+                  marginHorizontal: 20,
                 }}
               >
                 <Text
@@ -213,7 +214,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
-                      marginRight: 8,
+                      marginRight: 4,
                     }}
                   >
                     Body Fat:
@@ -237,7 +238,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
-                      marginRight: 8,
+                      marginRight: 4,
                     }}
                   >
                     Weight:
@@ -260,6 +261,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: theme.colors.tertiary,
                   padding: 12,
+                  marginHorizontal: 20,
                 }}
               >
                 <Text
@@ -282,7 +284,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
-                      marginRight: 8,
+                      marginRight: 4,
                     }}
                   >
                     Body Fat:
@@ -306,7 +308,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
-                      marginRight: 8,
+                      marginRight: 4,
                     }}
                   >
                     Weight:
@@ -330,6 +332,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
               color: theme.colors.onBackground,
               marginTop: 24,
               marginBottom: 12,
+              marginLeft: 40,
             }}
           >
             Additional info
@@ -339,6 +342,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
               ...styles.surface,
               marginBottom: 20,
               backgroundColor: theme.colors.backdrop,
+              marginHorizontal: 40,
             }}
             elevation={4}
           >
