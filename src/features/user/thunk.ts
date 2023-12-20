@@ -1,26 +1,24 @@
-import { db, doc, getDoc, setDoc, updateDoc } from "../../firebase/firebase-config";
+import { db, doc, getDoc, setDoc } from "../../firebase/firebase-config";
 import { AppThunk } from "../../app/store";
 import { selectAuthState } from "../auth";
 import { setUserState } from "./slice";
-import { arrayUnion } from "@firebase/firestore";
 
 export const updateUserInfo =
   (updatedFields): AppThunk =>
-  async (dispatch, getState) => {
-    dispatch(setUserState({ loading: true, errorMessage: null }));
-    const rootState = getState();
-    const authStore = selectAuthState(rootState);
+    async (dispatch, getState) => {
+      dispatch(setUserState({ loading: true, errorMessage: null }));
+      const rootState = getState();
+      const authStore = selectAuthState(rootState);
+      try {
+        await setDoc(doc(db, "users", authStore.uid), updatedFields, {
+          merge: true,
+        });
 
-    try {
-      await setDoc(doc(db, "users", authStore.uid), updatedFields, {
-        merge: true,
-      });
-
-      dispatch(setUserState({ loading: false }));
-    } catch (error) {
-      dispatch(setUserState({ loading: false, errorMessage: error }));
-    }
-  };
+        dispatch(setUserState({ loading: false }));
+      } catch (error) {
+        dispatch(setUserState({ loading: false, errorMessage: error }));
+      }
+    };
 
 export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
   dispatch(setUserState({ loading: true, errorMessage: null }));
@@ -71,29 +69,3 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
     dispatch(setUserState({ loading: false, errorMessage: msg }));
   }
 };
-
-// export const updateUserInfo = (key: string, value: any): AppThunk => async (dispatch, getState) => {
-//   dispatch(setUserState({ loading: true, errorMessage: null }));
-//   const rootState = getState();
-//   const authStore = selectAuthState(rootState);
-
-//   try {
-//     const userDocRef = doc(db, "users", authStore.uid);
-//     const docSnap = await getDoc(userDocRef);
-
-//     if (docSnap.exists()) {
-//       console.log(authStore.uid);
-//       if (Array.isArray(value)) {
-//         value = arrayUnion(...value)
-//       }
-//       console.log(value);
-//       await updateDoc(userDocRef, { [key]: value })
-//       console.log("DOC SHOULD BE UPDATED");
-//     } else {
-//       throw new Error("No such document!");
-//     }
-//   } catch (error) {
-//     let msg = error.message;
-//     dispatch(setUserState({ loading: false, errorMessage: msg }));
-//   }
-// };

@@ -51,6 +51,32 @@ export const styles = StyleSheet.create({
     textShadowRadius: 3, // Blurring the shadow for a softer look
     marginBottom: 10, // Space below the title
   },
+  subtitleUpperCase: {
+    marginBottom: 8,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: "center",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+  },
+  secondarySubtitleUppercase: {
+    fontSize: 12,
+    textAlign: "center",
+    fontWeight: "400",
+    textTransform: "uppercase",
+  },
+  bigUnits: {
+    fontSize: 24,
+    textAlign: "center",
+    fontWeight: "600",
+    letterSpacing: 2,
+    alignSelf: 'flex-end'
+  },
+  surface: {
+    padding: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
   image: {
     width: 300,
     height: 400,
@@ -69,7 +95,6 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 20,
   },
-
   titleContainer: {
     justifyContent: 'center',
     padding: 40,

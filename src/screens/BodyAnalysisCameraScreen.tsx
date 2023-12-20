@@ -10,6 +10,8 @@ import { selectAuthState } from '../features/auth';
 import { setUserState } from '../features/user/slice';
 import { selectUserState } from '../features/user';
 import { updateUserInfo } from '../features/user/thunk';
+import { selectBodyPhotosState } from '../features/bodyPhotos';
+import { setBodyPhotosState } from '../features/bodyPhotos/slice';
 
 const nextSideMap = {
     front: 'side',
@@ -29,6 +31,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const countdownTimer = useRef(null);
     const { uid } = useAppSelector(selectAuthState);
     const { photos } = useAppSelector(selectUserState);
+    const bodyPhotos = useAppSelector(selectBodyPhotosState);
 
 
     const [type, setType] = useState(CameraType.front);
@@ -70,10 +73,16 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const handlePictureUpload = async () => {
         try {
             const uploadResponse: any = await uploadToFirebase(takenPicture.uri, `${uid}_${side}_${Date.now().toFixed()}`, (currentUploadStatus) => { console.log({ currentUploadStatus }) })
-            const newPhotos = [...photos, uploadResponse.downloadUrl ]
-            dispatch(setUserState({photos: newPhotos}));
-            dispatch(updateUserInfo({photos: newPhotos}));
-            navigation.navigate('BodyAnalysisPictureScreen', { side: nextSideMap[side] })
+            const newPhotos = [...photos, uploadResponse.downloadUrl];
+            
+            dispatch(setBodyPhotosState([...bodyPhotos, uploadResponse.downloadUrl]));
+            dispatch(updateUserInfo({ photos: newPhotos }));
+
+            if (side == 'back') {
+                navigation.navigate('BodyAnalysis')
+            } else {
+                navigation.navigate('BodyAnalysisPictureScreen', { side: nextSideMap[side] })
+            }
         } catch (error) {
             console.error(error.message)
         }
