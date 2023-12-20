@@ -12,12 +12,10 @@ import { styles } from "../styles/globalStyles";
 import { uploadToFirebase } from "../firebase/firebase-config";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectAuthState } from "../features/auth";
-import { setUserState } from "../features/user/slice";
 import { selectUserState } from "../features/user";
 import { updateUserInfo } from "../features/user/thunk";
 import { selectBodyPhotosState } from "../features/bodyPhotos";
 import { setBodyPhotosState } from "../features/bodyPhotos/slice";
-import { StackRow } from "../components";
 
 const nextSideMap = {
   front: "side",
