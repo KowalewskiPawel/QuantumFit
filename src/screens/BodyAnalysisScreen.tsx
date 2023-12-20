@@ -46,6 +46,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
       exerciseFrequency,
       gymExperience
     );
+
     try {
       const { message } = await apiClient.post("image", {
         prompt: bodyAnalysisPrompt,
@@ -55,6 +56,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         message.split("```json")[1].split("```")[0]
       );
       setGeminiResponse(parsedText);
+
     } catch (error) {
       if (error.message) {
         setErrorFetchingGeminiResponse(error.message);
@@ -129,28 +131,28 @@ export const BodyAnalysisScreen = ({ navigation }) => {
             </Text>
           </View>
           <StackRow>
-          <Button
-            mode="contained"
-            disabled={isFetchingGeminiResponse}
-            onPress={handleComplete}
-            style={{
-              marginTop: 20,
-              marginBottom: 20,
-              marginRight: 20,
-              marginLeft: "auto",
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            mode="contained"
-            disabled={isFetchingGeminiResponse}
-            onPress={fetchAnalysis}
-            style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
-          >
-            Re-analyse
-          </Button>
-        </StackRow>
+            <Button
+              mode="contained"
+              disabled={isFetchingGeminiResponse}
+              onPress={handleComplete}
+              style={{
+                marginTop: 20,
+                marginBottom: 20,
+                marginRight: 20,
+                marginLeft: "auto",
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              mode="contained"
+              disabled={isFetchingGeminiResponse}
+              onPress={fetchAnalysis}
+              style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
+            >
+              Re-analyse
+            </Button>
+          </StackRow>
         </View>
       </SafeAreaView>
     );
