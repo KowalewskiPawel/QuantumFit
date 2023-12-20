@@ -25,7 +25,8 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   } = useAppSelector(selectUserState);
   const bodyPhotos = useAppSelector(selectBodyPhotosState);
   const [geminiResponse, setGeminiResponse] = useState(null);
-  const [errorFetchingGeminiResponse, setErrorFetchingGeminiResponse] = useState("");
+  const [errorFetchingGeminiResponse, setErrorFetchingGeminiResponse] =
+    useState("");
   const [isFetchingGeminiResponse, setIsFetchingGeminiResponse] =
     useState(false);
   const theme = useTheme();
@@ -55,7 +56,6 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         message.split("```json")[1].split("```")[0]
       );
       setGeminiResponse(parsedText);
-
     } catch (error) {
       if (error.message) {
         setErrorFetchingGeminiResponse(error.message);
@@ -71,7 +71,16 @@ export const BodyAnalysisScreen = ({ navigation }) => {
 
   const handleComplete = () => {
     dispatch(deletePhotos());
-    dispatch(updateUserInfo({ photos: [] }));
+    dispatch(
+      updateUserInfo({
+        currentBodyFat: geminiResponse.current.bodyFat,
+        targetBodyFat: geminiResponse.target.bodyFat,
+        targetWeight: geminiResponse.target.weight,
+        bodyPartsThatNeedImprovement:
+          geminiResponse.bodyPartsThatNeedImprovement,
+        photos: [],
+      })
+    );
     navigation.navigate("MainMenu");
   };
 
