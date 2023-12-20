@@ -26,8 +26,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   } = useAppSelector(selectUserState);
   const bodyPhotos = useAppSelector(selectBodyPhotosState);
   const [geminiResponse, setGeminiResponse] = useState(null);
-  const [errorFetchingGeminiResponse, setErrorFetchingGeminiResponse] =
-    useState(""); // TODO: [UX] Display error message [UX
+  const [errorFetchingGeminiResponse, setErrorFetchingGeminiResponse] = useState("");
   const [isFetchingGeminiResponse, setIsFetchingGeminiResponse] =
     useState(false);
   const theme = useTheme();
@@ -122,7 +121,10 @@ export const BodyAnalysisScreen = ({ navigation }) => {
             </Text>
           </View>
           <View style={localStyles.loadingScreen}>
-            <Text style={{ marginBottom: 30, color: theme.colors.error }} variant="headlineMedium">
+            <Text
+              style={{ marginBottom: 30, color: theme.colors.error }}
+              variant="headlineMedium"
+            >
               {errorFetchingGeminiResponse}
             </Text>
             <LoadingSpinner />
