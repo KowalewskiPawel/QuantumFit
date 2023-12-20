@@ -47,7 +47,7 @@ const MainScreen = ({ theme }) => {
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Entry"
         screenOptions={{
           headerShown: false,
           gestureEnabled: false,

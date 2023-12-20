@@ -1,15 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, Image, SafeAreaView } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button, Dialog, Portal, useTheme } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
-import { useAppSelector } from "../app/store";
-import { selectUserState } from "../features/user";
+import { useAppDispatch, useAppSelector } from "../app/store";
+import { loadUserInfo, selectUserState } from "../features/user";
 import { LoadingSpinner } from "../components";
 
 export const MainMenuScreen = ({ navigation }) => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUserState);
+  const [isBodyAnalysisMissingModalOpen, setIsBodyAnalysisMissingModalOpen] =
+    useState(false);
   const LogoEntry = require("../assets/logoEntry.png");
+
+  const shouldOpenMyTrainings = () => {
+    if (userState.currentBodyFat) {
+      navigation.navigate("MyTrainings");
+    } else {
+      setIsBodyAnalysisMissingModalOpen(true);
+    }
+  };
+
+  const shouldOpenMyDiet = () => {
+    if (userState.currentBodyFat) {
+      navigation.navigate("MyDiet");
+    } else {
+      setIsBodyAnalysisMissingModalOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!userState.loading) {
+      dispatch(loadUserInfo());
+    }
+  }, []);
 
   if (userState.loading) {
     return (
@@ -39,7 +64,9 @@ export const MainMenuScreen = ({ navigation }) => {
         <Button
           mode="contained"
           style={{ marginTop: 20, backgroundColor: theme.colors.primary }}
-          onPress={() => navigation.navigate("BodyAnalysisPictureScreen", {side: 'front'})}
+          onPress={() =>
+            navigation.navigate("BodyAnalysisPictureScreen", { side: "front" })
+          }
         >
           Body Analysis
         </Button>
@@ -49,7 +76,7 @@ export const MainMenuScreen = ({ navigation }) => {
             marginTop: 20,
             backgroundColor: theme.colors.primary,
           }}
-          onPress={() => navigation.navigate("MyTrainings")}
+          onPress={shouldOpenMyTrainings}
         >
           My Trainings
         </Button>
@@ -59,7 +86,7 @@ export const MainMenuScreen = ({ navigation }) => {
             marginTop: 20,
             backgroundColor: theme.colors.primary,
           }}
-          onPress={() => navigation.navigate("MyDiet")}
+          onPress={shouldOpenMyDiet}
         >
           My Diet
         </Button>
@@ -75,6 +102,30 @@ export const MainMenuScreen = ({ navigation }) => {
           Settings
         </Button>
       </View>
+      <Portal>
+        <Dialog
+          visible={isBodyAnalysisMissingModalOpen}
+          onDismiss={() => setIsBodyAnalysisMissingModalOpen(false)}
+          style={{
+            backgroundColor: theme.colors.primaryContainer,
+          }}
+        >
+          <Dialog.Title>Body Analysis Info Missing</Dialog.Title>
+          <Dialog.Content>
+            <Text style={{ color: "#FFF" }}>
+              Please complete the body analysis to enable this feature.
+            </Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              textColor="#FFF"
+              onPress={() => setIsBodyAnalysisMissingModalOpen(false)}
+            >
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </SafeAreaView>
   );
 };

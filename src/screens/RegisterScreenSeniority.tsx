@@ -10,7 +10,7 @@ import {
 } from "react-native-paper";
 import Slider from "@react-native-community/slider";
 import { styles } from "../styles/globalStyles";
-import { LoadingSpinner, StackRow } from "../components";
+import { StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { registerUser, selectRegisterState } from "../features/register";
 import {
@@ -120,7 +120,7 @@ export const RegisterScreenSeniority = ({ navigation }) => {
               backgroundColor: theme.colors.primaryContainer,
             }}
           >
-            <Dialog.Title>Do you want to create your account?</Dialog.Title>
+            <Dialog.Title>{registerStore.isRegistrationSuccessful ? "Congratulations!" : "Do you want to create your account?"}</Dialog.Title>
             {registerStore.isRegistrationSuccessful ? (
               <View>
                 <Dialog.Content>
