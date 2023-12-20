@@ -38,6 +38,11 @@ export const registerUser = (): AppThunk => async (dispatch, getState) => {
       username: registerStore.username,
       photos: [],
       lifestyle: registerStore.lifestyle,
+      gymExperience: registerStore.gymExperience,
+      currentBodyFat: null,
+      targetBodyFat: null,
+      targetWeight: null,
+      bodyPartsThatNeedImprovement: [],
     });
 
     dispatch(
