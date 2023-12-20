@@ -29,7 +29,7 @@ Suggest a target weight for me.
 Add additional information about my body,
 such as what parts of the body look good and what parts of the body need improvement.
 The additional information should be a string.
-The additional information should be no longer than 100 characters.
+The additional information should be no longer than 200 characters.
 Please take into account the following information about me:
 Current weight: ${currentWeight}kg
 Age: ${age} years old
@@ -52,5 +52,6 @@ Return the response in the following JSON format and ensure that it's parsable w
         weight: number,
     },
     additionalInfo: string,
+    bodyPartsThatNeedImprovement: string[],
 }
 `;
