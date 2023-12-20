@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { View, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Surface, useTheme, Text } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
-import { selectUserState, updateUserInfo } from "../features/user";
+import { loadUserInfo, selectUserState, updateUserInfo } from "../features/user";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { LoadingSpinner, StackRow } from "../components";
 import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
@@ -81,6 +81,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         photos: [],
       })
     );
+    dispatch(loadUserInfo());
     navigation.navigate("MainMenu");
   };
 
