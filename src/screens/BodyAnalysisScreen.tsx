@@ -127,8 +127,30 @@ export const BodyAnalysisScreen = ({ navigation }) => {
             >
               {errorFetchingGeminiResponse}
             </Text>
-            <LoadingSpinner />
           </View>
+          <StackRow>
+          <Button
+            mode="contained"
+            disabled={isFetchingGeminiResponse}
+            onPress={handleComplete}
+            style={{
+              marginTop: 20,
+              marginBottom: 20,
+              marginRight: 20,
+              marginLeft: "auto",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            mode="contained"
+            disabled={isFetchingGeminiResponse}
+            onPress={fetchAnalysis}
+            style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
+          >
+            Re-analyse
+          </Button>
+        </StackRow>
         </View>
       </SafeAreaView>
     );
