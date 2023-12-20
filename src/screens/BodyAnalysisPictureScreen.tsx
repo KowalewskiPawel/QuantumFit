@@ -62,24 +62,24 @@ export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
                 style={{ marginTop: 40, padding: 4 }}>
                 Take a photo
             </Button>
-            <Button
-                onPress={handleCancel}
-                uppercase
-                mode='contained'
-                labelStyle={{ fontSize: 18 }}
-                style={{ marginTop: 40, padding: 4 }}>
-                Cancel
-            </Button>
             {side !== 'front' &&
                 <Button
                     onPress={handleSkip}
                     uppercase
                     mode='outlined'
                     labelStyle={{ fontSize: 18 }}
-                    style={{ marginTop: 15, padding: 4 }}>
+                    style={{ marginTop: 10, padding: 4 }}>
                     Skip this part
                 </Button>
             }
+            <Button
+                onPress={handleCancel}
+                uppercase
+                mode='contained'
+                labelStyle={{ fontSize: 18 }}
+                style={{ marginTop: 10, padding: 4 }}>
+                Cancel
+            </Button>
         </View >
     );
 }

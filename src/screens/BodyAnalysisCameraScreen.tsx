@@ -17,6 +17,7 @@ import { selectUserState } from "../features/user";
 import { updateUserInfo } from "../features/user/thunk";
 import { selectBodyPhotosState } from "../features/bodyPhotos";
 import { setBodyPhotosState } from "../features/bodyPhotos/slice";
+import { StackRow } from "../components";
 
 const nextSideMap = {
   front: "side",
@@ -196,34 +197,34 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
           style={localStyles.camera}
         />
       </View>
-      <View style={localStyles.buttonsRow}>
-        {uploadStatus ? (
+      {uploadStatus ? (
+        <View style={{ marginTop: 10 }}>
           <Text style={{ fontSize: 18 }}>
             Uploading the photo. Status: {uploadStatus}%
           </Text>
-        ) : (
-          <View>
-            <Button
-              icon="cancel"
-              mode="contained-tonal"
-              buttonColor="red"
-              style={{ marginRight: 16 }}
-              onPress={() => setTakenPicture(null)}
-            >
-              Retake
-            </Button>
-            <Button
-              icon="check"
-              mode="contained-tonal"
-              buttonColor="green"
-              style={{ marginLeft: 16 }}
-              onPress={handlePictureUpload}
-            >
-              Accept
-            </Button>
-          </View>
-        )}
-      </View>
+        </View>
+      ) : (
+        <View style={localStyles.buttonsRow}>
+          <Button
+            icon="cancel"
+            mode="contained-tonal"
+            buttonColor="red"
+            style={{ marginRight: 16 }}
+            onPress={() => setTakenPicture(null)}
+          >
+            Retake
+          </Button>
+          <Button
+            icon="check"
+            mode="contained-tonal"
+            buttonColor="green"
+            style={{ marginLeft: 16 }}
+            onPress={handlePictureUpload}
+          >
+            Accept
+          </Button>
+        </View>
+      )}
     </View>
   );
 };
