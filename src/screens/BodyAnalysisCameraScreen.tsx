@@ -31,7 +31,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const countdownTimer = useRef(null);
     const { uid } = useAppSelector(selectAuthState);
     const { photos } = useAppSelector(selectUserState);
-    const bodyPhotos = useAppSelector(selectBodyPhotosState)
+    const bodyPhotos = useAppSelector(selectBodyPhotosState);
 
 
     const [type, setType] = useState(CameraType.front);
@@ -73,7 +73,8 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     const handlePictureUpload = async () => {
         try {
             const uploadResponse: any = await uploadToFirebase(takenPicture.uri, `${uid}_${side}_${Date.now().toFixed()}`, (currentUploadStatus) => { console.log({ currentUploadStatus }) })
-            const newPhotos = [...photos, uploadResponse.downloadUrl]
+            const newPhotos = [...photos, uploadResponse.downloadUrl];
+            
             dispatch(setBodyPhotosState([...bodyPhotos, uploadResponse.downloadUrl]));
             dispatch(updateUserInfo({ photos: newPhotos }));
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, SafeAreaView, StyleSheet } from "react-native";
+import { Image } from 'expo-image'
+import { View, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Surface, useTheme, Text } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { askGeminiText, askGeminiVision } from "../gemini/gemini-config";
@@ -8,9 +9,11 @@ import { useAppDispatch, useAppSelector } from "../app/store";
 import { LoadingSpinner, StackRow } from "../components";
 import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
 import { resetBodyPhotosState } from "../features/bodyPhotos/slice";
+import { selectBodyPhotosState } from "../features/bodyPhotos";
+import apiClient from "../api/apiClient";
 
 export const BodyAnalysisScreen = ({ navigation }) => {
-  const AnalysePosture = require("../assets/analyse-body.png");
+  const AnalysePosture = require("../assets/analysis-body.png");
   const {
     weight,
     yearOfBirth,
@@ -22,9 +25,16 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     gymExperience,
     photos
   } = useAppSelector(selectUserState);
+  const bodyPhotos = useAppSelector(selectBodyPhotosState);
   const [geminiResponse, setGeminiResponse] = useState(null);
   const theme = useTheme();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (aim?.length) { //any value from userState will do
+      fetchAnalysis()
+    }
+  }, [aim])
 
   const fetchAnalysis = async () => {
     const usersAge = new Date().getFullYear() - yearOfBirth;
@@ -38,25 +48,39 @@ export const BodyAnalysisScreen = ({ navigation }) => {
       exerciseFrequency,
       gymExperience
     );
+    console.log({ bodyPhotos })
 
     try {
-      const res = await fetch('https://quantumfit-vertex-api-production.up.railway.app/api/v1/gemini/text', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: bodyAnalysisPrompt
-        })
-      })
+      // const res = await fetch('https://quantumfit-gemini-vertex-production.up.railway.app/api/v1/gemini/image', {
+        //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     prompt: bodyAnalysisPrompt,
+      //     photos: bodyPhotos
+      //   })
+      // })
 
-      console.log({ res })
-
-      // Temporarily add photo urls to second argument of askGeminiVision as a string entry to the array of possible values
-      // const { text } = await askGeminiVision(bodyAnalysisPrompt, photos);
-      // const parsedText = JSON.parse(text.split("```json")[1].split("```")[0]);
-      // setGeminiResponse(parsedText);
+      // if (res) {
+        // const { message } = await res.json()
+      // }
+        const { message } = await apiClient.post("image", { prompt: bodyAnalysisPrompt, photos: bodyPhotos });
+        const parsedText = JSON.parse(message.split("```json")[1].split("```")[0]);
+        setGeminiResponse(parsedText);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+
+    // setGeminiResponse({
+    //   "current": {
+    //     "bodyFat": 22.5,
+    //     "weight": 80
+    //   },
+    //   "target": {
+    //     "bodyFat": 18,
+    //     "weight": 72
+    //   },
+    //   "additionalInfo": "You should focus on compound exercises and reduce your calorie intake to lose weight and build muscle."
+    // })
   };
 
   const handleComplete = () => {
@@ -86,134 +110,123 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         ) : (
           <View>
             <StackRow>
-              <Image
-                source={AnalysePosture}
-                style={{ width: 100, height: 300 }}
-              />
-              <View style={{ maxWidth: 150, marginLeft: 20 }}>
-                <Text
-                  style={{
-                    ...styles.subtitleUpperCase,
-                    color: theme.colors.onBackground,
-                    marginLeft: 20,
-                    marginBottom: 15,
-                  }}
-                >
-                  Current
-                </Text>
-                <StackRow>
+              <View style={{ flex: 2 }}>
+                <Image
+                  contentFit="contain"
+                  source={AnalysePosture}
+                  style={{ width: 'auto', height: 300 }}
+                />
+              </View>
+              <View style={{ flex: 3, marginLeft: 12 }}>
+                <Surface mode={'flat'} style={{ backgroundColor: theme.colors.background, borderRadius: 10, borderWidth: 1, borderColor: theme.colors.tertiary, padding: 12, marginBottom: 32 }}>
                   <Text
                     style={{
-                      ...styles.secondarySubtitleUppercase,
-                      color: theme.colors.onBackground,
-                      alignSelf: "center",
-                      marginRight: 10,
-                    }}
-                  >
-                    Body Fat:
-                  </Text>
-                  <Text
-                    style={{
-                      ...styles.bigUnits,
+                      ...styles.subtitleUpperCase,
+                      alignSelf: 'flex-start',
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {geminiResponse?.current.bodyFat}%
+                    Current
                   </Text>
-                </StackRow>
-                <StackRow>
+                  <StackRow style={{ justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                    <Text
+                      style={{
+                        ...styles.secondarySubtitleUppercase,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      Body Fat:
+                    </Text>
+                    <Text
+                      style={{
+                        ...styles.bigUnits,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      {geminiResponse?.current.bodyFat}%
+                    </Text>
+                  </StackRow>
+                  <StackRow style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <Text
+                      style={{
+                        ...styles.secondarySubtitleUppercase,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      Weight:
+                    </Text>
+                    <Text
+                      style={{
+                        ...styles.bigUnits,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      {`${geminiResponse?.current.weight || '0'}kg`}
+                    </Text>
+                  </StackRow>
+                </Surface>
+                <Surface mode={'flat'} style={{ backgroundColor: theme.colors.background, borderRadius: 10, borderWidth: 1, borderColor: theme.colors.tertiary, padding: 12 }}>
                   <Text
                     style={{
-                      ...styles.secondarySubtitleUppercase,
-                      color: theme.colors.onBackground,
-                      alignSelf: "center",
-                      marginRight: "auto",
-                    }}
-                  >
-                    Weight:
-                  </Text>
-                  <Text
-                    style={{
-                      ...styles.bigUnits,
-                      color: theme.colors.onBackground,
-                    }}
-                  >
-                    {weight}
-                  </Text>
-                  <Text
-                    style={{
-                      ...styles.secondarySubtitleUppercase,
-                      color: theme.colors.onBackground,
-                      marginLeft: 4,
-                    }}
-                  >
-                    kg
-                  </Text>
-                </StackRow>
-                <Text
-                  style={{
-                    ...styles.subtitleUpperCase,
-                    color: theme.colors.onBackground,
-                    marginLeft: 20,
-                    marginBottom: 15,
-                    marginTop: 20,
-                  }}
-                >
-                  Target
-                </Text>
-                <StackRow>
-                  <Text
-                    style={{
-                      ...styles.secondarySubtitleUppercase,
-                      color: theme.colors.onBackground,
-                      alignSelf: "center",
-                      marginRight: 10,
-                    }}
-                  >
-                    Body Fat:
-                  </Text>
-                  <Text
-                    style={{
-                      ...styles.bigUnits,
+                      ...styles.subtitleUpperCase,
+                      alignSelf: 'flex-start',
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {geminiResponse?.target.bodyFat}%
+                    Target
                   </Text>
-                </StackRow>
-                <StackRow>
-                  <Text
-                    style={{
-                      ...styles.secondarySubtitleUppercase,
-                      color: theme.colors.onBackground,
-                      alignSelf: "center",
-                      marginRight: "auto",
-                    }}
-                  >
-                    Weight:
-                  </Text>
-                  <Text
-                    style={{
-                      ...styles.bigUnits,
-                      color: theme.colors.onBackground,
-                    }}
-                  >
-                    {geminiResponse?.target.weight}
-                  </Text>
-                  <Text
-                    style={{
-                      ...styles.secondarySubtitleUppercase,
-                      color: theme.colors.onBackground,
-                      marginLeft: 4,
-                    }}
-                  >
-                    kg
-                  </Text>
-                </StackRow>
+                  <StackRow style={{ justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                    <Text
+                      style={{
+                        ...styles.secondarySubtitleUppercase,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      Body Fat:
+                    </Text>
+                    <Text
+                      style={{
+                        ...styles.bigUnits,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      {geminiResponse?.target.bodyFat}%
+                    </Text>
+                  </StackRow>
+                  <StackRow style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <Text
+                      style={{
+                        ...styles.secondarySubtitleUppercase,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      Weight:
+                    </Text>
+                    <Text
+                      style={{
+                        ...styles.bigUnits,
+                        color: theme.colors.onBackground,
+                      }}
+                    >
+                      {`${geminiResponse?.target.weight || '0'}kg`}
+                    </Text>
+                  </StackRow>
+                </Surface>
               </View>
             </StackRow>
+            <Text
+              style={{
+                ...styles.subtitleUpperCase,
+                alignSelf: 'flex-start',
+                color: theme.colors.onBackground,
+                marginTop: 24,
+                marginBottom: 12
+              }}
+            >
+              Additional info
+            </Text>
             <Surface
-              style={{ ...styles.surface, width: "70%", marginVertical: 20 }}
+              style={{ ...styles.surface, marginBottom: 20, backgroundColor: theme.colors.backdrop }}
               elevation={4}
             >
               <Text

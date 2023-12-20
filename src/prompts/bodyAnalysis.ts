@@ -24,13 +24,13 @@ export const getEstimateBodyFatAndTargetPrompt = (
 ) => `
 Please follow strictly the requirements below, and always output the results in the JSON format.
 Express the fat level in number as a percentage.
-Suggest a target body fat level for the person.
-Suggest a target weight for the person.
-Add additional information about the person's body,
+Suggest a target body fat level for me.
+Suggest a target weight for me.
+Add additional information about my body,
 such as what parts of the body look good and what parts of the body need improvement.
 The additional information should be a string.
 The additional information should be no longer than 100 characters.
-Please take into account the following information about the person:
+Please take into account the following information about me:
 Current weight: ${currentWeight}kg
 Age: ${age} years old
 Height: ${height}cm
@@ -53,6 +53,4 @@ Return the response in the following JSON format and ensure that it's parsable w
     },
     additionalInfo: string,
 }
-For example:
-${ExampleBodyAnalysisResponseFormat}
 `;

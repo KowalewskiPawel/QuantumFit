@@ -52,32 +52,30 @@ export const styles = StyleSheet.create({
     marginBottom: 10, // Space below the title
   },
   subtitleUpperCase: {
-    fontSize: 14,
+    marginBottom: 8,
+    fontSize: 18,
+    fontWeight: 'bold',
     textAlign: "center",
-    fontWeight: "400",
     letterSpacing: 2,
-    marginBottom: 10,
     textTransform: "uppercase",
   },
   secondarySubtitleUppercase: {
     fontSize: 12,
     textAlign: "center",
     fontWeight: "400",
-    marginBottom: 10,
     textTransform: "uppercase",
   },
   bigUnits: {
-    fontSize: 32,
+    fontSize: 24,
     textAlign: "center",
     fontWeight: "600",
     letterSpacing: 2,
-    marginBottom: 10,
+    alignSelf: 'flex-end'
   },
   surface: {
     padding: 8,
     borderRadius: 20,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   image: {
     width: 300,
