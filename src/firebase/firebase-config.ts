@@ -18,6 +18,7 @@ import {
   getStorage,
   ref,
   uploadBytesResumable,
+  deleteObject,
   getDownloadURL,
 } from "firebase/storage";
 
@@ -79,11 +80,13 @@ export {
   app,
   fbStorage,
   db,
+  ref,
   updateDoc,
   doc,
   getDoc,
   setDoc,
   uploadToFirebase,
+  deleteObject,
   auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,

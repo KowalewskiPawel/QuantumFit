@@ -3,12 +3,11 @@ import { Image } from "expo-image";
 import { View, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Surface, useTheme, Text } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
-import { selectUserState } from "../features/user";
+import { selectUserState, updateUserInfo } from "../features/user";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { LoadingSpinner, StackRow } from "../components";
 import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
-import { resetBodyPhotosState } from "../features/bodyPhotos/slice";
-import { selectBodyPhotosState } from "../features/bodyPhotos";
+import { deletePhotos, selectBodyPhotosState } from "../features/bodyPhotos";
 import apiClient from "../api/apiClient";
 
 export const BodyAnalysisScreen = ({ navigation }) => {
@@ -71,8 +70,9 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   };
 
   const handleComplete = () => {
+    dispatch(deletePhotos());
+    dispatch(updateUserInfo({ photos: [] }));
     navigation.navigate("MainMenu");
-    dispatch(resetBodyPhotosState());
   };
 
   useEffect(() => {
