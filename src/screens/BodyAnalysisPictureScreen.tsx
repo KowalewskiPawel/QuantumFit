@@ -2,9 +2,12 @@ import { Image } from 'expo-image'
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper'
 import { styles } from "../styles/globalStyles";
+import { useAppDispatch } from '../app/store';
+import { resetBodyPhotosState } from '../features/bodyPhotos/slice';
 
 
 export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
+    const dispatch = useAppDispatch();
     const { side } = route.params;
     const windowWidth = Dimensions.get('window').width;
     const cameraWidth = windowWidth * 0.9;
@@ -23,6 +26,11 @@ export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
     const navigateToPhoto = () => {
         navigation.navigate('BodyAnalysisCameraScreen', { side })
     }
+
+    const handleCancel = () => {
+        navigation.navigate("MainMenu");
+        dispatch(resetBodyPhotosState());
+      };
     
     const handleSkip = () => {
         const nextScreenMap = {
@@ -53,6 +61,14 @@ export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
                 labelStyle={{ fontSize: 18 }}
                 style={{ marginTop: 40, padding: 4 }}>
                 Take a photo
+            </Button>
+            <Button
+                onPress={handleCancel}
+                uppercase
+                mode='contained'
+                labelStyle={{ fontSize: 18 }}
+                style={{ marginTop: 40, padding: 4 }}>
+                Cancel
             </Button>
             {side !== 'front' &&
                 <Button
