@@ -13,6 +13,10 @@ const initialState = {
   exerciseFrequency: null,
   photos: null,
   gymExperience: null,
+  currentBodyFat: null,
+  targetBodyFat: null,
+  targetWeight: null,
+  bodyPartsThatNeedImprovement: null,
   errorMessage: null,
   loading: false,
 };

@@ -41,6 +41,10 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
         username,
         weight,
         yearOfBirth,
+        currentBodyFat,
+        targetBodyFat,
+        targetWeight,
+        bodyPartsThatNeedImprovement,
       } = docSnap.data();
 
       dispatch(
@@ -55,6 +59,10 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
           yearOfBirth,
           photos,
           gymExperience,
+          currentBodyFat,
+          targetBodyFat,
+          targetWeight,
+          bodyPartsThatNeedImprovement,
           loading: false,
         })
       );

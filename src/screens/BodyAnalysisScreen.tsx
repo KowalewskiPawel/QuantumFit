@@ -3,12 +3,11 @@ import { Image } from "expo-image";
 import { View, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Surface, useTheme, Text } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
-import { selectUserState } from "../features/user";
+import { loadUserInfo, selectUserState, updateUserInfo } from "../features/user";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { LoadingSpinner, StackRow } from "../components";
 import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
-import { resetBodyPhotosState } from "../features/bodyPhotos/slice";
-import { selectBodyPhotosState } from "../features/bodyPhotos";
+import { deletePhotos, selectBodyPhotosState } from "../features/bodyPhotos";
 import apiClient from "../api/apiClient";
 
 export const BodyAnalysisScreen = ({ navigation }) => {
@@ -26,7 +25,8 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   } = useAppSelector(selectUserState);
   const bodyPhotos = useAppSelector(selectBodyPhotosState);
   const [geminiResponse, setGeminiResponse] = useState(null);
-  const [errorFetchingGeminiResponse, setErrorFetchingGeminiResponse] = useState("");
+  const [errorFetchingGeminiResponse, setErrorFetchingGeminiResponse] =
+    useState("");
   const [isFetchingGeminiResponse, setIsFetchingGeminiResponse] =
     useState(false);
   const theme = useTheme();
@@ -56,7 +56,6 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         message.split("```json")[1].split("```")[0]
       );
       setGeminiResponse(parsedText);
-
     } catch (error) {
       if (error.message) {
         setErrorFetchingGeminiResponse(error.message);
@@ -71,8 +70,19 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   };
 
   const handleComplete = () => {
+    dispatch(deletePhotos());
+    dispatch(
+      updateUserInfo({
+        currentBodyFat: geminiResponse.current.bodyFat,
+        targetBodyFat: geminiResponse.target.bodyFat,
+        targetWeight: geminiResponse.target.weight,
+        bodyPartsThatNeedImprovement:
+          geminiResponse.bodyPartsThatNeedImprovement,
+        photos: [],
+      })
+    );
+    dispatch(loadUserInfo());
     navigation.navigate("MainMenu");
-    dispatch(resetBodyPhotosState());
   };
 
   useEffect(() => {
@@ -191,6 +201,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                   borderColor: theme.colors.tertiary,
                   padding: 12,
                   marginBottom: 32,
+                  marginHorizontal: 20,
                 }}
               >
                 <Text
@@ -213,6 +224,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 4,
                     }}
                   >
                     Body Fat:
@@ -223,7 +235,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {geminiResponse?.current.bodyFat}%
+                    {Math.floor(geminiResponse?.current.bodyFat)}%
                   </Text>
                 </StackRow>
                 <StackRow
@@ -236,6 +248,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 4,
                     }}
                   >
                     Weight:
@@ -246,7 +259,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {`${geminiResponse?.current.weight || "0"}kg`}
+                    {`${Math.floor(geminiResponse?.current.weight) || "0"}kg`}
                   </Text>
                 </StackRow>
               </Surface>
@@ -258,6 +271,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: theme.colors.tertiary,
                   padding: 12,
+                  marginHorizontal: 20,
                 }}
               >
                 <Text
@@ -280,6 +294,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 4,
                     }}
                   >
                     Body Fat:
@@ -290,7 +305,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {geminiResponse?.target.bodyFat}%
+                    {Math.floor(geminiResponse?.target.bodyFat)}%
                   </Text>
                 </StackRow>
                 <StackRow
@@ -303,6 +318,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 4,
                     }}
                   >
                     Weight:
@@ -313,7 +329,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {`${geminiResponse?.target.weight || "0"}kg`}
+                    {`${Math.floor(geminiResponse?.target.weight) || "0"}kg`}
                   </Text>
                 </StackRow>
               </Surface>
@@ -326,6 +342,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
               color: theme.colors.onBackground,
               marginTop: 24,
               marginBottom: 12,
+              marginLeft: 40,
             }}
           >
             Additional info
@@ -335,6 +352,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
               ...styles.surface,
               marginBottom: 20,
               backgroundColor: theme.colors.backdrop,
+              marginHorizontal: 40,
             }}
             elevation={4}
           >
