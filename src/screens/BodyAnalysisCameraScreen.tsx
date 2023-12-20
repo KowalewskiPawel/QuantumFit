@@ -98,8 +98,8 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
         // Camera permissions are not granted yet
         return (
             <View style={styles.container}>
-                <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-                <Button mode='contained' onPress={requestPermission} >grant permission</Button>
+                <Text style={{ textAlign: 'center' }}>Camera Permission Not Granted</Text>
+                <Button mode='contained' onPress={requestPermission}>Grant Permission</Button>
             </View>
         );
     }
@@ -111,7 +111,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
         return (
             <View style={localStyles.container}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.titleText}>{`Take a picture of your ${side}`}</Text>
+                    <Text style={styles.titleText}>{`Take a picture of the ${side} part of your body`}</Text>
                 </View>
                 <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: cameraHeight }}>
                     <Camera useCamera2Api autoFocus ref={cameraRef} style={localStyles.camera} type={type}>
@@ -131,13 +131,13 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     return (
         <View style={localStyles.container}>
             <View style={styles.titleContainer}>
-                <Text style={styles.titleText}>{`Take a picture of your ${side}`}</Text>
+                <Text style={styles.titleText}>{`Take a picture of the ${side} part of your body`}</Text>
             </View>
             <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: cameraHeight }}>
                 <Image contentFit='contain' source={takenPicture.uri} style={localStyles.camera} />
             </View>
             <View style={localStyles.buttonsRow}>
-                <Button icon='cancel' mode='contained-tonal' buttonColor='red' style={{ marginRight: 16 }} onPress={() => setTakenPicture(null)}>Decline</Button>
+                <Button icon='cancel' mode='contained-tonal' buttonColor='red' style={{ marginRight: 16 }} onPress={() => setTakenPicture(null)}>Retake</Button>
                 <Button icon='check' mode='contained-tonal' buttonColor='green' style={{ marginLeft: 16 }} onPress={handlePictureUpload}>Accept</Button>
             </View>
         </View >

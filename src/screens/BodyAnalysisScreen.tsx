@@ -213,6 +213,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 8,
                     }}
                   >
                     Body Fat:
@@ -223,7 +224,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {geminiResponse?.current.bodyFat}%
+                    {Math.floor(geminiResponse?.current.bodyFat)}%
                   </Text>
                 </StackRow>
                 <StackRow
@@ -236,6 +237,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 8,
                     }}
                   >
                     Weight:
@@ -246,7 +248,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {`${geminiResponse?.current.weight || "0"}kg`}
+                    {`${Math.floor(geminiResponse?.current.weight) || "0"}kg`}
                   </Text>
                 </StackRow>
               </Surface>
@@ -280,6 +282,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 8,
                     }}
                   >
                     Body Fat:
@@ -290,7 +293,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {geminiResponse?.target.bodyFat}%
+                    {Math.floor(geminiResponse?.target.bodyFat)}%
                   </Text>
                 </StackRow>
                 <StackRow
@@ -303,6 +306,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     style={{
                       ...styles.secondarySubtitleUppercase,
                       color: theme.colors.onBackground,
+                      marginRight: 8,
                     }}
                   >
                     Weight:
@@ -313,7 +317,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                       color: theme.colors.onBackground,
                     }}
                   >
-                    {`${geminiResponse?.target.weight || "0"}kg`}
+                    {`${Math.floor(geminiResponse?.target.weight) || "0"}kg`}
                   </Text>
                 </StackRow>
               </Surface>
