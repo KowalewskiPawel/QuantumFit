@@ -20,11 +20,7 @@ import apiClient from "../api/apiClient";
 
 import { DietState } from "../features/diet/state";
 import { setPreviousDietState } from "../features/diet/slice";
-import {
-  loadMealInfo,
-  selectMealState,
-  updateMealInfo,
-} from "../features/meal";
+import { selectMealState, updateMealInfo } from "../features/meal";
 import { selectUserState } from "../features/user";
 import { generateQuestion } from "../prompts/mealPlan";
 import { setMealState } from "../features/meal/slice";

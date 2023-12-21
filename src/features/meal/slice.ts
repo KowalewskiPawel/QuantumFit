@@ -10,8 +10,8 @@ export const mealSlice = createSlice({
     setMealState(state, action: PayloadAction<Partial<MealState>>) {
       Object.assign(state, action.payload);
     },
-    resetMealState() {
-      initialState;
+    resetMealState(_state) {
+      return initialState;
     },
   },
 });

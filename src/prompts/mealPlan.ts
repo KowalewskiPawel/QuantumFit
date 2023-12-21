@@ -9,15 +9,15 @@ export const generateQuestion = (
 ) => {
   const age = new Date(Date.now()).getFullYear() - yearOfBirth;
   const filteredAim = (aim: string) => {
-    if (aim.includes("lose")) {
+    if (aim?.includes("lose")) {
       return "lose weight";
     }
 
-    if (aim.includes("gain")) {
+    if (aim?.includes("gain")) {
       return "gain weight and muscle mass";
     }
 
-    if (aim.includes("maintain")) {
+    if (aim?.includes("maintain")) {
       return "maintain their weight";
     }
 

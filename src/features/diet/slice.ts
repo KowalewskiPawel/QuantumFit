@@ -23,8 +23,8 @@ export const dietSlice = createSlice({
     setDietState(state, action: PayloadAction<Partial<DietState>>) {
       Object.assign(state, action.payload);
     },
-    resetDietState(state) {
-      Object.assign(state, initialState);
+    resetDietState(_state) {
+      return initialState;
     },
   },
 });
@@ -36,8 +36,8 @@ export const previousDietSlice = createSlice({
     setPreviousDietState(state, action: PayloadAction<Partial<DietState>>) {
       Object.assign(state, action.payload);
     },
-    resetPreviousDietState(state) {
-      Object.assign(state, initialState);
+    resetPreviousDietState(_state) {
+      return initialState;
     },
   },
 });
