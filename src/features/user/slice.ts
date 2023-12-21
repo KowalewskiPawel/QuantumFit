@@ -19,6 +19,7 @@ const initialState = {
   bodyPartsThatNeedImprovement: null,
   errorMessage: null,
   loading: false,
+  bodyAnalysis:  null,
 };
 
 export const userSlice = createSlice({

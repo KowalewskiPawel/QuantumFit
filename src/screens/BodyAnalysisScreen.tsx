@@ -10,6 +10,7 @@ import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
 import { selectBodyPhotosState } from "../features/bodyPhotos";
 import apiClient from "../api/apiClient";
 import { resetBodyPhotosState } from "../features/bodyPhotos/slice";
+import { setUserState } from "../features/user/slice";
 
 export const BodyAnalysisScreen = ({ navigation }) => {
   const AnalysePosture = require("../assets/analysis-body.png");
@@ -57,6 +58,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         message.split("```json")[1].split("```")[0]
       );
       setGeminiResponse(parsedText);
+      dispatch(updateUserInfo({ bodyAnalysis: parsedText }))
     } catch (error) {
       if (error.message) {
         setErrorFetchingGeminiResponse(error.message);
@@ -93,7 +95,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     if (!loading) {
       fetchAnalysis();
     }
-  }, [loading]);
+  }, []);
 
   if (!geminiResponse || isFetchingGeminiResponse) {
     return (
