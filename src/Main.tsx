@@ -24,6 +24,7 @@ import {
   UpdateScreenBody,
   UpdateScreenLifestyle,
   UpdateScreenAim,
+  ExerciseAnalysisScreen,
 } from "./screens";
 import { withTheme } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./app/store";
@@ -88,9 +89,13 @@ const MainScreen = ({ theme }) => {
           component={BodyAnalysisCameraScreen}
         />
         <Stack.Screen
+          name="ExerciseAnalysis"
+          component={ExerciseAnalysisScreen}
+        />
+        <Stack.Screen
           name="BodyAnalysisPictureScreen"
           component={BodyAnalysisPictureScreen}
-          initialParams={{ side: 'front' }}
+          initialParams={{ side: "front" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

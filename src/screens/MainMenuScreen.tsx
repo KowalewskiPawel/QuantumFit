@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, Image, SafeAreaView } from "react-native";
-import { Button, Dialog, Portal, useTheme } from "react-native-paper";
+import {
+  Button,
+  Dialog,
+  IconButton,
+  Portal,
+  useTheme,
+} from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { loadUserInfo, selectUserState } from "../features/user";
@@ -59,6 +65,13 @@ export const MainMenuScreen = ({ navigation }) => {
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
             Hello {userState.username}
           </Text>
+          <IconButton
+            icon="cog"
+            iconColor={theme.colors.onBackground}
+            size={30}
+            style={{ position: "absolute", right: -50, top: -30, backgroundColor: theme.colors.primary }}
+            onPress={() => navigation.navigate("Settings")}
+          />
           <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
         </View>
         <Button
@@ -97,9 +110,9 @@ export const MainMenuScreen = ({ navigation }) => {
             marginBottom: 20,
             backgroundColor: theme.colors.primary,
           }}
-          onPress={() => navigation.navigate("Settings")}
+          onPress={() => navigation.navigate("ExerciseAnalysis")}
         >
-          Settings
+          Exercise Analysis
         </Button>
       </View>
       <Portal>
