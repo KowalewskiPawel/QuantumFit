@@ -39,8 +39,8 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
   const [type, setType] = useState(CameraType.front);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const cameraRef = useRef<Camera>(null);
-  const takePictureTimeout = useRef(null);
-  const [takenPicture, setTakenPicture] = useState<CameraCapturedVideo>();
+  const recordVideoTimeout = useRef(null);
+  const [recordedVideo, setRecordedVideo] = useState<CameraCapturedVideo>();
 
   const toggleCameraType = () => {
     setType((current) =>
@@ -48,10 +48,10 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     );
   };
 
-  const takePicture = () => {
+  const recordVideo = () => {
     setCountdown(5);
     setShowCountdown(true);
-    takePictureTimeout.current = setTimeout(async () => {
+    recordVideoTimeout.current = setTimeout(async () => {
       setIsRecording(true);
       setRecordingCountdown(10);
       const video = await cameraRef.current.recordAsync({
@@ -60,7 +60,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
         maxFileSize: 9000000,
         mute: true,
       });
-      setTakenPicture(video);
+      setRecordedVideo(video);
       setIsRecording(false);
       setShowCountdown(false);
     }, 5000);
@@ -70,7 +70,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     setUploadStatus(null);
     try {
       const uploadResponse: any = await uploadToFirebase(
-        takenPicture.uri,
+        recordedVideo.uri,
         `${uid}_exercise_${Date.now().toFixed()}`,
         false,
         (currentUploadStatus) => {
@@ -112,10 +112,10 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
   , [recordingCountdown]);
 
   useEffect(() => {
-    if (!!takenPicture) {
-      clearTimeout(takePictureTimeout.current);
+    if (!!recordedVideo) {
+      clearTimeout(recordVideoTimeout.current);
     }
-  }, [takenPicture]);
+  }, [recordedVideo]);
 
   if (!permission) {
     // Camera permissions are still loading
@@ -136,7 +136,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     );
   }
 
-  if (!takenPicture) {
+  if (!recordedVideo) {
     return (
       <View style={localStyles.container}>
         <View style={styles.titleContainer}>
@@ -183,7 +183,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
               iconColor="red"
               style={{ marginTop: 16 }}
               icon="record-rec"
-              onPress={takePicture}
+              onPress={recordVideo}
             />
             <Button
               icon="arrow-left"
@@ -214,7 +214,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
         }}
       >
         <Video
-          source={takenPicture}
+          source={recordedVideo}
           shouldPlay
           style={localStyles.camera}
           isLooping
@@ -233,7 +233,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
             mode="contained-tonal"
             buttonColor="red"
             style={{ marginRight: 16 }}
-            onPress={() => setTakenPicture(null)}
+            onPress={() => setRecordedVideo(null)}
           >
             Retake
           </Button>
