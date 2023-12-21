@@ -1,19 +1,31 @@
 import React from "react";
 import { Camera, CameraType } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import {
   Button,
   IconButton,
   MD3Colors,
+  Surface,
   Text,
   useTheme,
 } from "react-native-paper";
 import { Video } from "expo-av";
 import { styles } from "../styles/globalStyles";
-import { uploadToFirebase } from "../firebase/firebase-config";
+import {
+  uploadToFirebase,
+} from "../firebase/firebase-config";
 import { useAppSelector } from "../app/store";
 import { selectAuthState } from "../features/auth";
+import { LoadingSpinner, StackRow } from "../components";
+import apiClient from "../api/apiClient";
+import { exerciseAnalysisPrompt } from "../prompts/exerciseAnalysis";
 
 type CameraCapturedVideo = {
   uri: string;
@@ -32,6 +44,12 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
   const countdownTimer = useRef(null);
   const recordingCountdownTimer = useRef(null);
   const [uploadStatus, setUploadStatus] = useState(null);
+  const [videoUrl, setVideoUrl] = useState<string>();
+  const [videoContentType, setVideoContentType] = useState<string>();
+  const [fetchingAnalysis, setFetchingAnalysis] = useState<boolean>(false);
+  const [errorFetchingGeminiResponse, setErrorFetchingGeminiResponse] =
+    useState<string>("");
+  const [geminiResponse, setGeminiResponse] = useState<string>("");
 
   const [type, setType] = useState(CameraType.front);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -54,13 +72,37 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
       const video = await cameraRef.current.recordAsync({
         quality: "480p",
         maxDuration: 10,
-        maxFileSize: 9000000,
+        maxFileSize: 7000000,
         mute: true,
       });
       setRecordedVideo(video);
       setIsRecording(false);
       setShowCountdown(false);
     }, 5000);
+  };
+
+  const fetchAnalysis = async () => {
+    setFetchingAnalysis(true);
+    setErrorFetchingGeminiResponse("");
+
+    try {
+      const { message } = await apiClient.post("video", {
+        prompt: exerciseAnalysisPrompt,
+        videoUrl,
+        fileType: videoContentType,
+      });
+      setGeminiResponse(message);
+    } catch (error) {
+      if (error.message) {
+        setErrorFetchingGeminiResponse(error.message);
+      } else {
+        setErrorFetchingGeminiResponse(
+          "Something went wrong while fetching your body analysis."
+        );
+      }
+    } finally {
+      setFetchingAnalysis(false);
+    }
   };
 
   const uploadVideoToFirebase = async () => {
@@ -74,11 +116,24 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
           setUploadStatus(Math.ceil(currentUploadStatus));
         }
       );
+      const { downloadUrl, metadata } = uploadResponse;
+      setVideoUrl(downloadUrl);
+      setVideoContentType(metadata.contentType);
     } catch (error) {
       console.error(error.message);
     } finally {
       setUploadStatus(null);
     }
+  };
+
+  const cleanUpAfterRecording = async () => {
+    // Disabled for now as it makes the app crash from time to time
+    // TODO: Remove videos from firebase storage after analysis
+    // if (videoUrl) {
+    //   const videoToDelete = extractFileId(videoUrl);
+    //   await deleteObject(ref(fbStorage, `videos/${videoToDelete}`));
+    // }
+    navigation.goBack();
   };
 
   useEffect(() => {
@@ -113,6 +168,14 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     }
   }, [recordedVideo]);
 
+  useEffect(() => {
+    if (videoUrl) {
+      setTimeout(() => {
+        fetchAnalysis();
+      }, 2000);
+    }
+  }, [videoUrl]);
+
   if (!permission) {
     // Camera permissions are still loading
     return <View />;
@@ -132,12 +195,169 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     );
   }
 
+  if (geminiResponse && !fetchingAnalysis) {
+    return (
+      <SafeAreaView style={{ ...styles.container }}>
+        <View>
+          <View style={localStyles.loadingScreen}>
+            <View style={styles.textBackground}>
+              <Text
+                style={{
+                  ...styles.title,
+                  color: theme.colors.onBackground,
+                  marginBottom: 40,
+                }}
+              >
+                Exercise Analysis
+              </Text>
+            </View>
+            <View
+              style={{
+                ...localStyles.cameraContainer,
+                width: cameraWidth - 50,
+                height: cameraHeight - 100,
+              }}
+            >
+              <Video
+                source={recordedVideo}
+                shouldPlay
+                style={localStyles.camera}
+                isLooping
+              />
+            </View>
+            <Surface
+              style={{
+                ...styles.surface,
+                marginTop: 20,
+                marginBottom: 10,
+                backgroundColor: theme.colors.backdrop,
+                marginHorizontal: 40,
+              }}
+              elevation={4}
+            >
+              <ScrollView>
+                <Text
+                  style={{
+                    ...styles.textBackground,
+                    color: theme.colors.onBackground,
+                  }}
+                >
+                  {geminiResponse}
+                </Text>
+              </ScrollView>
+            </Surface>
+            <StackRow>
+              <Button
+                mode="contained"
+                disabled={fetchingAnalysis}
+                onPress={cleanUpAfterRecording}
+                style={{
+                  marginTop: 20,
+                  marginBottom: 20,
+                  marginRight: 20,
+                  marginLeft: "auto",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                mode="contained"
+                disabled={fetchingAnalysis}
+                onPress={fetchAnalysis}
+                style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
+              >
+                Re-analyze
+              </Button>
+            </StackRow>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (videoUrl && fetchingAnalysis) {
+    return (
+      <SafeAreaView style={{ ...styles.container }}>
+        <View>
+          <View style={styles.textBackground}>
+            <Text
+              style={{
+                ...styles.title,
+                color: theme.colors.onBackground,
+                marginBottom: 40,
+              }}
+            >
+              Exercise Analysis
+            </Text>
+          </View>
+          <View style={localStyles.loadingScreen}>
+            <Text style={{ marginBottom: 30 }} variant="headlineMedium">
+              Analyzing your video
+            </Text>
+            <LoadingSpinner />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (errorFetchingGeminiResponse) {
+    return (
+      <SafeAreaView style={{ ...styles.container }}>
+        <View>
+          <View style={styles.textBackground}>
+            <Text
+              style={{
+                ...styles.title,
+                color: theme.colors.onBackground,
+                marginBottom: 40,
+              }}
+            >
+              Exercise Analysis
+            </Text>
+          </View>
+          <View style={localStyles.loadingScreen}>
+            <Text
+              style={{ marginBottom: 30, color: theme.colors.error }}
+              variant="headlineMedium"
+            >
+              {errorFetchingGeminiResponse}
+            </Text>
+          </View>
+          <StackRow>
+            <Button
+              mode="contained"
+              disabled={fetchingAnalysis}
+              onPress={() => navigation.goBack()}
+              style={{
+                marginTop: 20,
+                marginBottom: 20,
+                marginRight: 20,
+                marginLeft: "auto",
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              mode="contained"
+              disabled={fetchingAnalysis}
+              onPress={fetchAnalysis}
+              style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
+            >
+              Re-analyze
+            </Button>
+          </StackRow>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   if (!recordedVideo) {
     return (
       <View style={localStyles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>
-            Record 10 seconds video of the Exercise to analyze
+          <Text style={styles.subtitleUpperCase}>
+            Record 10 seconds of the Exercise for the analysis
           </Text>
         </View>
         <View
@@ -357,5 +577,11 @@ const localStyles = StyleSheet.create({
     width: 6,
     backgroundColor: "#ff0000",
     marginHorizontal: 5,
+  },
+  loadingScreen: {
+    height: 200,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

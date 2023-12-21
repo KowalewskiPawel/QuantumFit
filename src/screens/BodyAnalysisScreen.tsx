@@ -7,8 +7,9 @@ import { loadUserInfo, selectUserState, updateUserInfo } from "../features/user"
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { LoadingSpinner, StackRow } from "../components";
 import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
-import { deletePhotos, selectBodyPhotosState } from "../features/bodyPhotos";
+import { selectBodyPhotosState } from "../features/bodyPhotos";
 import apiClient from "../api/apiClient";
+import { resetBodyPhotosState } from "../features/bodyPhotos/slice";
 
 export const BodyAnalysisScreen = ({ navigation }) => {
   const AnalysePosture = require("../assets/analysis-body.png");
@@ -70,7 +71,10 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   };
 
   const handleComplete = () => {
-    dispatch(deletePhotos());
+    // Disabled for now
+    // TODO: Remove photos from storage after analysis
+    // dispatch(deletePhotos());
+    dispatch(resetBodyPhotosState());
     dispatch(
       updateUserInfo({
         currentBodyFat: geminiResponse.current.bodyFat,
@@ -108,7 +112,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
           </View>
           <View style={localStyles.loadingScreen}>
             <Text style={{ marginBottom: 30 }} variant="headlineMedium">
-              Analysing your body
+              Analyzing your body
             </Text>
             <LoadingSpinner />
           </View>
@@ -160,7 +164,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
               onPress={fetchAnalysis}
               style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
             >
-              Re-analyse
+              Re-analyze
             </Button>
           </StackRow>
         </View>
@@ -386,7 +390,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
             onPress={fetchAnalysis}
             style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
           >
-            Re-analyse
+            Re-analyze
           </Button>
         </StackRow>
       </View>
