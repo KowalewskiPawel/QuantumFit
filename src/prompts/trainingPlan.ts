@@ -17,7 +17,7 @@ export const getTrainingPlanPrompt = (
   - gender: ${sex}
   - weight: ${currentWeight}
   - age: ${age}
-  - train since: ${gymExperience} months
+  - training since: ${gymExperience} months
   - excercise frequency: ${exerciseFrequency} times a week
   
   give additional tips about excercises and description how to perform those excercises
