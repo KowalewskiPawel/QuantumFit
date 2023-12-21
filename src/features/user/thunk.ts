@@ -5,21 +5,20 @@ import { setUserState } from "./slice";
 
 export const updateUserInfo =
   (updatedFields): AppThunk =>
-  async (dispatch, getState) => {
-    dispatch(setUserState({ loading: true, errorMessage: null }));
-    const rootState = getState();
-    const authStore = selectAuthState(rootState);
+    async (dispatch, getState) => {
+      dispatch(setUserState({ loading: true, errorMessage: null }));
+      const rootState = getState();
+      const authStore = selectAuthState(rootState);
+      try {
+        await setDoc(doc(db, "users", authStore.uid), updatedFields, {
+          merge: true,
+        });
 
-    try {
-      await setDoc(doc(db, "users", authStore.uid), updatedFields, {
-        merge: true,
-      });
-
-      dispatch(setUserState({ loading: false }));
-    } catch (error) {
-      dispatch(setUserState({ loading: false, errorMessage: error }));
-    }
-  };
+        dispatch(setUserState({ loading: false }));
+      } catch (error) {
+        dispatch(setUserState({ loading: false, errorMessage: error }));
+      }
+    };
 
 export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
   dispatch(setUserState({ loading: true, errorMessage: null }));
@@ -42,6 +41,10 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
         username,
         weight,
         yearOfBirth,
+        currentBodyFat,
+        targetBodyFat,
+        targetWeight,
+        bodyPartsThatNeedImprovement,
       } = docSnap.data();
 
       dispatch(
@@ -56,6 +59,10 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
           yearOfBirth,
           photos,
           gymExperience,
+          currentBodyFat,
+          targetBodyFat,
+          targetWeight,
+          bodyPartsThatNeedImprovement,
           loading: false,
         })
       );

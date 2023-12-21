@@ -100,7 +100,7 @@ export const LoginScreen = ({ navigation }) => {
               style={{ marginTop: 20, marginBottom: 20 }}
             >
               {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="small" color={theme.colors.tertiary} />
               ) : (
                 "Sign in"
               )}

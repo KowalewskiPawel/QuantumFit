@@ -1,15 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, Image, SafeAreaView } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import {
+  Button,
+  Dialog,
+  IconButton,
+  Portal,
+  useTheme,
+} from "react-native-paper";
 import { styles } from "../styles/globalStyles";
-import { useAppSelector } from "../app/store";
-import { selectUserState } from "../features/user";
+import { useAppDispatch, useAppSelector } from "../app/store";
+import { loadUserInfo, selectUserState } from "../features/user";
 import { LoadingSpinner } from "../components";
 
 export const MainMenuScreen = ({ navigation }) => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const userState = useAppSelector(selectUserState);
+  const [isBodyAnalysisMissingModalOpen, setIsBodyAnalysisMissingModalOpen] =
+    useState(false);
   const LogoEntry = require("../assets/logoEntry.png");
+
+  const shouldOpenMyTrainings = () => {
+    if (userState.currentBodyFat) {
+      navigation.navigate("MyTrainings");
+    } else {
+      setIsBodyAnalysisMissingModalOpen(true);
+    }
+  };
+
+  const shouldOpenMyDiet = () => {
+    if (userState.currentBodyFat) {
+      navigation.navigate("MyDiet");
+    } else {
+      setIsBodyAnalysisMissingModalOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!userState.loading) {
+      dispatch(loadUserInfo());
+    }
+  }, []);
 
   if (userState.loading) {
     return (
@@ -34,12 +65,21 @@ export const MainMenuScreen = ({ navigation }) => {
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
             Hello {userState.username}
           </Text>
+          <IconButton
+            icon="cog"
+            iconColor={theme.colors.onBackground}
+            size={30}
+            style={{ position: "absolute", right: -50, top: -30, backgroundColor: theme.colors.primary }}
+            onPress={() => navigation.navigate("Settings")}
+          />
           <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
         </View>
         <Button
           mode="contained"
           style={{ marginTop: 20, backgroundColor: theme.colors.primary }}
-          onPress={() => navigation.navigate("BodyAnalysis")}
+          onPress={() =>
+            navigation.navigate("BodyAnalysisPictureScreen", { side: "front" })
+          }
         >
           Body Analysis
         </Button>
@@ -49,7 +89,7 @@ export const MainMenuScreen = ({ navigation }) => {
             marginTop: 20,
             backgroundColor: theme.colors.primary,
           }}
-          onPress={() => navigation.navigate("MyTrainings")}
+          onPress={shouldOpenMyTrainings}
         >
           My Trainings
         </Button>
@@ -59,7 +99,7 @@ export const MainMenuScreen = ({ navigation }) => {
             marginTop: 20,
             backgroundColor: theme.colors.primary,
           }}
-          onPress={() => navigation.navigate("MyDiet")}
+          onPress={shouldOpenMyDiet}
         >
           My Diet
         </Button>
@@ -70,11 +110,35 @@ export const MainMenuScreen = ({ navigation }) => {
             marginBottom: 20,
             backgroundColor: theme.colors.primary,
           }}
-          onPress={() => navigation.navigate("Settings")}
+          onPress={() => navigation.navigate("ExerciseAnalysis")}
         >
-          Settings
+          Exercise Analysis
         </Button>
       </View>
+      <Portal>
+        <Dialog
+          visible={isBodyAnalysisMissingModalOpen}
+          onDismiss={() => setIsBodyAnalysisMissingModalOpen(false)}
+          style={{
+            backgroundColor: theme.colors.primaryContainer,
+          }}
+        >
+          <Dialog.Title>Body Analysis Info Missing</Dialog.Title>
+          <Dialog.Content>
+            <Text style={{ color: "#FFF" }}>
+              Please complete the body analysis to enable this feature.
+            </Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              textColor="#FFF"
+              onPress={() => setIsBodyAnalysisMissingModalOpen(false)}
+            >
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </SafeAreaView>
   );
 };

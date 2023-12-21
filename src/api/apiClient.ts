@@ -1,21 +1,17 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
 
 type Config = {
   method: string;
   headers: {
     "Content-Type": string;
-    "x-auth-token": string;
   };
   body?: string;
 };
 
 const apiClient = {
   async request(method, endpoint, data = null) {
-    const token = await AsyncStorage.getItem("userToken");
     const headers = {
       "Content-Type": "application/json",
-      "x-auth-token": token,
     };
 
     const config: Config = {

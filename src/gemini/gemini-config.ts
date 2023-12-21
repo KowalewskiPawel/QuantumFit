@@ -4,11 +4,13 @@ type imageProps = {
   path: string;
   mimeType: string;
 };
-
-const geminiAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const apiKey=process.env.GEMINI_API_KEY
+const geminiAI = new GoogleGenerativeAI(apiKey);
 
 // function will probably need to be adjusted to work depending on where we get the images from
-const fileToGenerativePart = async (file) => {
+const fileToGenerativePart = async (url) => {
+  const fetchedImage = await fetch(url);
+  const file = await fetchedImage.blob();
   const base64EncodedDataPromise = new Promise((resolve) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result.split(",")[1]);
@@ -31,15 +33,13 @@ export const askGeminiText = async (question: string) => {
 
 export const askGeminiVision = async (
   question: string,
-  images: imageProps[]
+  images: string[]
 ) => {
   const model = geminiAI.getGenerativeModel({ model: "gemini-pro-vision" });
-
   const imageParts = await Promise.all([...images].map(fileToGenerativePart));
 
   // will need to be adjusted based on image location
   const result = await model.generateContent([question, ...imageParts]);
-
   return {
     response: result.response,
     text: result.response.text(),

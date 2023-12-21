@@ -16,6 +16,8 @@ import {
   RegisterScreenAim,
   RegisterScreenSeniority,
   MainMenuScreen,
+  BodyAnalysisCameraScreen,
+  BodyAnalysisPictureScreen,
   BodyAnalysisScreen,
   MyTrainingsScreen,
   MyDietScreen,
@@ -24,6 +26,7 @@ import {
   UpdateScreenBody,
   UpdateScreenLifestyle,
   UpdateScreenAim,
+  ExerciseAnalysisScreen,
 } from "./screens";
 import { withTheme } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./app/store";
@@ -84,6 +87,19 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen
           name="CameraPermission"
           component={CameraPermissionScreen}
+        />
+        <Stack.Screen
+          name="BodyAnalysisCameraScreen"
+          component={BodyAnalysisCameraScreen}
+        />
+        <Stack.Screen
+          name="ExerciseAnalysis"
+          component={ExerciseAnalysisScreen}
+        />
+        <Stack.Screen
+          name="BodyAnalysisPictureScreen"
+          component={BodyAnalysisPictureScreen}
+          initialParams={{ side: "front" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

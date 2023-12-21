@@ -7,21 +7,10 @@ import { CustomCard, StackRow } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { setUserState } from "../features/user/slice";
 import { selectUserState, updateUserInfo } from "../features/user";
+import { AIMS } from "../consts/aims";
 
 export const UpdateScreenAim = ({ navigation }) => {
   const dispatch = useAppDispatch();
-
-  const AIMS = [
-    {
-      content: "I want to lose weight",
-    },
-    {
-      content: "I want to keep my weight",
-    },
-    {
-      content: "I want to gain weight and muscle mass",
-    },
-  ];
   const userState = useAppSelector(selectUserState);
   const [selectedAim, setSelectedAim] = useState(userState.aim || "");
   const [selectedExerciseFrequency, setSelectedExerciseFrequency] = useState(

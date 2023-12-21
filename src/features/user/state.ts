@@ -12,6 +12,10 @@ export type UserState = {
   exerciseFrequency: number | null;
   photos: string[] | null;
   gymExperience: number | null;
+  currentBodyFat: number | null;
+  targetBodyFat: number | null;
+  targetWeight: number | null;
+  bodyPartsThatNeedImprovement: string[] | null;
   loading: boolean;
   errorMessage: string | null;
 };

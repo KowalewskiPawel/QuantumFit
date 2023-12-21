@@ -5,6 +5,7 @@ import {
   db,
   doc,
   setDoc,
+  updateDoc
 } from "../../firebase/firebase-config";
 import { AppThunk } from "../../app/store";
 import { selectRegisterState } from "./state";
@@ -37,6 +38,11 @@ export const registerUser = (): AppThunk => async (dispatch, getState) => {
       username: registerStore.username,
       photos: [],
       lifestyle: registerStore.lifestyle,
+      gymExperience: registerStore.gymExperience,
+      currentBodyFat: null,
+      targetBodyFat: null,
+      targetWeight: null,
+      bodyPartsThatNeedImprovement: [],
     });
 
     dispatch(
