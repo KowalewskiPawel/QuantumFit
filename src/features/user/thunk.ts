@@ -9,6 +9,7 @@ export const updateUserInfo =
       dispatch(setUserState({ loading: true, errorMessage: null }));
       const rootState = getState();
       const authStore = selectAuthState(rootState);
+      console.log({ updatedFields })
       try {
         await setDoc(doc(db, "users", authStore.uid), updatedFields, {
           merge: true,
@@ -45,8 +46,25 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
         targetBodyFat,
         targetWeight,
         bodyPartsThatNeedImprovement,
+        bodyAnalysis
       } = docSnap.data();
-
+      console.log({
+        aim,
+        exerciseFrequency,
+        height,
+        lifestyle,
+        gymExperience,
+        photos,
+        sex,
+        username,
+        weight,
+        yearOfBirth,
+        currentBodyFat,
+        targetBodyFat,
+        targetWeight,
+        bodyPartsThatNeedImprovement,
+        bodyAnalysis
+      })
       dispatch(
         setUserState({
           aim,
@@ -62,6 +80,7 @@ export const loadUserInfo = (): AppThunk => async (dispatch, getState) => {
           currentBodyFat,
           targetBodyFat,
           targetWeight,
+          bodyAnalysis,
           bodyPartsThatNeedImprovement,
           loading: false,
         })

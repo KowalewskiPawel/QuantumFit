@@ -6,7 +6,7 @@ import {
   FIREBASE_AUTH_DOMAIN,
   FIREBASE_MESSAGING_SENDER_ID,
 } from "@env";
-import { getFirestore, getDoc, setDoc, doc, updateDoc } from "firebase/firestore";
+import { getFirestore, addDoc, getDoc, setDoc, doc, updateDoc, collection, query, where, getDocs, serverTimestamp } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -78,16 +78,22 @@ const uploadToFirebase = async (uri, name, isPhoto, onProgress) => {
 
 export {
   app,
+  addDoc,
   fbStorage,
   db,
   ref,
   updateDoc,
   doc,
   getDoc,
+  getDocs,
   setDoc,
   uploadToFirebase,
   deleteObject,
   auth,
+  collection,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  query,
+  where,
+  serverTimestamp
 };

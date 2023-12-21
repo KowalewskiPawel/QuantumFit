@@ -12,6 +12,7 @@ export { BodyAnalysisCameraScreen } from "./BodyAnalysisCameraScreen";
 export { BodyAnalysisPictureScreen } from "./BodyAnalysisPictureScreen";
 export { BodyAnalysisScreen } from "./BodyAnalysisScreen";
 export { MyTrainingsScreen } from "./MyTrainingsScreen";
+export { MyTrainingsExcercisesScreen } from "./MyTrainingsExcercisesScreen";
 export { MyDietScreen } from "./MyDietScreen";
 export { SettingsScreen } from "./SettingsScreen";
 export { UpdateScreenEntry } from "./UpdateScreenEntry";

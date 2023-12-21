@@ -21,11 +21,7 @@ export const MainMenuScreen = ({ navigation }) => {
   const LogoEntry = require("../assets/logoEntry.png");
 
   const shouldOpenMyTrainings = () => {
-    if (userState.currentBodyFat) {
-      navigation.navigate("MyTrainings");
-    } else {
-      setIsBodyAnalysisMissingModalOpen(true);
-    }
+    navigation.navigate("MyTrainings");
   };
 
   const shouldOpenMyDiet = () => {

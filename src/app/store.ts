@@ -6,6 +6,7 @@ import { userSlice } from "../features/user/slice";
 import { dietSlice, previousDietSlice } from "../features/diet";
 import { mealSlice } from "../features/meal";
 import { bodyPhotosSlice } from "../features/bodyPhotos";
+import { trainingPlansSlice } from "../features/trainingPlans";
 
 export const storeOptions = {
   reducer: {
@@ -16,7 +17,12 @@ export const storeOptions = {
     [previousDietSlice.name]: previousDietSlice.reducer,
     [mealSlice.name]: mealSlice.reducer,
     [bodyPhotosSlice.name]: bodyPhotosSlice.reducer,
+    [trainingPlansSlice.name]: trainingPlansSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 };
 
 export const store = configureStore(storeOptions);

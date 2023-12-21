@@ -18,6 +18,7 @@ export type UserState = {
   bodyPartsThatNeedImprovement: string[] | null;
   loading: boolean;
   errorMessage: string | null;
+  bodyAnalysis: any | null;
 };
 
 export const selectUserState = (state: RootState) => state.user;
