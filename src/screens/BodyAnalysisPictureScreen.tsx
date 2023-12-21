@@ -1,5 +1,5 @@
 import { Image } from 'expo-image'
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper'
 import { styles } from "../styles/globalStyles";
 import { useAppDispatch } from '../app/store';
@@ -46,41 +46,43 @@ export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
     }
 
     return (
-        <View style={localStyles.container}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.titleText}>{`Take a snapshot of your ${side}`}</Text>
-            </View>
-            <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: 400 }}>
-                <Image contentFit='contain' style={localStyles.bodyImage} source={imageSources[side]} />
-            </View>
-            <Button
-                onPress={navigateToPhoto}
-                uppercase
-                icon='camera'
-                mode='contained'
-                labelStyle={{ fontSize: 18 }}
-                style={{ marginTop: 40, padding: 4 }}>
-                Take a photo
-            </Button>
-            {side !== 'front' &&
+        <ScrollView>
+            <View style={localStyles.container}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.titleText}>{`Take a snapshot of your ${side}`}</Text>
+                </View>
+                <View style={{ ...localStyles.cameraContainer, width: cameraWidth, height: 400 }}>
+                    <Image contentFit='contain' style={localStyles.bodyImage} source={imageSources[side]} />
+                </View>
                 <Button
-                    onPress={handleSkip}
+                    onPress={navigateToPhoto}
                     uppercase
-                    mode='outlined'
+                    icon='camera'
+                    mode='contained'
+                    labelStyle={{ fontSize: 18 }}
+                    style={{ marginTop: 40, padding: 4 }}>
+                    Take a photo
+                </Button>
+                {side !== 'front' &&
+                    <Button
+                        onPress={handleSkip}
+                        uppercase
+                        mode='outlined'
+                        labelStyle={{ fontSize: 18 }}
+                        style={{ marginTop: 10, padding: 4 }}>
+                        Skip this part
+                    </Button>
+                }
+                <Button
+                    onPress={handleCancel}
+                    uppercase
+                    mode='contained'
                     labelStyle={{ fontSize: 18 }}
                     style={{ marginTop: 10, padding: 4 }}>
-                    Skip this part
+                    Cancel
                 </Button>
-            }
-            <Button
-                onPress={handleCancel}
-                uppercase
-                mode='contained'
-                labelStyle={{ fontSize: 18 }}
-                style={{ marginTop: 10, padding: 4 }}>
-                Cancel
-            </Button>
-        </View >
+            </View >
+        </ScrollView>
     );
 }
 

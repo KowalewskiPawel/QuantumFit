@@ -75,7 +75,7 @@ export const DietAdjustmentScreen = ({ navigation }) => {
                   selected={isSelected}
                   showSelectedCheck={false}
                   showSelectedOverlay={true}
-                  style={{ flexBasis: "40%" }}
+                  style={{ flexBasis: "40%", maxHeight: 40 }}
                   textStyle={{
                     textAlign: "center",
                     marginLeft: "auto",
