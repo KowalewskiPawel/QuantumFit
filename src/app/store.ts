@@ -3,6 +3,8 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { authSlice } from "../features/auth";
 import { registerSlice } from "../features/register";
 import { userSlice } from "../features/user/slice";
+import { dietSlice, previousDietSlice } from "../features/diet";
+import { mealSlice } from "../features/meal";
 import { bodyPhotosSlice } from "../features/bodyPhotos";
 
 export const storeOptions = {
@@ -10,6 +12,9 @@ export const storeOptions = {
     [authSlice.name]: authSlice.reducer,
     [registerSlice.name]: registerSlice.reducer,
     [userSlice.name]: userSlice.reducer,
+    [dietSlice.name]: dietSlice.reducer,
+    [previousDietSlice.name]: previousDietSlice.reducer,
+    [mealSlice.name]: mealSlice.reducer,
     [bodyPhotosSlice.name]: bodyPhotosSlice.reducer,
   },
 };

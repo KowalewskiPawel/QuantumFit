@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword,
 } from "../../firebase/firebase-config";
 import { resetRegisterState } from "../register/slice";
+import { resetMealState } from "../meal/slice";
+import { resetDietState, resetPreviousDietState } from "../diet/slice";
 
 export const loginUser =
   (username: string, password: string) => async (dispatch: any) => {
@@ -41,6 +43,9 @@ export const loginUser =
 export const logoutUser = () => async (dispatch) => {
   signOut(auth);
   dispatch(resetRegisterState());
+  dispatch(resetMealState());
+  dispatch(resetDietState());
+  dispatch(resetPreviousDietState());
   dispatch(
     setSessionState({
       token: null,

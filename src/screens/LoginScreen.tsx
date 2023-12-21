@@ -12,6 +12,8 @@ import { selectAuthState, loginUser } from "../features/auth";
 import { styles } from "../styles/globalStyles";
 import { StackRow } from "../components";
 import { loadUserInfo } from "../features/user";
+import { loadMealInfo } from "../features/meal";
+import { loadDietInfo } from "../features/diet";
 
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
@@ -29,6 +31,8 @@ export const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     if (token) {
       dispatch(loadUserInfo());
+      dispatch(loadMealInfo());
+      dispatch(loadDietInfo());
       navigation.navigate("MainMenu");
     }
   }, [token]);

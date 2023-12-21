@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   LoginScreen,
   CameraPermissionScreen,
+  DietAdjustmentScreen,
   EntryScreen,
   RegisterScreenEntry,
   RegisterScreenBody,
@@ -72,6 +73,7 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen name="BodyAnalysis" component={BodyAnalysisScreen} />
         <Stack.Screen name="MyTrainings" component={MyTrainingsScreen} />
         <Stack.Screen name="MyDiet" component={MyDietScreen} />
+        <Stack.Screen name="DietPreferences" component={DietAdjustmentScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="UpdateEntry" component={UpdateScreenEntry} />
         <Stack.Screen name="UpdateBody" component={UpdateScreenBody} />
