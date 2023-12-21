@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  Camera,
-  CameraType,
-} from "expo-camera";
+import { Camera, CameraType } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import {
@@ -55,7 +52,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
       setIsRecording(true);
       setRecordingCountdown(10);
       const video = await cameraRef.current.recordAsync({
-        quality: '480p',
+        quality: "480p",
         maxDuration: 10,
         maxFileSize: 9000000,
         mute: true,
@@ -108,8 +105,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     if (recordingCountdown === 0) {
       clearInterval(recordingCountdownTimer.current);
     }
-  }
-  , [recordingCountdown]);
+  }, [recordingCountdown]);
 
   useEffect(() => {
     if (!!recordedVideo) {
@@ -159,21 +155,38 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
             type={type}
           >
             <View style={localStyles.buttonContainer}>
-              {isRecording && (<View style={{ ...localStyles.recordIndicatorContainer, position: 'absolute', left: 30 }}>
-                <View style={localStyles.recordDot} />
-                <Text style={localStyles.recordTitle}>{"Recording..."}</Text>
-              </View>)}
-              <IconButton
-                size={26}
-                icon="camera-flip-outline"
-                iconColor={MD3Colors.secondary100}
-                onPress={toggleCameraType}
-              />
+              {isRecording && (
+                <View
+                  style={{
+                    ...localStyles.recordIndicatorContainer,
+                    position: "absolute",
+                    left: 30,
+                  }}
+                >
+                  <View style={localStyles.recordDot} />
+                  <Text style={localStyles.recordTitle}>{"Recording..."}</Text>
+                </View>
+              )}
+              {!isRecording && (
+                <IconButton
+                  size={26}
+                  icon="camera-flip-outline"
+                  iconColor={MD3Colors.secondary100}
+                  onPress={toggleCameraType}
+                />
+              )}
             </View>
           </Camera>
         </View>
         {showCountDown ? (
-          <Text style={{ ...localStyles.countdownTimer, color: isRecording ? theme.colors.error : theme.colors.onPrimaryContainer }}>
+          <Text
+            style={{
+              ...localStyles.countdownTimer,
+              color: isRecording
+                ? theme.colors.error
+                : theme.colors.onPrimaryContainer,
+            }}
+          >
             {countdown === 0 ? recordingCountdown : countdown}
           </Text>
         ) : (
