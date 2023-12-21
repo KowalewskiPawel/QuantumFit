@@ -34,7 +34,7 @@ export const DietAdjustmentScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <View>
+      <View style={{ ...styles.container }}>
         <View style={styles.textBackground}>
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
             Diet Preferences
@@ -67,26 +67,26 @@ export const DietAdjustmentScreen = ({ navigation }) => {
               rowGap: 16,
             }}
           >
-            {Object.entries(filteredChipState).map(([name, isSelected]) => {
-              return (
-                <Chip
-                  key={name}
-                  mode={isSelected ? "flat" : "outlined"}
-                  selected={isSelected}
-                  showSelectedCheck={false}
-                  showSelectedOverlay={true}
-                  style={{ flexBasis: "40%" }}
-                  textStyle={{
-                    textAlign: "center",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
-                  onPress={() => handleChipPress(name)}
-                >
-                  {name}
-                </Chip>
-              );
-            })}
+              {Object.entries(filteredChipState).map(([name, isSelected]) => {
+                return (
+                  <Chip
+                    key={name}
+                    mode={isSelected ? "flat" : "outlined"}
+                    selected={isSelected}
+                    showSelectedCheck={false}
+                    showSelectedOverlay={true}
+                    style={{ width: 150, height: 30, flexBasis: "40%" }}
+                    textStyle={{
+                      textAlign: "center",
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                    }}
+                    onPress={() => handleChipPress(name)}
+                  >
+                    {name}
+                  </Chip>
+                );
+              })}
           </View>
         </View>
         <Button
