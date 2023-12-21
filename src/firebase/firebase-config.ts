@@ -45,13 +45,13 @@ const auth = getAuth(app);
  * @param {*} uri
  * @param {*} name
  */
-const uploadToFirebase = async (uri, name, onProgress) => {
+const uploadToFirebase = async (uri, name, isPhoto, onProgress) => {
   const fetchResponse = await fetch(uri);
   const theBlob = await fetchResponse.blob();
 
-  const imageRef = ref(getStorage(), `images/${name}`);
+  const uploadRef = ref(getStorage(), `${isPhoto ? "images" : "videos"}/${name}`);
 
-  const uploadTask = uploadBytesResumable(imageRef, theBlob);
+  const uploadTask = uploadBytesResumable(uploadRef, theBlob);
 
   return new Promise((resolve, reject) => {
     uploadTask.on(

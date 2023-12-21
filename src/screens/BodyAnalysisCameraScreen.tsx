@@ -82,6 +82,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
       const uploadResponse: any = await uploadToFirebase(
         takenPicture.uri,
         `${uid}_${side}_${Date.now().toFixed()}`,
+        true,
         (currentUploadStatus) => {
           setUploadStatus(Math.ceil(currentUploadStatus));
         }
@@ -155,7 +156,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
               <IconButton
                 size={26}
                 icon="camera-flip-outline"
-                iconColor={MD3Colors.secondary10}
+                iconColor={MD3Colors.secondary100}
                 onPress={toggleCameraType}
               />
             </View>
