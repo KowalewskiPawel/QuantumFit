@@ -17,3 +17,4 @@ export { UpdateScreenEntry } from "./UpdateScreenEntry";
 export { UpdateScreenBody } from "./UpdateScreenBody";
 export { UpdateScreenLifestyle } from "./UpdateScreenLifestyle";
 export { UpdateScreenAim } from "./UpdateScreenAim";
+export { ExerciseAnalysisScreen } from "./ExerciseAnalysisScreen";
