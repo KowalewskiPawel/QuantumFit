@@ -92,14 +92,13 @@ export const MyDietScreen = ({ navigation }) => {
   });
 
   return (
-    <ScrollView>
-      <SafeAreaView style={{ ...styles.container }}>
+    <SafeAreaView style={{ ...styles.container }}>
         <View style={styles.textBackground}>
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
             My 7 Day Meal Plan
           </Text>
         </View>
-        <View>
+        <ScrollView>
           {loading ? (
             <>
               <ActivityIndicator size="large" color="#0000ff" />
@@ -202,7 +201,7 @@ export const MyDietScreen = ({ navigation }) => {
                 ))}
             </List.AccordionGroup>
           )}
-        </View>
+        </ScrollView>
         <View>
           {!!mealState.length && !loading && (
             <Button
@@ -223,7 +222,6 @@ export const MyDietScreen = ({ navigation }) => {
             Go back
           </Button>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
