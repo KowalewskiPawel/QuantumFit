@@ -12,8 +12,6 @@ const initialState = {
   vegetarian: false,
   gluten: false,
   soybeans: false,
-  errorMessage: null,
-  loading: false,
 };
 
 export const dietSlice = createSlice({

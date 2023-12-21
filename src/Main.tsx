@@ -9,7 +9,6 @@ import {
   CameraPermissionScreen,
   DietAdjustmentScreen,
   EntryScreen,
-  ShoppingListScreen,
   RegisterScreenEntry,
   RegisterScreenBody,
   RegisterScreenLifestyle,
@@ -75,7 +74,6 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen name="MyTrainings" component={MyTrainingsScreen} />
         <Stack.Screen name="MyDiet" component={MyDietScreen} />
         <Stack.Screen name="DietPreferences" component={DietAdjustmentScreen} />
-        <Stack.Screen name="ShoppingList" component={ShoppingListScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="UpdateEntry" component={UpdateScreenEntry} />
         <Stack.Screen name="UpdateBody" component={UpdateScreenBody} />

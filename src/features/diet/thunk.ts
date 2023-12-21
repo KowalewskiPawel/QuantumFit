@@ -5,8 +5,7 @@ import { setDietState, setPreviousDietState } from "./slice";
 
 export const updateDietInfo =
   (updatedFields): AppThunk =>
-  async (dispatch, getState) => {
-    dispatch(setDietState({ loading: true, errorMessage: null }));
+  async (_dispatch, getState) => {
     const rootState = getState();
     const authStore = selectAuthState(rootState);
 
@@ -14,15 +13,12 @@ export const updateDietInfo =
       await setDoc(doc(db, "dietPreferences", authStore.uid), updatedFields, {
         merge: true,
       });
-
-      dispatch(setDietState({ loading: false }));
     } catch (error) {
-      dispatch(setDietState({ loading: false, errorMessage: error }));
+      console.error(error);
     }
   };
 
 export const loadDietInfo = (): AppThunk => async (dispatch, getState) => {
-  dispatch(setDietState({ loading: true, errorMessage: null }));
   const rootState = getState();
   const authStore = selectAuthState(rootState);
 
@@ -56,7 +52,6 @@ export const loadDietInfo = (): AppThunk => async (dispatch, getState) => {
           soybeans,
           vegan,
           vegetarian,
-          loading: false,
         })
       );
 
@@ -78,6 +73,6 @@ export const loadDietInfo = (): AppThunk => async (dispatch, getState) => {
       throw new Error("No such document!");
     }
   } catch (error) {
-    dispatch(setDietState({ loading: false, errorMessage: error.message }));
+    console.error(error.message);
   }
 };

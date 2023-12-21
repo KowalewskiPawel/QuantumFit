@@ -4,7 +4,19 @@ preferences and they do not like the following foods:`;
 const extraSentenceFinish = `Please create a meal plan that does not include any of those food items.`;
 
 export const generateQuestion = (
-  { aim, exerciseFrequency, height, lifestyle, sex, weight, yearOfBirth },
+  {
+    aim,
+    currentBodyFat,
+    exerciseFrequency,
+    gymExperience,
+    height,
+    lifestyle,
+    sex,
+    targetBodyFat,
+    targetWeight,
+    weight,
+    yearOfBirth,
+  },
   excludedFoods: string
 ) => {
   const age = new Date(Date.now()).getFullYear() - yearOfBirth;
@@ -24,18 +36,42 @@ export const generateQuestion = (
     return "change their body appearance";
   };
 
+  const filteredExperience = (experience: number) => {
+    if (experience < 3) {
+      return "minimal to no";
+    }
+
+    if (experience < 6) {
+      return "moderate";
+    }
+
+    if (experience < 10) {
+      return "good";
+    }
+
+    if (experience < 14) {
+      return "high";
+    }
+
+    return "unknown";
+  };
+
   const correctedAim = filteredAim(aim);
+  const correctedExperience = filteredExperience(gymExperience);
 
   return `Please strictly follow the requirements below: \n
 
   You are to create a 7 day meal plan for a person who is looking to ${correctedAim}. This person 
   is a ${age} year old ${sex} who currently has a lifestyle (in terms of physical activity) that 
-  would be classified as ${lifestyle.toLowerCase()}. They are ${height}cm tall, weigh ${weight}kg, and exercise
-  about ${exerciseFrequency} times per week at the gym. \n
+  would be classified as ${lifestyle?.toLowerCase()}. They are ${height}cm tall, weigh ${weight}kg, and exercise
+  about ${exerciseFrequency} times per week at the gym. They have ${correctedExperience} experience at the gym.
+  They also have an estimated body fat of ${currentBodyFat}%. \n
 
-  Based on the given information, you are to create a meal plan that will help them to ${correctedAim} by 
-  eating the correct amount of calories throughout the day. The idea is to get the person to a healthy 
-  body weight for their age, gender, physical activity and height. \n
+  Based on the given information, you are to create a meal plan that will help them to ${correctedAim} in order 
+  for them to achieve their target weight of ${targetWeight}kg with approximately ${targetBodyFat}% body fat. 
+  This will be achieved by designing a meal plan that will help them to eat the correct amount of calories 
+  throughout the day. The idea is to get the person to a healthy body weight for their age, gender, 
+  physical activity and height. \n
 
   ${
     excludedFoods

@@ -11,8 +11,6 @@ export type DietState = {
   vegetarian: boolean;
   gluten: boolean;
   soybeans: boolean;
-  loading: boolean;
-  errorMessage: string | null;
 };
 
 export const selectDietState = (state: RootState) => state.dietPreferences;

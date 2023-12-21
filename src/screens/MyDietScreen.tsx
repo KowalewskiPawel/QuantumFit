@@ -214,14 +214,6 @@ export const MyDietScreen = ({ navigation }) => {
               Adjust My Diet
             </Button>
           )}
-          {/* <Button
-            icon="cart-outline"
-            mode="contained"
-            onPress={() => navigation.navigate("ShoppingList")}
-            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
-          >
-            My Shopping List
-          </Button> */}
           <Button
             icon="arrow-left"
             mode="outlined"
