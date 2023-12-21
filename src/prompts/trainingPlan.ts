@@ -10,7 +10,7 @@ export const getTrainingPlanPrompt = (
     bodyAnalysis: any
   ) => `
   Create a training plan based on the data provided next
-  - goal fo training: ${aim}
+  - goal for training: ${aim}
   - bodyFat: ${bodyAnalysis?.current.bodyFat || ''}
   - person height: ${height}
   - lifestyle: ${lifestyle}
