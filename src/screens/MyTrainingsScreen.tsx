@@ -109,7 +109,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
         style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
         loading={loading}
       >
-        {loading ? 'Creating new traing plan': 'Create My new trainig plan'}
+        {loading ? 'Creating new training plan': 'Create My new training plan'}
       </Button>
       <Button
         icon="arrow-left"
