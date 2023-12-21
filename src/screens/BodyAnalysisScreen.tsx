@@ -10,7 +10,6 @@ import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
 import { selectBodyPhotosState } from "../features/bodyPhotos";
 import apiClient from "../api/apiClient";
 import { resetBodyPhotosState } from "../features/bodyPhotos/slice";
-import { setUserState } from "../features/user/slice";
 
 export const BodyAnalysisScreen = ({ navigation }) => {
   const AnalysePosture = require("../assets/analysis-body.png");
