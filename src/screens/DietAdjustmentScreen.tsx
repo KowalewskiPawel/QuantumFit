@@ -34,7 +34,7 @@ export const DietAdjustmentScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <View>
+      <View style={{ ...styles.container }}>
         <View style={styles.textBackground}>
           <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
             Diet Preferences
@@ -75,7 +75,7 @@ export const DietAdjustmentScreen = ({ navigation }) => {
                   selected={isSelected}
                   showSelectedCheck={false}
                   showSelectedOverlay={true}
-                  style={{ flexBasis: "40%", maxHeight: 40 }}
+                  style={{ width: 150, height: 30, flexBasis: "40%" }}
                   textStyle={{
                     textAlign: "center",
                     marginLeft: "auto",

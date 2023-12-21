@@ -387,14 +387,13 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
                   <Text style={localStyles.recordTitle}>{"Recording..."}</Text>
                 </View>
               )}
-              {!isRecording && (
+
                 <IconButton
                   size={26}
                   icon="camera-flip-outline"
                   iconColor={MD3Colors.secondary100}
                   onPress={toggleCameraType}
                 />
-              )}
             </View>
           </Camera>
         </View>

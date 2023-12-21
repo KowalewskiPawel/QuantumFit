@@ -4,10 +4,10 @@
     "slug": "quantumfit",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,16 +20,17 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#0A1420"
       },
       "userInterfaceStyle": "dark",
       "permissions": [
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA"
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./src/assets/favicon.png"
     },
     "plugins": [
       [
@@ -48,7 +49,15 @@
     ],
     "owner": "practicalearning",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d206bc8e-5d01-466d-ad4d-f1c66a0a8add"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d206bc8e-5d01-466d-ad4d-f1c66a0a8add"
     }
   }
 }
