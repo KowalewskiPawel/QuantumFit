@@ -92,7 +92,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
                     description={trainingSummary}
                     descriptionStyle={{ fontStyle: "italic", paddingLeft: 6 }}
                     expanded={true}
-                    key={`day-${indexOuter}`}
+                    key={`day-${indexOuter}-${Math.random()})}`}
                     id={indexOuter}
                     style={{
                       ...styles.textBackground,
@@ -116,7 +116,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
                             ) => (
                               <List.Accordion
                                 title={name}
-                                key={name}
+                                key={`exercise-${name}-${Math.random()}-${indexMiddle}}`}
                                 titleStyle={{ fontSize: 18, fontWeight: "500" }}
                                 description={training}
                                 descriptionStyle={{
