@@ -3,13 +3,13 @@ import type { RootState } from '../../app/store';
 
 type DailyTrainingPlan = {
   dayNumber: number,
-  excercises: {
-     excerciseName: string,
+  exercises: {
+     exerciseName: string,
      escerciseDescription: string,
      numberOfReps: string,
      numberOfSets: string,
      brakesBetweenSets: string
-     excerciseDuration: string
+     exerciseDuration: string
   }
  }
 

@@ -18,25 +18,25 @@ export const getTrainingPlanPrompt = (
   - weight: ${currentWeight}
   - age: ${age}
   - training since: ${gymExperience} months
-  - excercise frequency: ${exerciseFrequency} times a week
+  - exercise frequency: ${exerciseFrequency} times a week
   
-  give additional tips about excercises and description how to perform those excercises
+  give additional tips about exercises and description how to perform those exercises
   
   please return your answer in a form of .json file in form provided below
-  "planDuration" cannot be bigger than excercise frequency 
+  "planDuration" cannot be bigger than exercise frequency 
   {
       "planDuration": "number of days", 
       "tips": "string",
       "dailyPlans": [
           {
            "dayNumber": "number",
-           "excercises": {
-              "excerciseName": "string",
+           "exercises": {
+              "exerciseName": "string",
               "escerciseDescription": "string",
               "numberOfReps": "string",
               "numberOfSets": "string",
               "brakesBetweenSets": "string"
-              "excerciseDuration": "string"
+              "exerciseDuration": "string"
            }
           }
       ]
