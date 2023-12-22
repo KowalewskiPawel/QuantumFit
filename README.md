@@ -14,7 +14,19 @@ Make sure to check out QuantumFit today, so we can help you on your journey towa
 
 ## Try it out
 
-Yes, we have a live working version! Try out our [QuantumFit](#) app.
+Yes, we have a live working version! You can try it out by downloading the Expo Go app on your phone and scanning the QR code below.
+
+[Expo Go on Google Play Store - Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en)
+
+[Expo Go on Apple App Store - iOS](https://apps.apple.com/us/app/expo-go/id982107779)
+
+### Android
+
+<img src="./android_qrcode.png" width="200" />
+
+### iOS
+
+<img src="./ios_qrcode.png" width="200" />
 
 ## Watch
 
@@ -56,7 +68,7 @@ expo start
 
 ### Backend
 
-TODO
+[QuantumFit-Gemini-Vertex - Backend Repository](https://github.com/KowalewskiPawel/QuantumFit-Gemini-Vertex)
 
 ## Made with
 
