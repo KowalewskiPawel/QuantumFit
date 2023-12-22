@@ -14,6 +14,7 @@ import { StackRow } from "../components";
 import { loadUserInfo } from "../features/user";
 import { loadMealInfo } from "../features/meal";
 import { loadDietInfo } from "../features/diet";
+import { loadTrainingsInfo } from "../features/trainings";
 
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
@@ -33,6 +34,7 @@ export const LoginScreen = ({ navigation }) => {
       dispatch(loadUserInfo());
       dispatch(loadMealInfo());
       dispatch(loadDietInfo());
+      dispatch(loadTrainingsInfo());
       navigation.navigate("MainMenu");
     }
   }, [token]);

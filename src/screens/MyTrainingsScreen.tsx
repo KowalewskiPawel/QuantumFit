@@ -6,7 +6,6 @@ import {
   ScrollView,
   useWindowDimensions,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import {
   Card,
   List,
@@ -14,24 +13,21 @@ import {
   useTheme,
   ActivityIndicator,
 } from "react-native-paper";
-import { selectDietState, selectPreviousDietState } from "../features/diet";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import apiClient from "../api/apiClient";
-
-import { DietState } from "../features/diet/state";
-import { setPreviousDietState } from "../features/diet/slice";
-import { selectMealState, updateMealInfo } from "../features/meal";
 import { selectUserState } from "../features/user";
-import { setMealState } from "../features/meal/slice";
 
 import { styles } from "../styles/globalStyles";
 import { generateTrainingPrompt } from "../prompts/exercisePlan";
+import {
+  selectTrainingsState,
+  updateTrainingsInfo,
+} from "../features/trainings";
+import { setTrainingsState } from "../features/trainings/slice";
 
 export const MyTrainingsScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const previousChipState = useAppSelector(selectPreviousDietState);
-  const chipState = useAppSelector(selectDietState);
-  const mealState = useAppSelector(selectMealState);
+  const trainingsState = useAppSelector(selectTrainingsState);
   const userState = useAppSelector(selectUserState);
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
@@ -46,12 +42,12 @@ export const MyTrainingsScreen = ({ navigation }) => {
       const { message } = await apiClient.post("text", {
         prompt: question,
       });
-      const parsedMealPlan = JSON.parse(message);
-      const parsedMealPlanForDB = {
-        mealPlan: JSON.stringify(parsedMealPlan),
+      const parsedTrainingPlan = JSON.parse(message);
+      const parsedTrainingPlanForDB = {
+        trainingPlan: JSON.stringify(parsedTrainingPlan),
       };
-      dispatch(setMealState(parsedMealPlan));
-      dispatch(updateMealInfo(parsedMealPlanForDB));
+      dispatch(setTrainingsState(parsedTrainingPlan));
+      dispatch(updateTrainingsInfo(parsedTrainingPlanForDB));
     } catch (error) {
       // There was a problem with the server. Please try again later!
       throw error;
@@ -60,63 +56,40 @@ export const MyTrainingsScreen = ({ navigation }) => {
     }
   };
 
-  useFocusEffect(() => {
-    const hasChipStateChanged = (
-      previousState: DietState,
-      newState: DietState
-    ) =>
-      Object.entries(newState)
-        .map(([name, value]) => value === previousState[name])
-        .filter((value) => value === false).length === 0;
-
-    if (!hasChipStateChanged(previousChipState, chipState)) {
-      const selectedChips = Object.entries(chipState)
-        .filter(([_key, value]) => value)
-        .map(([key]) => key);
-
-      const allChipsButLastOne = selectedChips.slice(0, -1).join(", ");
-      const lastChip = selectedChips.slice(-1);
-      const excludedFoods = `${allChipsButLastOne} and ${lastChip}`;
-
-      dispatch(setPreviousDietState(chipState));
-      // call gemini again to redo the meal plan
-      fetchData();
-    }
-  });
-
   useEffect(() => {
-    if (mealState.length === 0) {
-      // call gemini to create the meal plan
+    if (trainingsState.length === 0) {
+      // call gemini to create the training plan
       fetchData();
     }
   });
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-        <View style={styles.textBackground}>
-          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            My 7 Day Training Plan
-          </Text>
-        </View>
-        <ScrollView>
-          {loading ? (
-            <>
-              <ActivityIndicator size="large" color="#0000ff" />
-              <Text
-                style={{ color: theme.colors.onBackground, marginBottom: 40 }}
-              >
-                Your training plan is currently being generated...
-              </Text>
-            </>
-          ) : (
-            <List.AccordionGroup>
-              {!!mealState.length &&
-                !loading &&
-                mealState.map(({ mealSummary, meals }, indexOuter: number) => (
+      <View style={styles.textBackground}>
+        <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
+          My 7 Day Training Plan
+        </Text>
+      </View>
+      <ScrollView>
+        {loading ? (
+          <>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text
+              style={{ color: theme.colors.onBackground, marginBottom: 40 }}
+            >
+              Your training plan is currently being generated...
+            </Text>
+          </>
+        ) : (
+          <List.AccordionGroup>
+            {!!trainingsState.length &&
+              !loading &&
+              trainingsState.map(
+                ({ trainingSummary, trainings }, indexOuter: number) => (
                   <List.Accordion
                     title={`DAY ${indexOuter + 1}`}
                     titleStyle={{ fontSize: 24, fontWeight: "600" }}
-                    description={mealSummary}
+                    description={trainingSummary}
                     descriptionStyle={{ fontStyle: "italic", paddingLeft: 6 }}
                     expanded={true}
                     key={`day-${indexOuter}`}
@@ -129,16 +102,23 @@ export const MyTrainingsScreen = ({ navigation }) => {
                     <View style={{ marginLeft: 30, marginRight: 30 }}>
                       <List.Section style={{ marginBottom: 0 }}>
                         <List.AccordionGroup>
-                          {meals.map(
+                          {trainings.map(
                             (
-                              { meal, name, ingredients },
+                              {
+                                training,
+                                name,
+                                description,
+                                reps,
+                                sets,
+                                weight,
+                              },
                               indexMiddle: number
                             ) => (
                               <List.Accordion
                                 title={name}
                                 key={name}
                                 titleStyle={{ fontSize: 18, fontWeight: "500" }}
-                                description={meal}
+                                description={training}
                                 descriptionStyle={{
                                   fontStyle: "italic",
                                   paddingLeft: 6,
@@ -158,30 +138,37 @@ export const MyTrainingsScreen = ({ navigation }) => {
                                   }}
                                 >
                                   <Card.Content style={{ paddingTop: 0 }}>
-                                    <List.Section style={{ marginBottom: 0 }}>
-                                      {ingredients.map((ingredient: string) => (
-                                        <List.Item
-                                          key={ingredient}
-                                          title={ingredient}
-                                          titleNumberOfLines={2}
-                                          titleStyle={{
-                                            marginLeft: -8,
-                                            fontSize: 15,
-                                          }}
-                                          left={(props) => (
-                                            <List.Icon
-                                              {...props}
-                                              style={{ paddingLeft: 0 }}
-                                              icon="circle-small"
-                                            />
-                                          )}
-                                          style={{
-                                            paddingTop: 2,
-                                            paddingBottom: 2,
-                                          }}
-                                        />
-                                      ))}
-                                    </List.Section>
+                                    <Text
+                                      style={{
+                                        color: theme.colors.onBackground,
+                                      }}
+                                    >
+                                      {description}
+                                    </Text>
+                                    <Text
+                                      style={{
+                                        marginTop: 10,
+                                        color: theme.colors.onBackground,
+                                      }}
+                                    >
+                                      Reps: {reps}
+                                    </Text>
+                                    <Text
+                                      style={{
+                                        marginTop: 10,
+                                        color: theme.colors.onBackground,
+                                      }}
+                                    >
+                                      Sets: {sets}
+                                    </Text>
+                                    <Text
+                                      style={{
+                                        marginTop: 10,
+                                        color: theme.colors.onBackground,
+                                      }}
+                                    >
+                                      Weight: {weight}
+                                    </Text>
                                   </Card.Content>
                                   <Card.Actions
                                     style={{ paddingTop: 0, paddingBottom: 4 }}
@@ -198,20 +185,21 @@ export const MyTrainingsScreen = ({ navigation }) => {
                       </List.Section>
                     </View>
                   </List.Accordion>
-                ))}
-            </List.AccordionGroup>
-          )}
-        </ScrollView>
-        <View>
-          <Button
-            icon="arrow-left"
-            mode="outlined"
-            onPress={() => navigation.goBack()}
-            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
-          >
-            Go back
-          </Button>
-        </View>
-      </SafeAreaView>
+                )
+              )}
+          </List.AccordionGroup>
+        )}
+      </ScrollView>
+      <View>
+        <Button
+          icon="arrow-left"
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+        >
+          Go back
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 };
