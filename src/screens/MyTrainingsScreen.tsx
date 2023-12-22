@@ -22,10 +22,10 @@ import { DietState } from "../features/diet/state";
 import { setPreviousDietState } from "../features/diet/slice";
 import { selectMealState, updateMealInfo } from "../features/meal";
 import { selectUserState } from "../features/user";
-import { generateQuestion } from "../prompts/mealPlan";
 import { setMealState } from "../features/meal/slice";
 
 import { styles } from "../styles/globalStyles";
+import { generateTrainingPrompt } from "../prompts/exercisePlan";
 
 export const MyTrainingsScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
@@ -40,7 +40,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
 
   const fetchData = async (excludedFoods: string) => {
     setLoading(true);
-    const question = generateQuestion(userState, excludedFoods);
+    const question = generateTrainingPrompt(userState);
 
     try {
       const { message } = await apiClient.post("text", {
