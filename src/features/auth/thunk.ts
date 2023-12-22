@@ -7,6 +7,7 @@ import {
 import { resetRegisterState } from "../register/slice";
 import { resetMealState } from "../meal/slice";
 import { resetDietState, resetPreviousDietState } from "../diet/slice";
+import { resetTrainingsState } from "../trainings/slice";
 
 export const loginUser =
   (username: string, password: string) => async (dispatch: any) => {
@@ -46,6 +47,7 @@ export const logoutUser = () => async (dispatch) => {
   dispatch(resetMealState());
   dispatch(resetDietState());
   dispatch(resetPreviousDietState());
+  dispatch(resetTrainingsState());
   dispatch(
     setSessionState({
       token: null,
