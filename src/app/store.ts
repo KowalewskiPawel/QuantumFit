@@ -6,6 +6,7 @@ import { userSlice } from "../features/user/slice";
 import { dietSlice, previousDietSlice } from "../features/diet";
 import { mealSlice } from "../features/meal";
 import { bodyPhotosSlice } from "../features/bodyPhotos";
+import { trainingsSlice } from "../features/trainings";
 
 export const storeOptions = {
   reducer: {
@@ -16,6 +17,7 @@ export const storeOptions = {
     [previousDietSlice.name]: previousDietSlice.reducer,
     [mealSlice.name]: mealSlice.reducer,
     [bodyPhotosSlice.name]: bodyPhotosSlice.reducer,
+    [trainingsSlice.name]: trainingsSlice.reducer,
   },
 };
 

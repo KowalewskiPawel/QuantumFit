@@ -38,7 +38,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
   const { width } = useWindowDimensions();
   const upperAccordionWidth = width - 40;
 
-  const fetchData = async (excludedFoods: string) => {
+  const fetchData = async () => {
     setLoading(true);
     const question = generateTrainingPrompt(userState);
 
@@ -80,14 +80,14 @@ export const MyTrainingsScreen = ({ navigation }) => {
 
       dispatch(setPreviousDietState(chipState));
       // call gemini again to redo the meal plan
-      fetchData(excludedFoods);
+      fetchData();
     }
   });
 
   useEffect(() => {
     if (mealState.length === 0) {
       // call gemini to create the meal plan
-      fetchData("");
+      fetchData();
     }
   });
 
@@ -105,7 +105,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
               <Text
                 style={{ color: theme.colors.onBackground, marginBottom: 40 }}
               >
-                Your meal plan is currently being generated...
+                Your training plan is currently being generated...
               </Text>
             </>
           ) : (
