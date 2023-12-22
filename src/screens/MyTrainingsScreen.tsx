@@ -51,10 +51,9 @@ export const MyTrainingsScreen = ({ navigation }) => {
       dispatch(setTrainingsState(parsedTrainingPlan));
       dispatch(updateTrainingsInfo(parsedTrainingPlanForDB));
     } catch (error) {
-      // There was a problem with the server. Please try again later!
       setGenerateTrainingPlanError(`Unfortunately there was a problem generating your training plan. 
       Please try again!`);
-      throw error;
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -65,7 +64,12 @@ export const MyTrainingsScreen = ({ navigation }) => {
       // call gemini to create the training plan
       fetchData();
     }
-  });
+  }, []);
+
+  const regenerateTrainingPlan = () => {
+    setGenerateTrainingPlanError("");
+    fetchData();
+  };
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
@@ -75,13 +79,17 @@ export const MyTrainingsScreen = ({ navigation }) => {
         </Text>
       </View>
       <ScrollView>
-        {loading ? (
+        {generateTrainingPlanError || loading ? (
           <>
-            <ActivityIndicator size="large" color="#0000ff" />
+            {loading && <ActivityIndicator size="large" color="#0000ff" />}
             <Text
               style={{ color: theme.colors.onBackground, marginBottom: 40 }}
             >
-              Your training plan is currently being generated...
+              {`${
+                generateTrainingPlanError
+                  ? generateTrainingPlanError
+                  : "Your training plan is currently being generated..."
+              }`}
             </Text>
           </>
         ) : (
@@ -209,7 +217,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
           <Button
             icon="refresh"
             mode="contained"
-            onPress={() => fetchData()}
+            onPress={regenerateTrainingPlan}
             style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
           >
             Re-generate training
