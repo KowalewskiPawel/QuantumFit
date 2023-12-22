@@ -30,6 +30,8 @@ export const MyTrainingsScreen = ({ navigation }) => {
   const trainingsState = useAppSelector(selectTrainingsState);
   const userState = useAppSelector(selectUserState);
   const [loading, setLoading] = useState(false);
+  const [generateTrainingPlanError, setGenerateTrainingPlanError] =
+    useState("");
   const theme = useTheme();
   const { width } = useWindowDimensions();
   const upperAccordionWidth = width - 40;
@@ -50,6 +52,8 @@ export const MyTrainingsScreen = ({ navigation }) => {
       dispatch(updateTrainingsInfo(parsedTrainingPlanForDB));
     } catch (error) {
       // There was a problem with the server. Please try again later!
+      setGenerateTrainingPlanError(`Unfortunately there was a problem generating your training plan. 
+      Please try again!`);
       throw error;
     } finally {
       setLoading(false);
@@ -200,6 +204,18 @@ export const MyTrainingsScreen = ({ navigation }) => {
           Go back
         </Button>
       </View>
+      {generateTrainingPlanError && (
+        <View>
+          <Button
+            icon="refresh"
+            mode="contained"
+            onPress={() => fetchData()}
+            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+          >
+            Re-generate training
+          </Button>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
