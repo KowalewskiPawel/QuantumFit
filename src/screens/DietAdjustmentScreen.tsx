@@ -67,26 +67,26 @@ export const DietAdjustmentScreen = ({ navigation }) => {
               rowGap: 16,
             }}
           >
-              {Object.entries(filteredChipState).map(([name, isSelected]) => {
-                return (
-                  <Chip
-                    key={name}
-                    mode={isSelected ? "flat" : "outlined"}
-                    selected={isSelected}
-                    showSelectedCheck={false}
-                    showSelectedOverlay={true}
-                    style={{ width: 150, height: 30, flexBasis: "40%" }}
-                    textStyle={{
-                      textAlign: "center",
-                      marginLeft: "auto",
-                      marginRight: "auto",
-                    }}
-                    onPress={() => handleChipPress(name)}
-                  >
-                    {name}
-                  </Chip>
-                );
-              })}
+            {Object.entries(filteredChipState).map(([name, isSelected]) => {
+              return (
+                <Chip
+                  key={name}
+                  mode={isSelected ? "flat" : "outlined"}
+                  selected={isSelected}
+                  showSelectedCheck={false}
+                  showSelectedOverlay={true}
+                  style={{ width: 150, height: 30, flexBasis: "40%" }}
+                  textStyle={{
+                    textAlign: "center",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  onPress={() => handleChipPress(name)}
+                >
+                  {name}
+                </Chip>
+              );
+            })}
           </View>
         </View>
         <Button
