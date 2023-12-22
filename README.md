@@ -32,7 +32,7 @@ Yes, we have a live working version! You can try it out by downloading the Expo 
 
 Check out our video showcasing the power of QuantumFit and see how it can help you on your fitness journey towards better health, being more fit and shaping a better body!
 
-[![QuantumFit: AI personal trainer fitness app](https://link-to-website.com/image)](https://youtube-link-to-replace "QuantumFit: AI personal trainer fitness app")
+[QuantumFit: AI personal trainer fitness app YouTube Video](https://www.youtube.com/watch?v=vWycquV_Ib0)
 
 # Architecture
 
