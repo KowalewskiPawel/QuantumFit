@@ -18,9 +18,7 @@ import {
 } from "react-native-paper";
 import { Video } from "expo-av";
 import { styles } from "../styles/globalStyles";
-import {
-  uploadToFirebase,
-} from "../firebase/firebase-config";
+import { uploadToFirebase } from "../firebase/firebase-config";
 import { useAppSelector } from "../app/store";
 import { selectAuthState } from "../features/auth";
 import { LoadingSpinner, StackRow } from "../components";
@@ -167,14 +165,6 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
       clearTimeout(recordVideoTimeout.current);
     }
   }, [recordedVideo]);
-
-  useEffect(() => {
-    if (videoUrl) {
-      setTimeout(() => {
-        fetchAnalysis();
-      }, 2000);
-    }
-  }, [videoUrl]);
 
   if (!permission) {
     // Camera permissions are still loading
@@ -388,12 +378,13 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
                 </View>
               )}
 
-                <IconButton
-                  size={26}
-                  icon="camera-flip-outline"
-                  iconColor={MD3Colors.secondary100}
-                  onPress={toggleCameraType}
-                />
+              <IconButton
+                size={26}
+                icon="camera-flip-outline"
+                iconColor={MD3Colors.secondary100}
+                onPress={toggleCameraType}
+                disabled={isRecording}
+              />
             </View>
           </Camera>
         </View>
@@ -469,15 +460,27 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
           >
             Retake
           </Button>
-          <Button
-            icon="check"
-            mode="contained-tonal"
-            buttonColor="green"
-            style={{ marginLeft: 16 }}
-            onPress={uploadVideoToFirebase}
-          >
-            Accept
-          </Button>
+          {videoUrl ? (
+            <Button
+              icon="check"
+              mode="contained-tonal"
+              buttonColor="blue"
+              style={{ marginLeft: 16 }}
+              onPress={fetchAnalysis}
+            >
+              Analyze
+            </Button>
+          ) : (
+            <Button
+              icon="check"
+              mode="contained-tonal"
+              buttonColor="green"
+              style={{ marginLeft: 16 }}
+              onPress={uploadVideoToFirebase}
+            >
+              Accept
+            </Button>
+          )}
         </View>
       )}
     </View>
