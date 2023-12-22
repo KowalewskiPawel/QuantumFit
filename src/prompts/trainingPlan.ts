@@ -25,14 +25,14 @@ export const getTrainingPlanPrompt = (
   please return your answer in a form of .json file in form provided below
   "planDuration" cannot be bigger than exercise frequency 
   {
-      "planDuration": "number of days", 
+      "planDuration": "number", 
       "tips": "string",
       "dailyPlans": [
           {
            "dayNumber": "number",
            "exercises": {
               "exerciseName": "string",
-              "escerciseDescription": "string",
+              "exerciseDescription": "string",
               "numberOfReps": "string",
               "numberOfSets": "string",
               "brakesBetweenSets": "string"
