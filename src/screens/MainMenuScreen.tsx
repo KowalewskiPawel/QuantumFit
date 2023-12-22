@@ -69,7 +69,12 @@ export const MainMenuScreen = ({ navigation }) => {
             icon="cog"
             iconColor={theme.colors.onBackground}
             size={30}
-            style={{ position: "absolute", right: -50, top: -30, backgroundColor: theme.colors.primary }}
+            style={{
+              position: "absolute",
+              right: -50,
+              top: -30,
+              backgroundColor: theme.colors.primary,
+            }}
             onPress={() => navigation.navigate("Settings")}
           />
           <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
@@ -126,7 +131,9 @@ export const MainMenuScreen = ({ navigation }) => {
           <Dialog.Title>Body Analysis Info Missing</Dialog.Title>
           <Dialog.Content>
             <Text style={{ color: "#FFF" }}>
-              Please complete the body analysis to enable this feature.
+              Please complete the body analysis to enable this feature. If you
+              have already completed the body analysis, please try again making
+              the analysis or re-log in.
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
