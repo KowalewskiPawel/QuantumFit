@@ -56,7 +56,7 @@ const MainScreen = ({ theme }) => {
           animation: "none",
         }}
       >
-        {/* <Stack.Screen name="Entry" component={EntryScreen} />
+        <Stack.Screen name="Entry" component={EntryScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="RegisterEntry" component={RegisterScreenEntry} />
         <Stack.Screen name="RegisterBody" component={RegisterScreenBody} />
@@ -70,9 +70,9 @@ const MainScreen = ({ theme }) => {
           component={RegisterScreenSeniority}
         />
         <Stack.Screen name="MainMenu" component={MainMenuScreen} />
-        <Stack.Screen name="BodyAnalysis" component={BodyAnalysisScreen} /> */}
+        <Stack.Screen name="BodyAnalysis" component={BodyAnalysisScreen} />
         <Stack.Screen name="MyTrainings" component={MyTrainingsScreen} />
-        {/* <Stack.Screen name="MyDiet" component={MyDietScreen} />
+        <Stack.Screen name="MyDiet" component={MyDietScreen} />
         <Stack.Screen name="DietPreferences" component={DietAdjustmentScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="UpdateEntry" component={UpdateScreenEntry} />
@@ -98,7 +98,7 @@ const MainScreen = ({ theme }) => {
           name="BodyAnalysisPictureScreen"
           component={BodyAnalysisPictureScreen}
           initialParams={{ side: "front" }}
-        /> */}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
