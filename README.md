@@ -34,6 +34,10 @@ Check out our video showcasing the power of QuantumFit and see how it can help y
 
 [![QuantumFit: AI personal trainer fitness app](https://link-to-website.com/image)](https://youtube-link-to-replace "QuantumFit: AI personal trainer fitness app")
 
+# Architecture
+
+<img src="./quantum_fit_architecture.jpg" />
+
 ### Meet our Team
 
 | MEMBERS | Kamil | Pawel | Krzysiek | David |
