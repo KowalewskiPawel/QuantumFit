@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
-import { View, SafeAreaView, StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 import { Button, Surface, useTheme, Text } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import {
