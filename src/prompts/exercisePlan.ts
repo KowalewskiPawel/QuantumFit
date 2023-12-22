@@ -69,8 +69,8 @@ export const generateTrainingPrompt = ({
           name: "Biceps",
           description:
             "To perform biceps curls, stand with your feet shoulder-width apart, holding a dumbbell in each hand with an underhand grip. Bend your elbows and curl the dumbbells up towards your shoulders, keeping your upper arms stationary. Lower the dumbbells back down to the starting position.",
-          reps: 10,
-          sets: 3,
+          reps: "10",
+          sets: "3",
           weight: "light to moderate",
         },
         {
@@ -78,8 +78,8 @@ export const generateTrainingPrompt = ({
           name: "Triceps",
           description:
             "To perform triceps pushdowns, attach a rope or bar to a cable machine and select a weight. Grasp the rope or bar with an overhand grip, then extend your arms overhead. Bend your elbows and lower the rope or bar towards your chest, keeping your upper arms close to your body. Push back up to the starting position.",
-          reps: 10,
-          sets: 3,
+          reps: "10",
+          sets: "3",
           weight: "light to moderate",
         },
         {
@@ -87,8 +87,8 @@ export const generateTrainingPrompt = ({
           name: "Shoulders",
           description:
             "To perform shoulder press, sit on a bench with a barbell resting across the front of your shoulders. Unrack the barbell and press it overhead until your arms are fully extended. Lower the barbell back down to the starting position.",
-          reps: 8,
-          sets: 3,
+          reps: "8",
+          sets: "3",
           weight: "moderate",
         },
       ],

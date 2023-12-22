@@ -6,7 +6,7 @@ import {
 } from "expo-camera";
 import { Image } from "expo-image";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import { Button, IconButton, MD3Colors, Text } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { uploadToFirebase } from "../firebase/firebase-config";
@@ -132,6 +132,54 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
   }
   if (!takenPicture) {
     return (
+      <ScrollView>
+        <View style={localStyles.container}>
+          <View style={styles.titleContainer}>
+            <Text
+              style={styles.titleText}
+            >{`Take a picture of the ${side} part of your body`}</Text>
+          </View>
+          <View
+            style={{
+              ...localStyles.cameraContainer,
+              width: cameraWidth,
+              height: cameraHeight,
+            }}
+          >
+            <Camera
+              useCamera2Api
+              autoFocus
+              ref={cameraRef}
+              style={localStyles.camera}
+              type={type}
+            >
+              <View style={localStyles.buttonContainer}>
+                <IconButton
+                  size={26}
+                  icon="camera-flip-outline"
+                  iconColor={MD3Colors.secondary100}
+                  onPress={toggleCameraType}
+                />
+              </View>
+            </Camera>
+          </View>
+          {showCountDown ? (
+            <Text style={localStyles.countdownTimer}>{countdown}</Text>
+          ) : (
+            <IconButton
+              size={60}
+              style={{ marginTop: 16 }}
+              icon="camera"
+              onPress={takePicture}
+            />
+          )}
+        </View>
+      </ScrollView>
+    );
+  }
+
+  return (
+    <ScrollView>
       <View style={localStyles.container}>
         <View style={styles.titleContainer}>
           <Text
@@ -145,86 +193,42 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
             height: cameraHeight,
           }}
         >
-          <Camera
-            useCamera2Api
-            autoFocus
-            ref={cameraRef}
+          <Image
+            contentFit="contain"
+            source={takenPicture.uri}
             style={localStyles.camera}
-            type={type}
-          >
-            <View style={localStyles.buttonContainer}>
-              <IconButton
-                size={26}
-                icon="camera-flip-outline"
-                iconColor={MD3Colors.secondary100}
-                onPress={toggleCameraType}
-              />
-            </View>
-          </Camera>
-        </View>
-        {showCountDown ? (
-          <Text style={localStyles.countdownTimer}>{countdown}</Text>
-        ) : (
-          <IconButton
-            size={60}
-            style={{ marginTop: 16 }}
-            icon="camera"
-            onPress={takePicture}
           />
+        </View>
+        {uploadStatus ? (
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ fontSize: 18 }}>
+              Uploading the photo. Status: {uploadStatus}%
+            </Text>
+          </View>
+        ) : (
+          <View style={localStyles.buttonsRow}>
+            <Button
+              icon="cancel"
+              mode="contained-tonal"
+              buttonColor="red"
+              style={{ marginRight: 16 }}
+              onPress={() => setTakenPicture(null)}
+            >
+              Retake
+            </Button>
+            <Button
+              icon="check"
+              mode="contained-tonal"
+              buttonColor="green"
+              style={{ marginLeft: 16 }}
+              onPress={handlePictureUpload}
+            >
+              Accept
+            </Button>
+          </View>
         )}
       </View>
-    );
-  }
-
-  return (
-    <View style={localStyles.container}>
-      <View style={styles.titleContainer}>
-        <Text
-          style={styles.titleText}
-        >{`Take a picture of the ${side} part of your body`}</Text>
-      </View>
-      <View
-        style={{
-          ...localStyles.cameraContainer,
-          width: cameraWidth,
-          height: cameraHeight,
-        }}
-      >
-        <Image
-          contentFit="contain"
-          source={takenPicture.uri}
-          style={localStyles.camera}
-        />
-      </View>
-      {uploadStatus ? (
-        <View style={{ marginTop: 10 }}>
-          <Text style={{ fontSize: 18 }}>
-            Uploading the photo. Status: {uploadStatus}%
-          </Text>
-        </View>
-      ) : (
-        <View style={localStyles.buttonsRow}>
-          <Button
-            icon="cancel"
-            mode="contained-tonal"
-            buttonColor="red"
-            style={{ marginRight: 16 }}
-            onPress={() => setTakenPicture(null)}
-          >
-            Retake
-          </Button>
-          <Button
-            icon="check"
-            mode="contained-tonal"
-            buttonColor="green"
-            style={{ marginLeft: 16 }}
-            onPress={handlePictureUpload}
-          >
-            Accept
-          </Button>
-        </View>
-      )}
-    </View>
+    </ScrollView>
   );
 };
 

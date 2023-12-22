@@ -30,6 +30,8 @@ export const MyTrainingsScreen = ({ navigation }) => {
   const trainingsState = useAppSelector(selectTrainingsState);
   const userState = useAppSelector(selectUserState);
   const [loading, setLoading] = useState(false);
+  const [generateTrainingPlanError, setGenerateTrainingPlanError] =
+    useState("");
   const theme = useTheme();
   const { width } = useWindowDimensions();
   const upperAccordionWidth = width - 40;
@@ -49,8 +51,9 @@ export const MyTrainingsScreen = ({ navigation }) => {
       dispatch(setTrainingsState(parsedTrainingPlan));
       dispatch(updateTrainingsInfo(parsedTrainingPlanForDB));
     } catch (error) {
-      // There was a problem with the server. Please try again later!
-      throw error;
+      setGenerateTrainingPlanError(`Unfortunately there was a problem generating your training plan. 
+      Please try again!`);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -61,7 +64,12 @@ export const MyTrainingsScreen = ({ navigation }) => {
       // call gemini to create the training plan
       fetchData();
     }
-  });
+  }, []);
+
+  const regenerateTrainingPlan = () => {
+    setGenerateTrainingPlanError("");
+    fetchData();
+  };
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
@@ -71,13 +79,17 @@ export const MyTrainingsScreen = ({ navigation }) => {
         </Text>
       </View>
       <ScrollView>
-        {loading ? (
+        {generateTrainingPlanError || loading ? (
           <>
-            <ActivityIndicator size="large" color="#0000ff" />
+            {loading && <ActivityIndicator size="large" color="#0000ff" />}
             <Text
               style={{ color: theme.colors.onBackground, marginBottom: 40 }}
             >
-              Your training plan is currently being generated...
+              {`${
+                generateTrainingPlanError
+                  ? generateTrainingPlanError
+                  : "Your training plan is currently being generated..."
+              }`}
             </Text>
           </>
         ) : (
@@ -200,6 +212,18 @@ export const MyTrainingsScreen = ({ navigation }) => {
           Go back
         </Button>
       </View>
+      {generateTrainingPlanError && (
+        <View>
+          <Button
+            icon="refresh"
+            mode="contained"
+            onPress={regenerateTrainingPlan}
+            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+          >
+            Re-generate training
+          </Button>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
