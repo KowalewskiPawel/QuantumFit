@@ -89,7 +89,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
           <View style={{ marginBottom: 32 }} key={planData.createdAt.seconds}>
             <Card style={{ backgroundColor: theme.colors.backdrop }}>
               <Card.Cover source={{ uri: workoutImages[(Math.ceil(Math.random() * 10) - 1) || 0] }} />
-              <Card.Title title={`Created at ${convertTimestamp(planData.createdAt)}`} subtitle={`Trainging planned for ${planData.planDuration} days`} />
+              <Card.Title title={`Created at ${convertTimestamp(planData.createdAt)}`} subtitle={`Training planned for ${planData.planDuration} days`} />
               <Card.Content>
                 <Text variant="bodyMedium">{planData.tips}</Text>
               </Card.Content>
