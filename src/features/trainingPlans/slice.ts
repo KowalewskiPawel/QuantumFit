@@ -10,7 +10,6 @@ export const trainingPlansSlice = createSlice({
   initialState,
   reducers: {
     setTrainingPlansState(state, action: PayloadAction<Partial<TraingPlansState>>) {
-      console.log({ state, action })
       Object.assign(state, action.payload);
     },
     resetTrainingPlansState(_state) {

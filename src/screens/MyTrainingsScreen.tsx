@@ -9,6 +9,20 @@ import apiClient from "../api/apiClient";
 import { loadTrainingPlans, selectTrainingPlansState } from "../features/trainingPlans";
 import { createTrainingPlan } from "../features/trainingPlans/thunk";
 
+
+const workoutImages = [
+  require('../assets/images/workouts/workout_1.jpg'),
+  require('../assets/images/workouts/workout_2.jpg'),
+  require('../assets/images/workouts/workout_3.jpg'),
+  require('../assets/images/workouts/workout_4.jpg'),
+  require('../assets/images/workouts/workout_5.jpg'),
+  require('../assets/images/workouts/workout_6.jpg'),
+  require('../assets/images/workouts/workout_7.jpg'),
+  require('../assets/images/workouts/workout_8.jpg'),
+  require('../assets/images/workouts/workout_9.jpg'),
+  require('../assets/images/workouts/workout_10.jpg')
+]
+
 export const MyTrainingsScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
@@ -74,13 +88,13 @@ export const MyTrainingsScreen = ({ navigation }) => {
         return (
           <View style={{ marginBottom: 32 }} key={planData.createdAt.seconds}>
             <Card style={{ backgroundColor: theme.colors.backdrop }}>
-              <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+              <Card.Cover source={{ uri: workoutImages[(Math.ceil(Math.random() * 10) - 1) || 0] }} />
               <Card.Title title={`Created at ${convertTimestamp(planData.createdAt)}`} subtitle={`Trainging planned for ${planData.planDuration} days`} />
               <Card.Content>
                 <Text variant="bodyMedium">{planData.tips}</Text>
               </Card.Content>
               <Card.Actions>
-                <Button mode="contained" onPress={() => navigation.navigate("MyTrainingsExcercises", { planId: planDoc.id })}>Show entire plan</Button>
+                <Button mode="contained" onPress={() => navigation.navigate("MyTrainingsExercises", { planId: planDoc.id })}>Show entire plan</Button>
               </Card.Actions>
             </Card>
           </View>
