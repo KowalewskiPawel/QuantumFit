@@ -50,16 +50,14 @@ export const MyTrainingsExercisesScreen = ({ navigation, route }) => {
   const renderExercises = () => {
     if (!!trainingPlan) {
       return trainingPlan.dailyPlans.map(dplan => {
-        console.log({ dplan })
         return (
           <View style={{ marginBottom: 32 }} key={`daily-plan-${planId}-${dplan.dayNumber}`}>
             <Card style={{ backgroundColor: theme.colors.backdrop }}>
               <Card.Content>
                 <Card.Title titleVariant="headlineMedium" title={`Day ${dplan.dayNumber}`} />
-                <Text style={{ marginBottom: 20 }} variant="titleMedium">Exercises:</Text>
                 <View>
                   {dplan.exercises?.map((exercise, index) => (<View style={{ marginBottom: 20 }} key={`${planId}-day-${dplan.dayNumber}-exercise-${index}`}>
-                    <Text variant="bodyLarge" style={{ marginBottom: 8 }}>{exercise.exerciseName}</Text>
+                    <Text variant="headlineSmall" style={{ marginBottom: 8 }}>{exercise.exerciseName}</Text>
                     <View style={{ marginBottom: 12 }}>
                       <List.Item
                         title={`Duration: ${exercise.exerciseDuration}`}

@@ -32,7 +32,7 @@ export const getTrainingPlanPrompt = (
            "dayNumber": "number",
            "exercises": {
               "exerciseName": "string",
-              "escerciseDescription": "string",
+              "exerciseDescription": "string",
               "numberOfReps": "string",
               "numberOfSets": "string",
               "brakesBetweenSets": "string"
