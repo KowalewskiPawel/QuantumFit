@@ -7,7 +7,7 @@ import {
   SegmentedButtons,
 } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
-import { StackRow } from "../components";
+import { StackRow, TopHeader } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectUserState, updateUserInfo } from "../features/user";
 import { setUserState } from "../features/user/slice";
@@ -42,12 +42,7 @@ export const UpdateScreenBody = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <View>
-        <View style={styles.textBackground}>
-          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            Update Information
-          </Text>
-        </View>
+        <TopHeader>Update Information</TopHeader>
         <View style={{ alignItems: "center" }}>
           <SegmentedButtons
             value={sex}
@@ -93,25 +88,22 @@ export const UpdateScreenBody = ({ navigation }) => {
             label="Year of Birth"
             style={{ width: "100%", marginBottom: 20 }}
           />
-          <StackRow>
+          </View>
+          <StackRow style={{ marginVertical: 20, columnGap: 20, justifyContent: "center" }}>
             <Button
               icon="arrow-left"
-              mode="contained"
+              mode="outlined"
               onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
             >
               Previous
             </Button>
             <Button
               mode="contained"
               onPress={validateRegistration}
-              style={{ marginTop: 20, marginBottom: 20 }}
             >
               Update
             </Button>
           </StackRow>
-        </View>
-      </View>
     </SafeAreaView>
   );
 };

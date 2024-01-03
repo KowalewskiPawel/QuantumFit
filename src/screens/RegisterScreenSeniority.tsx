@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { View, SafeAreaView, Image } from "react-native";
+import { View, SafeAreaView } from "react-native";
+import { Image } from "expo-image";
 import {
   ActivityIndicator,
   Button,
@@ -10,7 +11,7 @@ import {
 } from "react-native-paper";
 import Slider from "@react-native-community/slider";
 import { styles } from "../styles/globalStyles";
-import { StackRow } from "../components";
+import { StackRow, TopHeader } from "../components";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { registerUser, selectRegisterState } from "../features/register";
 import {
@@ -68,112 +69,107 @@ export const RegisterScreenSeniority = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <View>
-        <View style={{ display: "flex", alignItems: "center" }}>
-          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            Welcome to QuantumFit
-          </Text>
-          <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
-        </View>
-        <View style={{ display: "flex", alignItems: "center" }}>
-          <Text
-            variant="bodyLarge"
-            style={{ marginTop: 20, marginBottom: 10, marginHorizontal: 10 }}
-          >
-            We are almost done! Just tell us how many months, have you been
-            working out?
-          </Text>
-          <Text variant="titleLarge">{renderExerciseFrequency()}</Text>
-          <Slider
-            style={{ width: 250, height: 20, marginTop: 10, marginBottom: 10 }}
-            minimumValue={1}
-            maximumValue={13}
-            value={selectedExerciseFrequency}
-            onValueChange={setSelectedExerciseFrequency}
-            step={1}
-            minimumTrackTintColor={theme.colors.primary}
-            maximumTrackTintColor="#000000"
-          />
-          <StackRow>
-            <Button
-              icon="arrow-left"
-              mode="contained"
-              onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
-            >
-              Previous
-            </Button>
-            <Button
-              mode="contained"
-              style={{ marginTop: 20, marginBottom: 20 }}
-              onPress={validateRegistration}
-            >
-              Finish
-            </Button>
-          </StackRow>
-        </View>
-        <Portal>
-          <Dialog
-            visible={registerDialog}
-            onDismiss={() => setRegisterDialog(false)}
-            style={{
-              backgroundColor: theme.colors.primaryContainer,
-            }}
-          >
-            <Dialog.Title>{registerStore.isRegistrationSuccessful ? "Congratulations!" : "Do you want to create your account?"}</Dialog.Title>
-            {registerStore.isRegistrationSuccessful ? (
-              <View>
-                <Dialog.Content>
-                  <Text style={{ color: "#5AF113" }}>
-                    Your account has been created successfully!
-                  </Text>
-                </Dialog.Content>
-                <Dialog.Actions>
-                  <Button textColor="#FFF" onPress={finishRegistration}>
-                    OK
-                  </Button>
-                </Dialog.Actions>
-              </View>
-            ) : (
-              <View>
-                <Dialog.Content>
-                  <Text style={{ color: "#FFF" }}>
-                    Please confirm that you want to create your account. You can
-                    always go back and change your information.
-                  </Text>
-                </Dialog.Content>
-                {registerStore.errorMessage && (
-                  <Dialog.Content>
-                    <Text style={{ color: theme.colors.error }}>
-                      {registerStore.errorMessage}
-                    </Text>
-                  </Dialog.Content>
-                )}
-                <Dialog.Actions>
-                  <Button
-                    textColor="#FFF"
-                    onPress={cancelRegistration}
-                    disabled={registerStore.loading}
-                  >
-                    Go Back
-                  </Button>
-                  <Button
-                    textColor="#FFF"
-                    onPress={createAccount}
-                    disabled={registerStore.loading}
-                  >
-                    {registerStore.loading ? (
-                      <ActivityIndicator size="large" color="#0000ff" />
-                    ) : (
-                      "Create Account"
-                    )}
-                  </Button>
-                </Dialog.Actions>
-              </View>
-            )}
-          </Dialog>
-        </Portal>
+      <TopHeader>Welcome to QuantumFit</TopHeader>
+      <View style={{ alignItems: "center", width: "100%", height: 200 }}>
+        <Image contentFit="contain" source={LogoEntry} style={{ width: 200, height: 200 }} />
       </View>
-    </SafeAreaView>
+      <View style={{ alignItems: "center" }}>
+        <Text
+          variant="bodyLarge"
+          style={{ marginVertical: 20, textAlign: "center" }}
+        >
+          We are almost done! Just tell us how many months, have you been
+          working out?
+        </Text>
+        <Text variant="headlineSmall">{renderExerciseFrequency()}</Text>
+        <Slider
+          style={{ width: 250, height: 20, marginVertical: 10 }}
+          minimumValue={1}
+          maximumValue={13}
+          value={selectedExerciseFrequency}
+          onValueChange={setSelectedExerciseFrequency}
+          step={1}
+          thumbTintColor={theme.colors.primary}
+          minimumTrackTintColor={theme.colors.secondary}
+          maximumTrackTintColor="#000000"
+        />
+      </View>
+      <StackRow style={{ marginVertical: 20, columnGap: 20, justifyContent: "center" }}>
+        <Button
+          icon="arrow-left"
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+        >
+          Previous
+        </Button>
+        <Button
+          mode="contained"
+          onPress={validateRegistration}
+        >
+          Finish
+        </Button>
+      </StackRow>
+      <Portal>
+        <Dialog
+          visible={registerDialog}
+          onDismiss={() => setRegisterDialog(false)}
+          style={{
+            backgroundColor: theme.colors.primaryContainer,
+          }}
+        >
+          <Dialog.Title>{registerStore.isRegistrationSuccessful ? "Congratulations!" : "Do you want to create your account?"}</Dialog.Title>
+          {registerStore.isRegistrationSuccessful ? (
+            <View>
+              <Dialog.Content>
+                <Text style={{ color: "#5AF113" }}>
+                  Your account has been created successfully!
+                </Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button textColor={theme.colors.onBackground} onPress={finishRegistration}>
+                  OK
+                </Button>
+              </Dialog.Actions>
+            </View>
+          ) : (
+            <View>
+              <Dialog.Content>
+                <Text style={{ color: theme.colors.onBackground }}>
+                  Please confirm that you want to create your account. You can
+                  always go back and change your information.
+                </Text>
+              </Dialog.Content>
+              {registerStore.errorMessage && (
+                <Dialog.Content>
+                  <Text style={{ color: theme.colors.error }}>
+                    {registerStore.errorMessage}
+                  </Text>
+                </Dialog.Content>
+              )}
+              <Dialog.Actions>
+                <Button
+                  textColor={theme.colors.onBackground}
+                  onPress={cancelRegistration}
+                  disabled={registerStore.loading}
+                >
+                  Go Back
+                </Button>
+                <Button
+                  textColor={theme.colors.onBackground}
+                  onPress={createAccount}
+                  disabled={registerStore.loading}
+                >
+                  {registerStore.loading ? (
+                    <ActivityIndicator size="large" color="#0000ff" />
+                  ) : (
+                    "Create Account"
+                  )}
+                </Button>
+              </Dialog.Actions>
+            </View>
+          )}
+        </Dialog>
+      </Portal>
+    </SafeAreaView >
   );
 };

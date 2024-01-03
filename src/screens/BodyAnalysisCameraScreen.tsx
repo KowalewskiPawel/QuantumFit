@@ -6,8 +6,8 @@ import {
 } from "expo-camera";
 import { Image } from "expo-image";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
-import { Button, IconButton, MD3Colors, Text } from "react-native-paper";
+import { Dimensions, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { Button, IconButton, MD3Colors, Text, useTheme } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { uploadToFirebase } from "../firebase/firebase-config";
 import { useAppDispatch, useAppSelector } from "../app/store";
@@ -16,6 +16,10 @@ import { selectUserState } from "../features/user";
 import { updateUserInfo } from "../features/user/thunk";
 import { selectBodyPhotosState } from "../features/bodyPhotos";
 import { setBodyPhotosState } from "../features/bodyPhotos/slice";
+import { CountdownTimer, TopHeader } from "../components";
+
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 const nextSideMap = {
   front: "side",
@@ -26,11 +30,14 @@ const nextSideMap = {
 export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
   const dispatch = useAppDispatch();
   const { side } = route.params;
-  const windowWidth = Dimensions.get("window").width;
   const cameraWidth = windowWidth * 0.9;
   const cameraHeight = cameraWidth * (4 / 3);
-  const [countdown, setCountdown] = useState(5);
+
+  const [timer, setTimer] = useState(0);
+  const [countdown, setCountdown] = useState(0);
+  const [timerClicked, setTimerClicked] = useState(false)
   const [showCountDown, setShowCountdown] = useState(false);
+
   const countdownTimer = useRef(null);
   const { uid } = useAppSelector(selectAuthState);
   const { photos } = useAppSelector(selectUserState);
@@ -43,29 +50,36 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
   const takePictureTimeout = useRef(null);
   const [takenPicture, setTakenPicture] = useState<CameraCapturedPicture>();
 
+  const onPressTimerItem = (time) => {
+    setTimer(time);
+    setTimerClicked((prevState) => !prevState);
+  };
+
   const takePicture = () => {
-    setCountdown(5);
-    setShowCountdown(true);
+    setCountdown(timer)
+    if (timer > 0) {
+      setShowCountdown(true)
+    }
     takePictureTimeout.current = setTimeout(async () => {
-      const picture = await cameraRef.current.takePictureAsync({
+      const picture = await cameraRef.current?.takePictureAsync({
         quality: 0.75,
         scale: 0.6,
         imageType: ImageType.jpg,
       });
       setTakenPicture(picture);
       setShowCountdown(false);
-    }, 5000);
+    }, timer * 1000);
   };
 
   useEffect(() => {
-    if (countdown >= 5) {
-      clearInterval(countdownTimer.current);
+    if ((countdown === timer) && (timer > 0)) {
       countdownTimer.current = setInterval(
         () => setCountdown((v) => v - 1),
         1000
       );
     }
     if (countdown === 0) {
+      setShowCountdown(false)
       clearInterval(countdownTimer.current);
     }
   }, [countdown]);
@@ -115,7 +129,9 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
     // Camera permissions are not granted yet
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
+        <Text style={{ textAlign: "center", marginBottom: 24 }}
+          variant="headlineMedium"
+        >
           Camera Permission Not Granted
         </Text>
         <Button mode="contained" onPress={requestPermission}>
@@ -130,41 +146,42 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
       current === CameraType.back ? CameraType.front : CameraType.back
     );
   }
+
   if (!takenPicture) {
-    return (
-      <ScrollView>
-        <View style={localStyles.container}>
-          <View style={styles.titleContainer}>
-            <Text
-              style={styles.titleText}
-            >{`Take a picture of the ${side} part of your body`}</Text>
-          </View>
-          <View
-            style={{
-              ...localStyles.cameraContainer,
-              width: cameraWidth,
-              height: cameraHeight,
-            }}
+    return (<SafeAreaView>
+      {timerClicked && <CountdownTimer onPress={onPressTimerItem} />}
+      <View style={localStyles.container}>
+        <TopHeader>{`Take a picture of the ${side} part of your body`}</TopHeader>
+        <View
+          style={{
+            ...localStyles.cameraContainer,
+            width: cameraWidth,
+            height: cameraHeight,
+          }}
+        >
+          <Camera
+            useCamera2Api
+            autoFocus
+            ref={cameraRef}
+            style={localStyles.camera}
+            type={type}
           >
-            <Camera
-              useCamera2Api
-              autoFocus
-              ref={cameraRef}
-              style={localStyles.camera}
-              type={type}
-            >
-              <View style={localStyles.buttonContainer}>
-                <IconButton
-                  size={26}
-                  icon="camera-flip-outline"
-                  iconColor={MD3Colors.secondary100}
-                  onPress={toggleCameraType}
-                />
-              </View>
-            </Camera>
+          </Camera>
+        </View>
+        <View style={localStyles.buttonContainer}>
+          <View style={{ flexDirection: 'row', flexWrap: "nowrap" }}>
+            <IconButton
+              size={26}
+              icon="camera-timer"
+              iconColor={MD3Colors.secondary100}
+              onPress={() => setTimerClicked((prevState) => !prevState)}
+            />
+            <Text style={{ color: MD3Colors.secondary100, fontSize: 12, fontWeight: 'bold', position: "absolute", bottom: 6, right: 4 }}>{timer > 0 ? `${timer}s` : "off"}</Text>
           </View>
           {showCountDown ? (
-            <Text style={localStyles.countdownTimer}>{countdown}</Text>
+            <View style={localStyles.countdownContainer}>
+              <Text style={localStyles.countdownTimer}>{countdown}</Text>
+            </View>
           ) : (
             <IconButton
               size={60}
@@ -173,19 +190,21 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
               onPress={takePicture}
             />
           )}
+          <IconButton
+            size={26}
+            icon="camera-flip-outline"
+            iconColor={MD3Colors.secondary100}
+            onPress={toggleCameraType}
+          />
         </View>
-      </ScrollView>
-    );
+      </View>
+    </SafeAreaView>);
   }
 
   return (
-    <ScrollView>
+    <SafeAreaView>
       <View style={localStyles.container}>
-        <View style={styles.titleContainer}>
-          <Text
-            style={styles.titleText}
-          >{`Take a picture of the ${side} part of your body`}</Text>
-        </View>
+        <TopHeader>{`Check if picture of the ${side} is correct`}</TopHeader>
         <View
           style={{
             ...localStyles.cameraContainer,
@@ -194,7 +213,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
           }}
         >
           <Image
-            contentFit="contain"
+            contentFit="cover"
             source={takenPicture.uri}
             style={localStyles.camera}
           />
@@ -206,7 +225,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
             </Text>
           </View>
         ) : (
-          <View style={localStyles.buttonsRow}>
+          <View style={{ ...localStyles.buttonContainer, marginTop: 24 }}>
             <Button
               icon="cancel"
               mode="contained-tonal"
@@ -228,20 +247,21 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
           </View>
         )}
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const localStyles = StyleSheet.create({
   container: {
+    minHeight: windowHeight,
     flex: 1,
-    paddingTop: 56,
     justifyContent: "flex-start",
     alignItems: "center",
     width: "100%",
+    paddingTop: 12,
   },
   cameraContainer: {
-    width: "100%",
+    flex: 1,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     borderBottomLeftRadius: 25,
@@ -253,27 +273,18 @@ const localStyles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    alignSelf: "flex-start",
     width: "100%",
-    position: "absolute",
-    bottom: 0,
-    justifyContent: "flex-end",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "flex-end",
+    marginBottom: 24
   },
   button: {
     flex: 1,
     alignSelf: "flex-end",
     alignItems: "center",
   },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-  sizeText: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "white",
-  },
+
   galleryContainer: {
     flexDirection: "row",
   },
@@ -292,15 +303,20 @@ const localStyles = StyleSheet.create({
     height: "60%",
     width: "auto",
   },
-  buttonsRow: {
-    marginTop: 30,
-    flexDirection: "row",
-    justifyContent: "space-around",
+
+  countdownContainer: {
+    marginTop: 16,
+    marginBottom: 6,
+    marginLeft: 6,
+    marginRight: 6,
+    width: 76,
+    height: 76,
+    justifyContent: "center",
+    alignItems: "center"
   },
+
   countdownTimer: {
-    textAlign: "center",
     fontSize: 40,
     fontWeight: "bold",
-    marginTop: 30,
   },
 });

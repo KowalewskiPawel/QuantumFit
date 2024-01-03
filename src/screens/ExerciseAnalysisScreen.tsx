@@ -21,7 +21,7 @@ import { styles } from "../styles/globalStyles";
 import { uploadToFirebase } from "../firebase/firebase-config";
 import { useAppSelector } from "../app/store";
 import { selectAuthState } from "../features/auth";
-import { LoadingSpinner, StackRow } from "../components";
+import { LoadingSpinner, StackRow, TopHeader } from "../components";
 import apiClient from "../api/apiClient";
 import { exerciseAnalysisPrompt } from "../prompts/exerciseAnalysis";
 
@@ -188,137 +188,58 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
   if (geminiResponse && !fetchingAnalysis) {
     return (
       <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={localStyles.loadingScreen}>
-            <View style={styles.textBackground}>
+        <View style={localStyles.loadingScreen}>
+          <View style={styles.textBackground}>
+            <Text
+              style={{
+                ...styles.title,
+                color: theme.colors.onBackground,
+                marginBottom: 40,
+              }}
+            >
+              Exercise Analysis
+            </Text>
+          </View>
+          <View
+            style={{
+              ...localStyles.cameraContainer,
+              width: cameraWidth - 50,
+              height: cameraHeight - 100,
+            }}
+          >
+            <Video
+              source={recordedVideo}
+              shouldPlay
+              style={localStyles.camera}
+              isLooping
+            />
+          </View>
+          <Surface
+            style={{
+              ...styles.surface,
+              marginTop: 20,
+              marginBottom: 10,
+              backgroundColor: theme.colors.backdrop,
+              marginHorizontal: 40,
+            }}
+            elevation={4}
+          >
+            <ScrollView>
               <Text
                 style={{
-                  ...styles.title,
+                  ...styles.textBackground,
                   color: theme.colors.onBackground,
-                  marginBottom: 40,
                 }}
               >
-                Exercise Analysis
+                {geminiResponse}
               </Text>
-            </View>
-            <View
-              style={{
-                ...localStyles.cameraContainer,
-                width: cameraWidth - 50,
-                height: cameraHeight - 100,
-              }}
-            >
-              <Video
-                source={recordedVideo}
-                shouldPlay
-                style={localStyles.camera}
-                isLooping
-              />
-            </View>
-            <Surface
-              style={{
-                ...styles.surface,
-                marginTop: 20,
-                marginBottom: 10,
-                backgroundColor: theme.colors.backdrop,
-                marginHorizontal: 40,
-              }}
-              elevation={4}
-            >
-              <ScrollView>
-                <Text
-                  style={{
-                    ...styles.textBackground,
-                    color: theme.colors.onBackground,
-                  }}
-                >
-                  {geminiResponse}
-                </Text>
-              </ScrollView>
-            </Surface>
-            <StackRow>
-              <Button
-                mode="contained"
-                disabled={fetchingAnalysis}
-                onPress={cleanUpAfterRecording}
-                style={{
-                  marginTop: 20,
-                  marginBottom: 20,
-                  marginRight: 20,
-                  marginLeft: "auto",
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                mode="contained"
-                disabled={fetchingAnalysis}
-                onPress={fetchAnalysis}
-                style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
-              >
-                Re-analyze
-              </Button>
-            </StackRow>
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (videoUrl && fetchingAnalysis) {
-    return (
-      <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text
-              style={{
-                ...styles.title,
-                color: theme.colors.onBackground,
-                marginBottom: 40,
-              }}
-            >
-              Exercise Analysis
-            </Text>
-          </View>
-          <View style={localStyles.loadingScreen}>
-            <Text style={{ marginBottom: 30 }} variant="headlineMedium">
-              Analyzing your video
-            </Text>
-            <LoadingSpinner />
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (errorFetchingGeminiResponse) {
-    return (
-      <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text
-              style={{
-                ...styles.title,
-                color: theme.colors.onBackground,
-                marginBottom: 40,
-              }}
-            >
-              Exercise Analysis
-            </Text>
-          </View>
-          <View style={localStyles.loadingScreen}>
-            <Text
-              style={{ marginBottom: 30, color: theme.colors.error }}
-              variant="headlineMedium"
-            >
-              {errorFetchingGeminiResponse}
-            </Text>
-          </View>
+            </ScrollView>
+          </Surface>
           <StackRow>
             <Button
               mode="contained"
               disabled={fetchingAnalysis}
-              onPress={() => navigation.goBack()}
+              onPress={cleanUpAfterRecording}
               style={{
                 marginTop: 20,
                 marginBottom: 20,
@@ -332,7 +253,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
               mode="contained"
               disabled={fetchingAnalysis}
               onPress={fetchAnalysis}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
+              style={{ marginVertical: 20, marginRight: "auto" }}
             >
               Re-analyze
             </Button>
@@ -342,14 +263,83 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     );
   }
 
+  if (videoUrl && fetchingAnalysis) {
+    return (
+      <SafeAreaView style={{ ...styles.container }}>
+        <View style={styles.textBackground}>
+          <Text
+            style={{
+              ...styles.title,
+              color: theme.colors.onBackground,
+              marginBottom: 40,
+            }}
+          >
+            Exercise Analysis
+          </Text>
+        </View>
+        <View style={localStyles.loadingScreen}>
+          <Text style={{ marginBottom: 30 }} variant="headlineMedium">
+            Analyzing your video
+          </Text>
+          <LoadingSpinner />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (errorFetchingGeminiResponse) {
+    return (
+      <SafeAreaView style={{ ...styles.container }}>
+        <View style={styles.textBackground}>
+          <Text
+            style={{
+              ...styles.title,
+              color: theme.colors.onBackground,
+              marginBottom: 40,
+            }}
+          >
+            Exercise Analysis
+          </Text>
+        </View>
+        <View style={localStyles.loadingScreen}>
+          <Text
+            style={{ marginBottom: 30, color: theme.colors.error }}
+            variant="headlineMedium"
+          >
+            {errorFetchingGeminiResponse}
+          </Text>
+        </View>
+        <StackRow>
+          <Button
+            mode="contained"
+            disabled={fetchingAnalysis}
+            onPress={() => navigation.goBack()}
+            style={{
+              marginTop: 20,
+              marginBottom: 20,
+              marginRight: 20,
+              marginLeft: "auto",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            mode="contained"
+            disabled={fetchingAnalysis}
+            onPress={fetchAnalysis}
+            style={{ marginVertical: 20, marginRight: "auto" }}
+          >
+            Re-analyze
+          </Button>
+        </StackRow>
+      </SafeAreaView>
+    );
+  }
+
   if (!recordedVideo) {
     return (
       <View style={localStyles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.subtitleUpperCase}>
-            Record 10 seconds of the Exercise for the analysis
-          </Text>
-        </View>
+        <TopHeader titleStyle={styles.subtitleUpperCase}>Record 10 seconds of the Exercise for the analysis</TopHeader>
         <View
           style={{
             ...localStyles.cameraContainer,
@@ -412,7 +402,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
               icon="arrow-left"
               mode="contained"
               onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+              style={{ marginVertical: 20, marginRight: 10 }}
             >
               Go back
             </Button>
@@ -424,11 +414,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
 
   return (
     <View style={localStyles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>
-          Record the video of the Exercise to analyze
-        </Text>
-      </View>
+      <TopHeader>Record the video of the Exercise to analyze</TopHeader>
       <View
         style={{
           ...localStyles.cameraContainer,

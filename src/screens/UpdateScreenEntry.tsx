@@ -48,7 +48,7 @@ export const UpdateScreenEntry = ({ navigation }) => {
               icon="arrow-left"
               mode="contained"
               onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+              style={{ marginVertical: 20, marginRight: 10 }}
             >
               Go back
             </Button>

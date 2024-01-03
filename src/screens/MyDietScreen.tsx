@@ -208,7 +208,7 @@ export const MyDietScreen = ({ navigation }) => {
               icon="tune"
               mode="contained"
               onPress={() => navigation.navigate("DietPreferences")}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+              style={{ marginVertical: 20, marginRight: 10 }}
             >
               Adjust My Diet
             </Button>
@@ -217,7 +217,7 @@ export const MyDietScreen = ({ navigation }) => {
             icon="arrow-left"
             mode="outlined"
             onPress={() => navigation.goBack()}
-            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+            style={{ marginVertical: 20, marginRight: 10 }}
           >
             Go back
           </Button>

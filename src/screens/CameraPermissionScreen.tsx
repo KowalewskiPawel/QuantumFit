@@ -11,27 +11,25 @@ export const CameraPermissionScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <View style={styles.textBackground}>
-          <Text style={styles.title}>Quantum Fit</Text>
-        </View>
-        <View style={styles.textBackground}>
-          <Text style={styles.text}>
-            Permission Not Granted - {permission?.status}
-          </Text>
-        </View>
-        <StatusBar style="auto" />
-        <Button
-          icon="shield-key"
-          mode="contained"
-          onPress={requestPermission}
-          style={{ marginTop: 10 }}
-          buttonColor={theme.colors.primary}
-          textColor={theme.colors.onPrimary}
-        >
-          Request Permission
-        </Button>
+      <View style={styles.textBackground}>
+        <Text style={styles.title}>Quantum Fit</Text>
       </View>
+      <View style={styles.textBackground}>
+        <Text style={styles.text}>
+          Permission Not Granted - {permission?.status}
+        </Text>
+      </View>
+      <StatusBar style="auto" />
+      <Button
+        icon="shield-key"
+        mode="contained"
+        onPress={requestPermission}
+        style={{ marginTop: 10 }}
+        buttonColor={theme.colors.primary}
+        textColor={theme.colors.onPrimary}
+      >
+        Request Permission
+      </Button>
     </SafeAreaView>
   );
 };
