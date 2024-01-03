@@ -34,6 +34,8 @@ export const MyDietScreen = ({ navigation }) => {
   const mealState = useAppSelector(selectMealState);
   const userState = useAppSelector(selectUserState);
   const [loading, setLoading] = useState(false);
+  const [generateDietPlanError, setGenerateDietPlanError] = useState("");
+  const [dietPreferences, setDietPreferences] = useState("");
   const theme = useTheme();
   const { width } = useWindowDimensions();
   const upperAccordionWidth = width - 40;
@@ -54,7 +56,9 @@ export const MyDietScreen = ({ navigation }) => {
       dispatch(updateMealInfo(parsedMealPlanForDB));
     } catch (error) {
       // There was a problem with the server. Please try again later!
-      throw error;
+      setGenerateDietPlanError(`Unfortunately there was a problem generating your diet plan. 
+      Please try again!`);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -78,6 +82,7 @@ export const MyDietScreen = ({ navigation }) => {
       const lastChip = selectedChips.slice(-1);
       const excludedFoods = `${allChipsButLastOne} and ${lastChip}`;
 
+      setDietPreferences(excludedFoods);
       dispatch(setPreviousDietState(chipState));
       // call gemini again to redo the meal plan
       fetchData(excludedFoods);
@@ -91,126 +96,146 @@ export const MyDietScreen = ({ navigation }) => {
     }
   });
 
+  const regenerateDietPlan = () => {
+    setGenerateDietPlanError("");
+    fetchData(dietPreferences);
+  };
+
   return (
-      <SafeAreaView style={{ ...styles.container }}>
-        <View style={styles.textBackground}>
-          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            My 7 Day Meal Plan
-          </Text>
-        </View>
-        <ScrollView>
-          {loading ? (
-            <>
-              <ActivityIndicator size="large" color="#0000ff" />
-              <Text
-                style={{ color: theme.colors.onBackground, marginBottom: 40 }}
-              >
-                Your meal plan is currently being generated...
-              </Text>
-            </>
-          ) : (
-            <List.AccordionGroup>
-              {!!mealState.length &&
-                !loading &&
-                mealState.map(({ mealSummary, meals }, indexOuter: number) => (
-                  <List.Accordion
-                    title={`DAY ${indexOuter + 1}`}
-                    titleStyle={{ fontSize: 24, fontWeight: "600" }}
-                    description={mealSummary}
-                    descriptionStyle={{ fontStyle: "italic", paddingLeft: 6 }}
-                    expanded={true}
-                    key={`day-${indexOuter}`}
-                    id={indexOuter}
-                    style={{
-                      ...styles.textBackground,
-                      width: upperAccordionWidth,
-                    }}
-                  >
-                    <View style={{ marginLeft: 30, marginRight: 30 }}>
-                      <List.Section style={{ marginBottom: 0 }}>
-                        <List.AccordionGroup>
-                          {meals.map(
-                            (
-                              { meal, name, ingredients },
-                              indexMiddle: number
-                            ) => (
-                              <List.Accordion
-                                title={name}
-                                key={name}
-                                titleStyle={{ fontSize: 18, fontWeight: "500" }}
-                                description={meal}
-                                descriptionStyle={{
-                                  fontStyle: "italic",
-                                  paddingLeft: 6,
-                                  fontWeight: "300",
-                                }}
-                                id={`${indexOuter}-${indexMiddle}`}
+    <SafeAreaView style={{ ...styles.container }}>
+      <View style={styles.textBackground}>
+        <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
+          My 7 Day Meal Plan
+        </Text>
+      </View>
+      <ScrollView>
+        {generateDietPlanError || loading ? (
+          <>
+            {loading && <ActivityIndicator size="large" color="#0000ff" />}
+            <Text
+              style={{ color: theme.colors.onBackground, marginBottom: 40 }}
+            >
+              {`${
+                generateDietPlanError
+                  ? generateDietPlanError
+                  : "Your meal plan is currently being generated..."
+              }`}
+            </Text>
+          </>
+        ) : (
+          <List.AccordionGroup>
+            {!!mealState.length &&
+              !loading &&
+              mealState.map(({ mealSummary, meals }, indexOuter: number) => (
+                <List.Accordion
+                  title={`DAY ${indexOuter + 1}`}
+                  titleStyle={{ fontSize: 24, fontWeight: "600" }}
+                  description={mealSummary}
+                  descriptionStyle={{ fontStyle: "italic", paddingLeft: 6 }}
+                  expanded={true}
+                  key={`day-${indexOuter}`}
+                  id={indexOuter}
+                  style={{
+                    ...styles.textBackground,
+                    width: upperAccordionWidth,
+                  }}
+                >
+                  <View style={{ marginLeft: 30, marginRight: 30 }}>
+                    <List.Section style={{ marginBottom: 0 }}>
+                      <List.AccordionGroup>
+                        {meals.map(
+                          (
+                            { meal, name, ingredients },
+                            indexMiddle: number
+                          ) => (
+                            <List.Accordion
+                              title={name}
+                              key={name}
+                              titleStyle={{ fontSize: 18, fontWeight: "500" }}
+                              description={meal}
+                              descriptionStyle={{
+                                fontStyle: "italic",
+                                paddingLeft: 6,
+                                fontWeight: "300",
+                              }}
+                              id={`${indexOuter}-${indexMiddle}`}
+                              style={{
+                                backgroundColor: "#24232a",
+                                marginBottom: 12,
+                              }}
+                            >
+                              <Card
                                 style={{
-                                  backgroundColor: "#24232a",
+                                  borderRadius: 0,
+                                  marginTop: -12,
                                   marginBottom: 12,
                                 }}
                               >
-                                <Card
-                                  style={{
-                                    borderRadius: 0,
-                                    marginTop: -12,
-                                    marginBottom: 12,
-                                  }}
+                                <Card.Content style={{ paddingTop: 0 }}>
+                                  <List.Section style={{ marginBottom: 0 }}>
+                                    {ingredients.map((ingredient: string) => (
+                                      <List.Item
+                                        key={ingredient}
+                                        title={ingredient}
+                                        titleNumberOfLines={2}
+                                        titleStyle={{
+                                          marginLeft: -8,
+                                          fontSize: 15,
+                                        }}
+                                        left={(props) => (
+                                          <List.Icon
+                                            {...props}
+                                            style={{ paddingLeft: 0 }}
+                                            icon="circle-small"
+                                          />
+                                        )}
+                                        style={{
+                                          paddingTop: 2,
+                                          paddingBottom: 2,
+                                        }}
+                                      />
+                                    ))}
+                                  </List.Section>
+                                </Card.Content>
+                                <Card.Actions
+                                  style={{ paddingTop: 0, paddingBottom: 4 }}
                                 >
-                                  <Card.Content style={{ paddingTop: 0 }}>
-                                    <List.Section style={{ marginBottom: 0 }}>
-                                      {ingredients.map((ingredient: string) => (
-                                        <List.Item
-                                          key={ingredient}
-                                          title={ingredient}
-                                          titleNumberOfLines={2}
-                                          titleStyle={{
-                                            marginLeft: -8,
-                                            fontSize: 15,
-                                          }}
-                                          left={(props) => (
-                                            <List.Icon
-                                              {...props}
-                                              style={{ paddingLeft: 0 }}
-                                              icon="circle-small"
-                                            />
-                                          )}
-                                          style={{
-                                            paddingTop: 2,
-                                            paddingBottom: 2,
-                                          }}
-                                        />
-                                      ))}
-                                    </List.Section>
-                                  </Card.Content>
-                                  <Card.Actions
-                                    style={{ paddingTop: 0, paddingBottom: 4 }}
-                                  >
-                                    <Button mode="text" textColor="#c4bcbc">
-                                      Details
-                                    </Button>
-                                  </Card.Actions>
-                                </Card>
-                              </List.Accordion>
-                            )
-                          )}
-                        </List.AccordionGroup>
-                      </List.Section>
-                    </View>
-                  </List.Accordion>
-                ))}
-            </List.AccordionGroup>
-          )}
-        </ScrollView>
-        <View>
-          {!!mealState.length && !loading && (
+                                  <Button mode="text" textColor="#c4bcbc">
+                                    Details
+                                  </Button>
+                                </Card.Actions>
+                              </Card>
+                            </List.Accordion>
+                          )
+                        )}
+                      </List.AccordionGroup>
+                    </List.Section>
+                  </View>
+                </List.Accordion>
+              ))}
+          </List.AccordionGroup>
+        )}
+      </ScrollView>
+      <View>
+        {!!mealState.length && !loading && !generateDietPlanError && (
+          <Button
+            icon="tune"
+            mode="contained"
+            onPress={() => navigation.navigate("DietPreferences")}
+            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+          >
+            Adjust My Diet
+          </Button>
+        )}
+        {generateDietPlanError && (
+          <View>
             <Button
-              icon="tune"
+              icon="refresh"
               mode="contained"
-              onPress={() => navigation.navigate("DietPreferences")}
               style={{ marginVertical: 20, marginRight: 10 }}
+              onPress={regenerateDietPlan}
             >
-              Adjust My Diet
+              Re-generate diet
             </Button>
           )}
           <Button
