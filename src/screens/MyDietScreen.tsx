@@ -237,16 +237,17 @@ export const MyDietScreen = ({ navigation }) => {
             >
               Re-generate diet
             </Button>
-          )}
-          <Button
-            icon="arrow-left"
-            mode="outlined"
-            onPress={() => navigation.goBack()}
-            style={{ marginVertical: 20, marginRight: 10 }}
-          >
-            Go back
-          </Button>
-        </View>
-      </SafeAreaView>
+          </View>
+        )}
+        <Button
+          icon="arrow-left"
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={{ marginVertical: 20, marginRight: 10 }}
+        >
+          Go back
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 };
