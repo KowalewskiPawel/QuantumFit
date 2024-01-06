@@ -17,12 +17,12 @@ import * as tf from "@tensorflow/tfjs";
 import * as posedetection from "@tensorflow-models/pose-detection";
 import * as ScreenOrientation from "expo-screen-orientation";
 import {
-  bundleResourceIO,
   cameraWithTensors,
 } from "@tensorflow/tfjs-react-native";
 import Svg, { Circle } from "react-native-svg";
 import { ExpoWebGLRenderingContext } from "expo-gl";
 import { CameraType } from "expo-camera/build/Camera.types";
+import * as Speech from "expo-speech";
 import { LoadingSpinner } from "../components";
 
 // tslint:disable-next-line: variable-name
@@ -55,8 +55,6 @@ const OUTPUT_TENSOR_HEIGHT = OUTPUT_TENSOR_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 // Whether to auto-render TensorCamera preview.
 const AUTO_RENDER = false;
 
-// Whether to load model from app bundle (true) or through network (false).
-const LOAD_MODEL_FROM_BUNDLE = true;
 
 export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
   const theme = useTheme();
@@ -70,6 +68,8 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
   const [cameraType, setCameraType] = useState<CameraType>(
     Camera.Constants.Type["front"]
   );
+  const [squatCount, setSquatCount] = useState(0);
+  const squatRef = useRef(false);
   // Use `useRef` so that changing it won't trigger a re-render.
   //
   // - null: unset (initial value).
@@ -102,15 +102,6 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
         modelType: posedetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
         enableSmoothing: true,
       };
-      if (LOAD_MODEL_FROM_BUNDLE) {
-        const modelJson = require("../tensorflow/offline_models/model.json");
-        const modelWeights1 = require("../tensorflow/offline_models/group1-shard1of2.bin");
-        const modelWeights2 = require("../tensorflow/offline_models/group1-shard2of2.bin");
-        movenetModelConfig.modelUrl = bundleResourceIO(modelJson, [
-          modelWeights1,
-          modelWeights2,
-        ]);
-      }
       const model = await posedetection.createDetector(
         posedetection.SupportedModels.MoveNet,
         movenetModelConfig
@@ -134,6 +125,12 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (squatCount > 0) {
+      Speech.speak(`The current count is ${squatCount}`, { rate: 1.0 });
+    }
+  }, [squatCount]);
+
   const handleCameraStream = async (
     images: IterableIterator<tf.Tensor3D>,
     updatePreview: () => void,
@@ -149,6 +146,39 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
         undefined,
         Date.now()
       );
+      if (poses && poses.length > 0) {
+        const pose = poses[0];
+
+        const leftHip = pose.keypoints.find(
+          (k) => k.name === "left_hip" && k.score > 0.3
+        );
+        const rightHip = pose.keypoints.find(
+          (k) => k.name === "right_hip" && k.score > 0.3
+        );
+        const leftKnee = pose.keypoints.find(
+          (k) => k.name === "left_knee" && k.score > 0.3
+        );
+        const rightKnee = pose.keypoints.find(
+          (k) => k.name === "right_knee" && k.score > 0.3
+        );
+
+        if (leftHip && rightHip && leftKnee && rightKnee) {
+          const avgHipY = (leftHip.y + rightHip.y) / 2;
+          const avgKneeY = (leftKnee.y + rightKnee.y) / 2;
+
+          // If the hips are lower than the knees, the user is in a squat
+          if (avgHipY > avgKneeY) {
+            console.log("in squat");
+            squatRef.current = true;
+          } else if (squatRef.current) {
+            console.log("not in squat");
+            // If the user was in a squat and is no longer, increment the squat count
+            setSquatCount((prevSquatCount) => prevSquatCount + 1);
+            squatRef.current = false;
+          }
+        }
+      }
+
       const latency = Date.now() - startTs;
       setFps(Math.floor(1000 / latency));
       setPoses(poses);
@@ -209,6 +239,7 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
     return (
       <View style={styles.fpsContainer}>
         <Text>FPS: {fps}</Text>
+        <Text>Squats: {squatCount}</Text>
       </View>
     );
   };
