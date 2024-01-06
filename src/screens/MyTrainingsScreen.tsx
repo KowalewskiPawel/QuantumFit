@@ -16,7 +16,6 @@ import {
 import { useAppDispatch, useAppSelector } from "../app/store";
 import apiClient from "../api/apiClient";
 import { selectUserState } from "../features/user";
-
 import { styles } from "../styles/globalStyles";
 import { generateTrainingPrompt } from "../prompts/exercisePlan";
 import {
