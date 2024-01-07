@@ -2,7 +2,7 @@
   "expo": {
     "name": "quantum-fit",
     "slug": "quantumfit",
-    "version": "1.0.0",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -11,15 +11,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "buildNumber": "1",
       "supportsTablet": true,
       "userInterfaceStyle": "dark",
       "bundleIdentifier": "com.practicalearning.quantumfit"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#0A1420"
@@ -48,13 +48,11 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
       ],
-      [
-        "react-native-health"
-      ]
+      ["react-native-health"]
     ],
     "owner": "practicalearning",
     "runtimeVersion": {
-      "runtimeVersion": "0.3.0"
+      "policy": "nativeVersion"
     },
     "extra": {
       "eas": {
