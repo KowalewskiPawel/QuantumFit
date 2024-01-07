@@ -112,12 +112,22 @@ export const MainMenuScreen = ({ navigation }) => {
           mode="contained"
           style={{
             marginTop: 20,
-            marginBottom: 20,
             backgroundColor: theme.colors.primary,
           }}
           onPress={() => navigation.navigate("ExerciseAnalysis")}
         >
           Exercise Analysis
+        </Button>
+        <Button
+          mode="contained"
+          style={{
+            marginTop: 20,
+            marginBottom: 20,
+            backgroundColor: theme.colors.primary,
+          }}
+          onPress={() => navigation.navigate("GoogleFit")}
+        >
+          Google Fit
         </Button>
       </View>
       <Portal>
