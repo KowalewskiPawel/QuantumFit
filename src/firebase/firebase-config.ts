@@ -8,6 +8,8 @@ import {
 } from "@env";
 import { getFirestore, getDoc, setDoc, doc, updateDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -21,6 +23,7 @@ import {
   deleteObject,
   getDownloadURL,
 } from "firebase/storage";
+import { Platform } from "react-native";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -35,11 +38,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const fbStorage = getStorage();
 const db = getFirestore(app);
-const auth = getAuth(app);
+// const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
 
-// const auth = initializeAuth(fbApp, {
-//   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-// });
 /**
  *
  * @param {*} uri

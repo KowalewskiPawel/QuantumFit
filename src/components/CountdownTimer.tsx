@@ -1,11 +1,10 @@
 import {
-    View,
-    Text,
     FlatList,
+    Text,
     StyleSheet,
     TouchableOpacity,
 } from "react-native";
-import { useTheme } from "react-native-paper";
+import { Portal, useTheme, Modal } from "react-native-paper";
 
 const timerData = [
     { key: "OFF", time: 0 },
@@ -13,36 +12,34 @@ const timerData = [
     { key: "5s", time: 5 },
     { key: "10s", time: 10 }
 ]
-export const CountdownTimer = ({ onPress }) => {
+export const CountdownTimer = ({ onTimeSelect, visible, onDismiss }) => {
     const theme = useTheme();
-
     const onClick = (time) => {
-        onPress(time);
+        onTimeSelect(time);
     };
 
     return (
-        <View style={{ ...styles.timerContainer, backgroundColor: theme.colors.background }}>
-            <FlatList
-                data={timerData}
-                style={styles.timerList}
-                renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => onClick(item.time)}>
-                        <Text style={styles.item}>{item.key}</Text>
-                    </TouchableOpacity>
-                )}
-            />
-        </View>
+        <Portal>
+            <Modal visible={visible} onDismiss={onDismiss} contentContainerStyle={{ ...styles.timerContainer, backgroundColor: theme.colors.background }}>
+                <FlatList
+                    data={timerData}
+                    style={styles.timerList}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => onClick(item.time)}>
+                            <Text style={{...styles.item, color: theme.colors.onPrimary}}>{item.key}</Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            </Modal>
+        </Portal>
     );
 }
 
 const styles = StyleSheet.create({
     timerContainer: {
-        position: "absolute",
         width: "50%",
-        bottom: "25%",
-        right: "25%",
-        zIndex: 1,
-        borderRadius: 10,
+        left: "25%",
+        borderRadius: 15,
         padding: 10,
     },
     timerList: {
@@ -53,6 +50,5 @@ const styles = StyleSheet.create({
         textAlign: "center",
         height: 44,
         fontWeight: "bold",
-        color: "white",
     },
 });

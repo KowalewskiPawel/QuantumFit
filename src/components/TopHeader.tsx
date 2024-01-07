@@ -10,7 +10,7 @@ interface Props {
 }
 export const TopHeader: FC<PropsWithChildren<Props>> = ({ children, containerStyle, titleStyle, variant = "headlineMedium" }) => {
     return (
-        <View style={[{ padding: 24 }, containerStyle]}>
+        <View style={[{ paddingHorizontal: 24, paddingTop: 48, paddingBottom: 24 }, containerStyle]}>
             <Text
                 style={[{ textAlign: "center" }, titleStyle]}
                 variant={variant}

@@ -4,6 +4,7 @@ import {
   useNavigationContainerRef,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
 import {
   LoginScreen,
   CameraPermissionScreen,
@@ -31,7 +32,6 @@ import { withTheme } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./app/store";
 import { selectAuthState } from "./features/auth";
 import { loadUserInfo } from "./features/user";
-
 const Stack = createNativeStackNavigator();
 
 const MainScreen = ({ theme }) => {
@@ -48,6 +48,7 @@ const MainScreen = ({ theme }) => {
 
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
+      <StatusBar barStyle="dark-content" />
       <Stack.Navigator
         initialRouteName="Entry"
         screenOptions={{

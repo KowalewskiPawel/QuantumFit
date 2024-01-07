@@ -66,15 +66,7 @@ export const MainMenuScreen = ({ navigation }) => {
       <View style={{ alignItems: "center", width: "100%", height: 200 }}>
         <Image contentFit="contain" source={LogoEntry} style={{ width: 200, height: 200 }} />
       </View>
-      <View style={{ flexDirection: 'column', rowGap: 20 }}>
-        <Button
-          mode="contained"
-          onPress={() =>
-            navigation.navigate("BodyAnalysisPictureScreen", { side: "front" })
-          }
-        >
-          Body Analysis
-        </Button>
+      <View style={{ flex: 1, flexDirection: 'column', rowGap: 20, justifyContent: "center" }}>
         <Button
           mode="contained"
           onPress={shouldOpenMyTrainings}
@@ -86,6 +78,14 @@ export const MainMenuScreen = ({ navigation }) => {
           onPress={shouldOpenMyDiet}
         >
           My Diet
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() =>
+            navigation.navigate("BodyAnalysisPictureScreen", { side: "front" })
+          }
+        >
+          Body Analysis
         </Button>
         <Button
           mode="contained"

@@ -1,7 +1,7 @@
 // import { Image } from 'expo-image'
 import { Dimensions, SafeAreaView, ScrollView, View } from 'react-native';
 import { Image } from 'expo-image';
-import { Button } from 'react-native-paper'
+import { Button, Text } from 'react-native-paper'
 import { useAppDispatch } from '../app/store';
 import { resetBodyPhotosState } from '../features/bodyPhotos/slice';
 import { TopHeader } from '../components';
@@ -48,36 +48,34 @@ export const BodyAnalysisPictureScreen = ({ route, navigation }) => {
     }
 
     return (
-        <SafeAreaView>
-            <ScrollView style={styles.container}>
-                <TopHeader>{`Take a snapshot of your ${side}`}</TopHeader>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Image contentFit='contain' style={{ width: imageWidth, height: imageHeight }} source={imageSources[side]} />
-                </View>
-                <View style={{ flexDirection: 'column', rowGap: 10, marginTop: 20 }}>
+        <SafeAreaView style={styles.container}>
+            <TopHeader>{`Take a snapshot of your ${side}`}</TopHeader>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Image contentFit='contain' style={{ width: imageWidth, height: imageHeight }} source={imageSources[side]} />
+            </View>
+            <View style={{ flexDirection: 'column', rowGap: 10, marginTop: 20 }}>
+                <Button
+                    onPress={navigateToPhoto}
+                    icon='camera'
+                    mode='contained'
+                >
+                    Take a photo
+                </Button>
+                {side !== 'front' &&
                     <Button
-                        onPress={navigateToPhoto}
-                        icon='camera'
-                        mode='contained'
+                        onPress={handleSkip}
+                        mode='contained-tonal'
                     >
-                        Take a photo
+                        Skip this part
                     </Button>
-                    {side !== 'front' &&
-                        <Button
-                            onPress={handleSkip}
-                            mode='contained-tonal'
-                        >
-                            Skip this part
-                        </Button>
-                    }
-                    <Button
-                        onPress={handleCancel}
-                        mode='outlined'
-                    >
-                        Cancel
-                    </Button>
-                </View>
-            </ScrollView>
+                }
+                <Button
+                    onPress={handleCancel}
+                    mode='outlined'
+                >
+                    Cancel
+                </Button>
+            </View>
         </SafeAreaView>
     );
 }

@@ -46,11 +46,7 @@ export const styles = StyleSheet.create({
     textShadowRadius: 3, // Blurring the shadow for a softer look
     marginBottom: 10, // Space below the title
   },
-  subtitleUpperCase: {
-    marginBottom: 8,
-    letterSpacing: 2,
-    textTransform: "uppercase",
-  },
+
   secondarySubtitleUppercase: {
     fontSize: 12,
     textAlign: "center",

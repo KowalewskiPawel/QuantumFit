@@ -7,8 +7,7 @@ import {
 import { Image } from "expo-image";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
-import { Button, IconButton, MD3Colors, Text, useTheme } from "react-native-paper";
-import { styles } from "../styles/globalStyles";
+import { Button, Dialog, IconButton, MD3Colors, Portal, Text, useTheme } from "react-native-paper";
 import { uploadToFirebase } from "../firebase/firebase-config";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectAuthState } from "../features/auth";
@@ -20,6 +19,9 @@ import { CountdownTimer, TopHeader } from "../components";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
+const cameraWidth = windowWidth * 0.9;
+const cameraHeight = cameraWidth * (4 / 3);
+
 
 const nextSideMap = {
   front: "side",
@@ -28,10 +30,9 @@ const nextSideMap = {
 };
 
 export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const { side } = route.params;
-  const cameraWidth = windowWidth * 0.9;
-  const cameraHeight = cameraWidth * (4 / 3);
 
   const [timer, setTimer] = useState(0);
   const [countdown, setCountdown] = useState(0);
@@ -119,26 +120,25 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
       setUploadStatus(null);
     }
   };
-
   if (!permission) {
-    // Camera permissions are still loading
-    return <View />;
+    return <View />
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
+  if (!permission?.granted) {
+
     return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center", marginBottom: 24 }}
-          variant="headlineMedium"
-        >
-          Camera Permission Not Granted
-        </Text>
-        <Button mode="contained" onPress={requestPermission}>
-          Grant Permission
-        </Button>
-      </View>
-    );
+      <Portal>
+        <Dialog style={{ backgroundColor: theme.colors.primaryContainer }} visible={!permission || !permission?.granted} onDismiss={navigation.goBack}>
+          <Dialog.Title>Camera Permissions</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">To use tis feature you need to grant camera permissions to application</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button textColor={theme.colors.onPrimary} onPress={navigation.goBack}>Cancel</Button>
+            <Button textColor={theme.colors.onPrimary} onPress={requestPermission}>OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>)
   }
 
   function toggleCameraType() {
@@ -149,7 +149,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
 
   if (!takenPicture) {
     return (<SafeAreaView>
-      {timerClicked && <CountdownTimer onPress={onPressTimerItem} />}
+      <CountdownTimer visible={timerClicked} onTimeSelect={onPressTimerItem} onDismiss={() => setTimerClicked(false)} />
       <View style={localStyles.container}>
         <TopHeader>{`Take a picture of the ${side} part of your body`}</TopHeader>
         <View
@@ -169,7 +169,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
           </Camera>
         </View>
         <View style={localStyles.buttonContainer}>
-          <View style={{ flexDirection: 'row', flexWrap: "nowrap" }}>
+          <View style={{ flexDirection: 'row', flexWrap: "nowrap", height: 26}}>
             <IconButton
               size={26}
               icon="camera-timer"
@@ -229,7 +229,7 @@ export const BodyAnalysisCameraScreen = ({ route, navigation }) => {
             <Button
               icon="cancel"
               mode="contained-tonal"
-              buttonColor="red"
+              buttonColor={theme.colors.error}
               style={{ marginRight: 16 }}
               onPress={() => setTakenPicture(null)}
             >
@@ -261,7 +261,6 @@ const localStyles = StyleSheet.create({
     paddingTop: 12,
   },
   cameraContainer: {
-    flex: 1,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     borderBottomLeftRadius: 25,
@@ -271,6 +270,7 @@ const localStyles = StyleSheet.create({
   camera: {
     flex: 1,
   },
+
   buttonContainer: {
     flexDirection: "row",
     width: "100%",
@@ -279,6 +279,7 @@ const localStyles = StyleSheet.create({
     alignSelf: "flex-end",
     marginBottom: 24
   },
+
   button: {
     flex: 1,
     alignSelf: "flex-end",
@@ -303,7 +304,6 @@ const localStyles = StyleSheet.create({
     height: "60%",
     width: "auto",
   },
-
   countdownContainer: {
     marginTop: 16,
     marginBottom: 6,
@@ -314,7 +314,6 @@ const localStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-
   countdownTimer: {
     fontSize: 40,
     fontWeight: "bold",
