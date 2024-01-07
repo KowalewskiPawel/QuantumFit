@@ -1,15 +1,16 @@
 import React from "react";
-import { Image, Text, View, SafeAreaView } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { View, SafeAreaView } from "react-native";
+import { Image } from "expo-image";
+import { Button } from "react-native-paper";
 
 import { logoutUser } from "../features/auth";
 import { useAppDispatch } from "../app/store";
 
 import { styles } from "../styles/globalStyles";
+import { TopHeader } from "../components";
 
 export const SettingsScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const theme = useTheme();
   const LogoEntry = require("../assets/logoEntry.png");
 
   const handleLogout = () => {
@@ -19,21 +20,17 @@ export const SettingsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <View>
-        <View style={styles.textBackground}>
-          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            Settings
-          </Text>
-        </View>
-        <Image
-          source={LogoEntry}
-          style={{ width: 175, height: 175, alignSelf: "center" }}
-        />
+      <TopHeader>
+        Settings
+      </TopHeader>
+      <View style={{ alignItems: "center", width: "100%", height: 200 }}>
+        <Image contentFit="contain" source={LogoEntry} style={{ width: 200, height: 200 }} />
+      </View>
+      <View style={{ flexDirection: "column", rowGap: 20 }}>
         <Button
           icon="file-document-outline"
           mode="contained"
           onPress={() => navigation.navigate("UpdateEntry")}
-          style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
         >
           Update Personal Information
         </Button>
@@ -41,7 +38,6 @@ export const SettingsScreen = ({ navigation }) => {
           icon="bullseye-arrow"
           mode="contained"
           onPress={() => navigation.navigate("UpdateLifestyle")}
-          style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
         >
           Modify Lifestyle & Aim
         </Button>
@@ -49,7 +45,6 @@ export const SettingsScreen = ({ navigation }) => {
           icon="logout"
           mode="contained"
           onPress={handleLogout}
-          style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
         >
           Log out
         </Button>
@@ -57,11 +52,10 @@ export const SettingsScreen = ({ navigation }) => {
           icon="arrow-left"
           mode="outlined"
           onPress={() => navigation.goBack()}
-          style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
         >
           Go back
         </Button>
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };

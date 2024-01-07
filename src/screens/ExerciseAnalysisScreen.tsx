@@ -10,35 +10,42 @@ import {
 } from "react-native";
 import {
   Button,
+  Dialog,
   IconButton,
   MD3Colors,
+  Portal,
   Surface,
   Text,
   useTheme,
 } from "react-native-paper";
-import { Video } from "expo-av";
+import { Video, ResizeMode } from "expo-av";
 import { styles } from "../styles/globalStyles";
 import { uploadToFirebase } from "../firebase/firebase-config";
 import { useAppSelector } from "../app/store";
 import { selectAuthState } from "../features/auth";
-import { LoadingSpinner, StackRow } from "../components";
+import { CountdownTimer, LoadingSpinner, StackRow, TopHeader } from "../components";
 import apiClient from "../api/apiClient";
 import { exerciseAnalysisPrompt } from "../prompts/exerciseAnalysis";
 
 type CameraCapturedVideo = {
   uri: string;
 };
+const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
+const cameraWidth = windowWidth * 0.9;
+const cameraHeight = cameraWidth * (4 / 3);
 
 export const ExerciseAnalysisScreen = ({ navigation }) => {
   const theme = useTheme();
-  const windowWidth = Dimensions.get("window").width;
   const { uid } = useAppSelector(selectAuthState);
-  const cameraWidth = windowWidth * 0.9;
-  const cameraHeight = cameraWidth * (4 / 3);
-  const [countdown, setCountdown] = useState(5);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingCountdown, setRecordingCountdown] = useState(10);
+
+  const [timer, setTimer] = useState(0);
+  const [countdown, setCountdown] = useState(timer);
+  const [timerClicked, setTimerClicked] = useState(false)
   const [showCountDown, setShowCountdown] = useState(false);
+  const [recordingCountdown, setRecordingCountdown] = useState(10);
+
+  const [isRecording, setIsRecording] = useState(false);
   const countdownTimer = useRef(null);
   const recordingCountdownTimer = useRef(null);
   const [uploadStatus, setUploadStatus] = useState(null);
@@ -62,8 +69,10 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
   };
 
   const recordVideo = () => {
-    setCountdown(5);
-    setShowCountdown(true);
+    setCountdown(timer);
+    if (timer > 0) {
+      setShowCountdown(true)
+    }
     recordVideoTimeout.current = setTimeout(async () => {
       setIsRecording(true);
       setRecordingCountdown(10);
@@ -76,7 +85,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
       setRecordedVideo(video);
       setIsRecording(false);
       setShowCountdown(false);
-    }, 5000);
+    }, timer * 1000);
   };
 
   const fetchAnalysis = async () => {
@@ -134,8 +143,13 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const onPressTimerItem = (time) => {
+    setTimer(time);
+    setTimerClicked((prevState) => !prevState);
+  };
+
   useEffect(() => {
-    if (countdown >= 5) {
+    if (countdown >= timer) {
       clearInterval(countdownTimer.current);
       countdownTimer.current = setInterval(
         () => setCountdown((v) => v - 1),
@@ -145,7 +159,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     if (countdown === 0) {
       clearInterval(countdownTimer.current);
     }
-  }, [countdown]);
+  }, [countdown, timer]);
 
   useEffect(() => {
     if (recordingCountdown >= 10) {
@@ -171,122 +185,122 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
     return <View />;
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
+  if (!permission?.granted) {
+
     return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          Camera Permission Not Granted
-        </Text>
-        <Button mode="contained" onPress={requestPermission}>
-          Grant Permission
-        </Button>
-      </View>
-    );
+      <Portal>
+        <Dialog style={{ backgroundColor: theme.colors.primaryContainer }} visible={!permission || !permission?.granted} onDismiss={navigation.goBack}>
+          <Dialog.Title>Camera Permissions</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">To use tis feature you need to grant camera permissions to application</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button textColor={theme.colors.onPrimary} onPress={navigation.goBack}>Cancel</Button>
+            <Button textColor={theme.colors.onPrimary} onPress={requestPermission}>OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>)
   }
 
   if (geminiResponse && !fetchingAnalysis) {
     return (
-      <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={localStyles.loadingScreen}>
-            <View style={styles.textBackground}>
-              <Text
-                style={{
-                  ...styles.title,
-                  color: theme.colors.onBackground,
-                  marginBottom: 40,
-                }}
-              >
-                Exercise Analysis
-              </Text>
-            </View>
-            <View
-              style={{
-                ...localStyles.cameraContainer,
-                width: cameraWidth - 50,
-                height: cameraHeight - 100,
-              }}
-            >
-              <Video
-                source={recordedVideo}
-                shouldPlay
-                style={localStyles.camera}
-                isLooping
-              />
-            </View>
-            <Surface
-              style={{
-                ...styles.surface,
-                marginTop: 20,
-                marginBottom: 10,
-                backgroundColor: theme.colors.backdrop,
-                marginHorizontal: 40,
-              }}
-              elevation={4}
-            >
-              <ScrollView>
-                <Text
-                  style={{
-                    ...styles.textBackground,
-                    color: theme.colors.onBackground,
-                  }}
-                >
-                  {geminiResponse}
-                </Text>
-              </ScrollView>
-            </Surface>
-            <StackRow>
-              <Button
-                mode="contained"
-                disabled={fetchingAnalysis}
-                onPress={cleanUpAfterRecording}
-                style={{
-                  marginTop: 20,
-                  marginBottom: 20,
-                  marginRight: 20,
-                  marginLeft: "auto",
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                mode="contained"
-                disabled={fetchingAnalysis}
-                onPress={fetchAnalysis}
-                style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
-              >
-                Re-analyze
-              </Button>
-            </StackRow>
-          </View>
+      <ScrollView style={localStyles.container}>
+        <TopHeader>Analysis Results</TopHeader>
+        <View
+          style={{
+            ...localStyles.cameraContainer,
+            width: cameraWidth,
+            height: cameraHeight,
+          }}
+        >
+          <Video
+            source={recordedVideo}
+            shouldPlay
+            style={{ ...localStyles.camera, width: cameraWidth, height: cameraHeight, flex: 1 }}
+            isLooping
+            resizeMode={ResizeMode.COVER}
+          />
         </View>
-      </SafeAreaView>
+        <Surface
+          style={{
+            ...styles.surface,
+            marginTop: 20,
+            marginBottom: 10,
+            backgroundColor: theme.colors.backdrop,
+            marginHorizontal: 20,
+          }}
+          elevation={4}
+        >
+          <Text
+            variant="bodyMedium"
+            style={{
+              ...styles.textBackground,
+              color: theme.colors.onBackground,
+            }}
+          >
+            {geminiResponse}
+          </Text>
+        </Surface>
+        <View style={{ ...localStyles.buttonsContainer, marginBottom: 24 }}>
+          <Button
+            mode="contained"
+            disabled={fetchingAnalysis}
+            onPress={fetchAnalysis}
+            style={{ marginVertical: 20, marginLeft: "auto" }}
+          >
+            Re-analyze
+          </Button>
+          <Button
+            mode="contained"
+            disabled={fetchingAnalysis}
+            onPress={cleanUpAfterRecording}
+            style={{
+              marginTop: 20,
+              marginBottom: 20,
+              marginLeft: 20,
+              marginRight: "auto",
+            }}
+          >
+            OK
+          </Button>
+        </View>
+      </ScrollView>
     );
   }
 
   if (videoUrl && fetchingAnalysis) {
     return (
       <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text
-              style={{
-                ...styles.title,
-                color: theme.colors.onBackground,
-                marginBottom: 40,
-              }}
-            >
-              Exercise Analysis
-            </Text>
-          </View>
-          <View style={localStyles.loadingScreen}>
-            <Text style={{ marginBottom: 30 }} variant="headlineMedium">
-              Analyzing your video
-            </Text>
-            <LoadingSpinner />
-          </View>
+        <TopHeader>Analyzing your video</TopHeader>
+        <View
+          style={{
+            ...localStyles.cameraContainer,
+            width: cameraWidth,
+            height: cameraHeight,
+            position: 'relative'
+          }}
+        >
+          <LoadingSpinner size={60} style={{
+            backgroundColor: 'rgba(11, 39, 73, 0.6)',
+            flex: 1,
+            position: 'absolute',
+            width: cameraWidth,
+            height: cameraHeight,
+            zIndex: 10
+          }} />
+          <Video
+            source={recordedVideo}
+            shouldPlay
+            style={{ ...localStyles.camera, width: cameraWidth, height: cameraHeight, flex: 1 }}
+            isLooping
+            resizeMode={ResizeMode.COVER}
+          />
         </View>
+        {/* <View style={localStyles.loadingScreen}>
+          <Text style={{ marginBottom: 30 }} variant="headlineMedium">
+            Analyzing your video
+          </Text>
+        </View> */}
       </SafeAreaView>
     );
   }
@@ -294,49 +308,36 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
   if (errorFetchingGeminiResponse) {
     return (
       <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text
-              style={{
-                ...styles.title,
-                color: theme.colors.onBackground,
-                marginBottom: 40,
-              }}
-            >
-              Exercise Analysis
-            </Text>
-          </View>
-          <View style={localStyles.loadingScreen}>
-            <Text
-              style={{ marginBottom: 30, color: theme.colors.error }}
-              variant="headlineMedium"
-            >
-              {errorFetchingGeminiResponse}
-            </Text>
-          </View>
-          <StackRow>
-            <Button
-              mode="contained"
-              disabled={fetchingAnalysis}
-              onPress={() => navigation.goBack()}
-              style={{
-                marginTop: 20,
-                marginBottom: 20,
-                marginRight: 20,
-                marginLeft: "auto",
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              mode="contained"
-              disabled={fetchingAnalysis}
-              onPress={fetchAnalysis}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
-            >
-              Re-analyze
-            </Button>
-          </StackRow>
+        <TopHeader>Exercise Analysis</TopHeader>
+        <View style={localStyles.loadingScreen}>
+          <Text
+            style={{ marginBottom: 30, color: theme.colors.error }}
+            variant="headlineMedium"
+          >
+            {errorFetchingGeminiResponse}
+          </Text>
+        </View>
+        <View style={{ ...localStyles.buttonsContainer, marginTop: 24 }}>
+          <Button
+            mode="contained"
+            disabled={fetchingAnalysis}
+            onPress={() => navigation.goBack()}
+            style={{
+              marginVertical: 20,
+              marginRight: 20,
+              marginLeft: "auto",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            mode="contained"
+            disabled={fetchingAnalysis}
+            onPress={fetchAnalysis}
+            style={{ marginVertical: 20, marginRight: "auto" }}
+          >
+            Re-analyze
+          </Button>
         </View>
       </SafeAreaView>
     );
@@ -345,11 +346,8 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
   if (!recordedVideo) {
     return (
       <View style={localStyles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.subtitleUpperCase}>
-            Record 10 seconds of the Exercise for the analysis
-          </Text>
-        </View>
+        <CountdownTimer visible={timerClicked} onTimeSelect={onPressTimerItem} onDismiss={() => setTimerClicked(false)} />
+        <TopHeader>Record 10 seconds of the Exercise for the analysis</TopHeader>
         <View
           style={{
             ...localStyles.cameraContainer,
@@ -364,71 +362,76 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
             style={localStyles.camera}
             type={type}
           >
-            <View style={localStyles.buttonContainer}>
-              {isRecording && (
-                <View
-                  style={{
-                    ...localStyles.recordIndicatorContainer,
-                    position: "absolute",
-                    left: 30,
-                  }}
-                >
-                  <View style={localStyles.recordDot} />
-                  <Text style={localStyles.recordTitle}>{"Recording..."}</Text>
-                </View>
-              )}
-
-              <IconButton
-                size={26}
-                icon="camera-flip-outline"
-                iconColor={MD3Colors.secondary100}
-                onPress={toggleCameraType}
-                disabled={isRecording}
-              />
-            </View>
+            {isRecording && (
+              <View
+                style={{
+                  ...localStyles.recordIndicatorContainer,
+                  position: "absolute",
+                  left: 30,
+                }}
+              >
+                <View style={localStyles.recordDot} />
+                <Text style={localStyles.recordTitle}>{"Recording..."}</Text>
+              </View>
+            )}
           </Camera>
         </View>
         {showCountDown ? (
-          <Text
-            style={{
-              ...localStyles.countdownTimer,
-              color: isRecording
-                ? theme.colors.error
-                : theme.colors.onPrimaryContainer,
-            }}
-          >
-            {countdown === 0 ? recordingCountdown : countdown}
-          </Text>
+          <View style={{...localStyles.countdownContainer, alignSelf: 'center'}}>
+            <Text
+              style={{
+                ...localStyles.countdownTimer,
+                color: isRecording
+                  ? theme.colors.error
+                  : theme.colors.onPrimaryContainer,
+              }}
+            >
+              {countdown === 0 ? recordingCountdown : countdown}
+            </Text>
+          </View>
         ) : (
-          <View style={{ ...styles.container }}>
+          <View style={localStyles.buttonsContainer}>
+            <View style={{ flexDirection: 'row', flexWrap: "nowrap" }}>
+              <IconButton
+                size={26}
+                icon="camera-timer"
+                iconColor={MD3Colors.secondary100}
+                onPress={() => setTimerClicked((prevState) => !prevState)}
+              />
+              <Text style={{ color: MD3Colors.secondary100, fontSize: 12, fontWeight: 'bold', position: "absolute", bottom: 6, right: 4 }}>{timer > 0 ? `${timer}s` : "off"}</Text>
+            </View>
             <IconButton
               size={60}
-              iconColor="red"
+              iconColor={theme.colors.error}
               style={{ marginTop: 16 }}
-              icon="record-rec"
+              icon="record-circle"
               onPress={recordVideo}
             />
-            <Button
-              icon="arrow-left"
-              mode="contained"
-              onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
-            >
-              Go back
-            </Button>
+            <IconButton
+              size={26}
+              icon="camera-flip-outline"
+              iconColor={MD3Colors.secondary100}
+              onPress={toggleCameraType}
+              disabled={isRecording}
+            />
           </View>
         )}
+        <Button
+          icon="arrow-left"
+          mode="outlined"
+          onPress={() => navigation.goBack()}
+          style={{ marginBottom: 20, width: (windowWidth - 40), alignSelf: "center" }}
+        >
+          Go back
+        </Button>
       </View>
     );
   }
 
   return (
     <View style={localStyles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>
-          Record the video of the Exercise to analyze
-        </Text>
-      </View>
+      <CountdownTimer visible={timerClicked} onTimeSelect={onPressTimerItem} onDismiss={() => setTimerClicked(false)} />
+      <TopHeader>Record the video of the Exercise to analyze</TopHeader>
       <View
         style={{
           ...localStyles.cameraContainer,
@@ -439,22 +442,23 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
         <Video
           source={recordedVideo}
           shouldPlay
-          style={localStyles.camera}
+          style={{ ...localStyles.camera, width: cameraWidth, height: cameraHeight, flex: 1 }}
           isLooping
+          resizeMode={ResizeMode.COVER}
         />
       </View>
       {uploadStatus ? (
-        <View style={{ marginTop: 10 }}>
+        <View style={{ marginTop: 10,}}>
           <Text style={{ fontSize: 18 }}>
             Uploading the video. Status: {uploadStatus}%
           </Text>
         </View>
       ) : (
-        <View style={localStyles.buttonsRow}>
+        <View style={{ ...localStyles.buttonsContainer, marginTop: 24 }}>
           <Button
             icon="cancel"
             mode="contained-tonal"
-            buttonColor="red"
+            buttonColor={theme.colors.error}
             style={{ marginRight: 16 }}
             onPress={() => setRecordedVideo(null)}
           >
@@ -489,30 +493,28 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
 
 const localStyles = StyleSheet.create({
   container: {
+    minHeight: windowHeight,
     flex: 1,
-    paddingTop: 56,
-    justifyContent: "flex-start",
-    alignItems: "center",
     width: "100%",
+    paddingTop: 12,
   },
   cameraContainer: {
-    width: "100%",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
     overflow: "hidden",
+    alignSelf: "center",
   },
   camera: {
     flex: 1,
   },
-  buttonContainer: {
+  buttonsContainer: {
     flexDirection: "row",
-    alignSelf: "flex-start",
+    alignSelf: "center",
+    alignItems: "center",
     width: "100%",
-    position: "absolute",
-    bottom: 0,
-    justifyContent: "flex-end",
+    justifyContent: "center",
   },
   button: {
     flex: 1,
@@ -542,22 +544,13 @@ const localStyles = StyleSheet.create({
     height: 50 * (4 / 3),
     margin: 10,
   },
+
   bodyImage: {
     flex: 1,
     height: "60%",
     width: "auto",
   },
-  buttonsRow: {
-    marginTop: 30,
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  countdownTimer: {
-    textAlign: "center",
-    fontSize: 40,
-    fontWeight: "bold",
-    marginTop: 30,
-  },
+
   recordIndicatorContainer: {
     flexDirection: "row",
     position: "absolute",
@@ -568,22 +561,42 @@ const localStyles = StyleSheet.create({
     backgroundColor: "transparent",
     opacity: 0.7,
   },
+
   recordTitle: {
     fontSize: 14,
     color: "#ffffff",
     textAlign: "center",
   },
+
   recordDot: {
-    borderRadius: 3,
-    height: 6,
-    width: 6,
+    borderRadius: 4,
+    height: 8,
+    width: 8,
     backgroundColor: "#ff0000",
     marginHorizontal: 5,
   },
+
   loadingScreen: {
     height: 200,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  countdownContainer: {
+    marginTop: 16,
+    marginBottom: 6,
+    marginLeft: 6,
+    marginRight: 6,
+    width: 76,
+    height: 76,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  countdownTimer: {
+    fontSize: 40,
+    fontWeight: "bold",
+    alignSelf: "center"
   },
 });

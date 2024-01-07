@@ -232,8 +232,8 @@ export const MyDietScreen = ({ navigation }) => {
             <Button
               icon="refresh"
               mode="contained"
+              style={{ marginVertical: 20, marginRight: 10 }}
               onPress={regenerateDietPlan}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
             >
               Re-generate diet
             </Button>
@@ -243,7 +243,7 @@ export const MyDietScreen = ({ navigation }) => {
           icon="arrow-left"
           mode="outlined"
           onPress={() => navigation.goBack()}
-          style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+          style={{ marginVertical: 20, marginRight: 10 }}
         >
           Go back
         </Button>

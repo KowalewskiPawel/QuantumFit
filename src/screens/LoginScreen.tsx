@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Image, SafeAreaView } from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
+import { Image } from "expo-image"
 import {
   Button,
   useTheme,
@@ -10,7 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectAuthState, loginUser } from "../features/auth";
 import { styles } from "../styles/globalStyles";
-import { StackRow } from "../components";
+import { StackRow, TopHeader } from "../components";
 import { loadUserInfo } from "../features/user";
 import { loadMealInfo } from "../features/meal";
 import { loadDietInfo } from "../features/diet";
@@ -41,74 +42,65 @@ export const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <View>
-        <View style={styles.textBackground}>
-          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            QuantumFit
+      <TopHeader variant="headlineLarge">Sign in to your account</TopHeader>
+      <View style={{ flex: 1, alignItems: "center", width: "100%", height: 200 }}>
+        <Image contentFit="contain" source={LogoEntry} style={{ width: 200, height: 200 }} />
+      </View>
+      <View style={{ flex: 2 }}>
+        <TextInput
+          mode="outlined"
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Email"
+          placeholderTextColor={theme.colors.outline}
+          style={{ width: "100%", marginBottom: 20 }}
+        />
+        <TextInput
+          mode="outlined"
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          label="Password"
+          placeholderTextColor={theme.colors.outline}
+          secureTextEntry
+          style={{ width: "100%", marginBottom: 20 }}
+        />
+        <StackRow>
+          <Checkbox
+            status={rememberUser ? "checked" : "unchecked"}
+            color={theme.colors.onBackground}
+            onPress={() => {
+              setRememberUser(!rememberUser);
+            }}
+          />
+          <Text style={{ color: theme.colors.onBackground, alignSelf: "center" }}>
+            Remember me
           </Text>
-          <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
-        </View>
-        <View>
-          <TextInput
+        </StackRow>
+        {error && (
+          <Text style={{ color: theme.colors.error, alignSelf: "center" }}>
+            {error}
+          </Text>
+        )}
+        <StackRow style={{ marginVertical: 20, columnGap: 20, justifyContent: "center" }}>
+          <Button
+            icon="arrow-left"
             mode="outlined"
-            label="Email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            placeholderTextColor={theme.colors.outline}
-            style={{ width: "100%", marginBottom: 20 }}
-          />
-          <TextInput
-            mode="outlined"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Password"
-            label="Password"
-            placeholderTextColor={theme.colors.outline}
-            secureTextEntry
-            style={{ width: "100%", marginBottom: 20 }}
-          />
-          <StackRow>
-            <Checkbox
-              status={rememberUser ? "checked" : "unchecked"}
-              color="#FFF"
-              onPress={() => {
-                setRememberUser(!rememberUser);
-              }}
-            />
-            <Text style={{ color: "#FFF", alignSelf: "center" }}>
-              Remember me
-            </Text>
-          </StackRow>
-          {error && (
-            <Text style={{ color: theme.colors.error, alignSelf: "center" }}>
-              {error}
-            </Text>
-          )}
-          <StackRow>
-            <Button
-              icon="arrow-left"
-              mode="contained"
-              onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
-            >
-              Go back
-            </Button>
-            <Button
-              icon="account-key"
-              mode="contained"
-              disabled={loading}
-              onPress={sendLoginRequest}
-              style={{ marginTop: 20, marginBottom: 20 }}
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color={theme.colors.tertiary} />
-              ) : (
-                "Sign in"
-              )}
-            </Button>
-          </StackRow>
-        </View>
+            onPress={() => navigation.goBack()}
+          >
+            Go back
+          </Button>
+          <Button
+            icon="account-key"
+            mode="contained"
+            disabled={loading}
+            onPress={sendLoginRequest}
+            loading={loading}
+          >
+            {loading ? "Loading..." : "Sign in"}
+          </Button>
+        </StackRow>
       </View>
     </SafeAreaView>
   );

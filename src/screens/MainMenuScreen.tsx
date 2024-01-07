@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Image, SafeAreaView } from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
+import { Image } from "expo-image";
 import {
   Button,
   Dialog,
-  IconButton,
   Portal,
   useTheme,
 } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { loadUserInfo, selectUserState } from "../features/user";
-import { LoadingSpinner } from "../components";
+import { LoadingSpinner, TopHeader } from "../components";
 
 export const MainMenuScreen = ({ navigation }) => {
   const theme = useTheme();
@@ -60,28 +60,27 @@ export const MainMenuScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <View>
-        <View style={styles.textBackground}>
-          <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-            Hello {userState.username}
-          </Text>
-          <IconButton
-            icon="cog"
-            iconColor={theme.colors.onBackground}
-            size={30}
-            style={{
-              position: "absolute",
-              right: -50,
-              top: -30,
-              backgroundColor: theme.colors.primary,
-            }}
-            onPress={() => navigation.navigate("Settings")}
-          />
-          <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
-        </View>
+      <TopHeader>
+        Hello {userState.username}
+      </TopHeader>
+      <View style={{ alignItems: "center", width: "100%", height: 200 }}>
+        <Image contentFit="contain" source={LogoEntry} style={{ width: 200, height: 200 }} />
+      </View>
+      <View style={{ flex: 1, flexDirection: 'column', rowGap: 20, justifyContent: "center" }}>
         <Button
           mode="contained"
-          style={{ marginTop: 20, backgroundColor: theme.colors.primary }}
+          onPress={shouldOpenMyTrainings}
+        >
+          My Trainings
+        </Button>
+        <Button
+          mode="contained"
+          onPress={shouldOpenMyDiet}
+        >
+          My Diet
+        </Button>
+        <Button
+          mode="contained"
           onPress={() =>
             navigation.navigate("BodyAnalysisPictureScreen", { side: "front" })
           }
@@ -90,31 +89,6 @@ export const MainMenuScreen = ({ navigation }) => {
         </Button>
         <Button
           mode="contained"
-          style={{
-            marginTop: 20,
-            backgroundColor: theme.colors.primary,
-          }}
-          onPress={shouldOpenMyTrainings}
-        >
-          My Trainings
-        </Button>
-        <Button
-          mode="contained"
-          style={{
-            marginTop: 20,
-            backgroundColor: theme.colors.primary,
-          }}
-          onPress={shouldOpenMyDiet}
-        >
-          My Diet
-        </Button>
-        <Button
-          mode="contained"
-          style={{
-            marginTop: 20,
-            marginBottom: 20,
-            backgroundColor: theme.colors.primary,
-          }}
           onPress={() => navigation.navigate("ExerciseAnalysis")}
         >
           Exercise Analysis
@@ -129,6 +103,16 @@ export const MainMenuScreen = ({ navigation }) => {
         >
           Tensorflow
         </Button>
+        <Button
+          mode="contained"
+          style={{
+            marginBottom: 20,
+            backgroundColor: theme.colors.primary,
+          }}
+          onPress={() => navigation.navigate("Settings")}
+        >
+          Settings
+        </Button>
       </View>
       <Portal>
         <Dialog
@@ -140,7 +124,7 @@ export const MainMenuScreen = ({ navigation }) => {
         >
           <Dialog.Title>Body Analysis Info Missing</Dialog.Title>
           <Dialog.Content>
-            <Text style={{ color: "#FFF" }}>
+            <Text style={{ color: theme.colors.onBackground }}>
               Please complete the body analysis to enable this feature. If you
               have already completed the body analysis, please try again making
               the analysis or re-log in.
@@ -148,7 +132,7 @@ export const MainMenuScreen = ({ navigation }) => {
           </Dialog.Content>
           <Dialog.Actions>
             <Button
-              textColor="#FFF"
+              textColor={theme.colors.onBackground}
               onPress={() => setIsBodyAnalysisMissingModalOpen(false)}
             >
               OK

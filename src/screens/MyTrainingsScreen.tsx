@@ -206,7 +206,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
           icon="arrow-left"
           mode="outlined"
           onPress={() => navigation.goBack()}
-          style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+          style={{ marginVertical: 20, marginRight: 10 }}
         >
           Go back
         </Button>
@@ -217,7 +217,7 @@ export const MyTrainingsScreen = ({ navigation }) => {
             icon="refresh"
             mode="contained"
             onPress={regenerateTrainingPlan}
-            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+            style={{ marginVertical: 20, marginRight: 10 }}
           >
             Re-generate training
           </Button>
