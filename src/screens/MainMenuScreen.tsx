@@ -119,6 +119,16 @@ export const MainMenuScreen = ({ navigation }) => {
         >
           Exercise Analysis
         </Button>
+        <Button
+          mode="contained"
+          style={{
+            marginBottom: 20,
+            backgroundColor: theme.colors.primary,
+          }}
+          onPress={() => navigation.navigate("RealTimeExerciseAnalysis")}
+        >
+          Tensorflow
+        </Button>
       </View>
       <Portal>
         <Dialog

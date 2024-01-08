@@ -26,6 +26,7 @@ import {
   UpdateScreenLifestyle,
   UpdateScreenAim,
   ExerciseAnalysisScreen,
+  RealTimeExerciseAnalysisScreen,
 } from "./screens";
 import { withTheme } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./app/store";
@@ -75,6 +76,7 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen name="MyDiet" component={MyDietScreen} />
         <Stack.Screen name="DietPreferences" component={DietAdjustmentScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="RealTimeExerciseAnalysis" component={RealTimeExerciseAnalysisScreen} />
         <Stack.Screen name="UpdateEntry" component={UpdateScreenEntry} />
         <Stack.Screen name="UpdateBody" component={UpdateScreenBody} />
         <Stack.Screen
