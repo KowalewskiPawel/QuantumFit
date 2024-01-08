@@ -7,12 +7,11 @@ export function CameraPermissionModal({permission}) {
     const navigation = useNavigation();
     const [, requestPermission] = Camera.useCameraPermissions();
     
-    useEffect(() => { console.log(permission); }, [permission]);
     return (
         <Dialog visible={!permission || !permission?.granted} onDismiss={navigation.goBack}>
             <Dialog.Title>Camera Permissions</Dialog.Title>
             <Dialog.Content>
-                <Text variant="bodyMedium">To use tis feature you need to grant camera permissions to application</Text>
+                <Text variant="bodyMedium">To use this feature you need to grant camera permissions to application</Text>
             </Dialog.Content>
             <Dialog.Actions>
                 <Button onPress={requestPermission}>Done</Button>
