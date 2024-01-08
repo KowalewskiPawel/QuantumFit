@@ -280,7 +280,7 @@ export const ExerciseAnalysisScreen = ({ navigation }) => {
             position: 'relative'
           }}
         >
-          <LoadingSpinner size={60} style={{
+          <LoadingSpinner size={60} sx={{
             backgroundColor: 'rgba(11, 39, 73, 0.6)',
             flex: 1,
             position: 'absolute',

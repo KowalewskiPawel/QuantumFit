@@ -4,11 +4,11 @@ import { useTheme } from "react-native-paper";
 
 interface Props {
   size?: number;
-  style?: any;
+  sx?: any;
 }
-export const LoadingSpinner: React.FC<Props> = ({size = 40, style  }) => {
+export const LoadingSpinner: React.FC<Props> = ({size = 40, sx  }) => {
   const theme = useTheme()
-  return (<View style={{...styles.container, ...style}}>
+  return (<View style={{...styles.container, ...sx}}>
     <ActivityIndicator size={size} color={theme.colors.tertiary} />
   </View>
   )
