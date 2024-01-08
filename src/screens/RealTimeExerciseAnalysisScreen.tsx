@@ -7,7 +7,7 @@ import {
   Dimensions,
   StyleSheet,
 } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button, IconButton, MD3Colors, useTheme } from "react-native-paper";
 import { styles as globalStyles } from "../styles/globalStyles";
 import React, { useEffect, useState, useRef } from "react";
 
@@ -23,7 +23,7 @@ import Svg, { Circle } from "react-native-svg";
 import { ExpoWebGLRenderingContext } from "expo-gl";
 import { CameraType } from "expo-camera/build/Camera.types";
 import * as Speech from "expo-speech";
-import { LoadingSpinner } from "../components";
+import { LoadingSpinner, TopHeader } from "../components";
 
 // tslint:disable-next-line: variable-name
 const TensorCamera = cameraWithTensors(Camera);
@@ -49,7 +49,7 @@ const MIN_KEYPOINT_SCORE = 0.3;
 // For movenet, the size here doesn't matter too much because the model will
 // preprocess the input (crop, resize, etc). For best result, use the size that
 // doesn't distort the image.
-const OUTPUT_TENSOR_WIDTH = 180;
+const OUTPUT_TENSOR_WIDTH = 200;
 const OUTPUT_TENSOR_HEIGHT = OUTPUT_TENSOR_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 
 // Whether to auto-render TensorCamera preview.
@@ -101,6 +101,9 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
       const movenetModelConfig: posedetection.MoveNetModelConfig = {
         modelType: posedetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
         enableSmoothing: true,
+        minPoseScore: 0.3,
+        trackerType: posedetection.TrackerType.Keypoint
+
       };
       const model = await posedetection.createDetector(
         posedetection.SupportedModels.MoveNet,
@@ -221,10 +224,10 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
               key={`skeletonkp_${k.name}`}
               cx={cx}
               cy={cy}
-              r="4"
-              strokeWidth="2"
-              fill="#00AA00"
-              stroke="white"
+              r="6"
+              strokeWidth="1"
+              // fill="rgba(0, 200, 0, 0.6)"
+              stroke="rgba(0, 200, 0, 0.4)"
             />
           );
         });
@@ -246,16 +249,13 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
 
   const renderCameraTypeSwitcher = () => {
     return (
-      <View
+        <IconButton
         style={styles.cameraTypeSwitcher}
-        onTouchEnd={handleSwitchCameraType}
-      >
-        <Text>
-          Switch to{" "}
-          {cameraType === Camera.Constants.Type["front"] ? "back" : "front"}{" "}
-          camera
-        </Text>
-      </View>
+          icon="camera-flip-outline"
+          iconColor="black"
+          onPress={handleSwitchCameraType}
+          containerColor="rgba(255, 255, 255, 0.6)"
+        />
     );
   };
 
@@ -317,13 +317,9 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
   if (!tfReady) {
     return (
       <SafeAreaView style={{ ...globalStyles.container }}>
-        <View style={globalStyles.textBackground}>
-          <Text
-            style={{ ...globalStyles.title, color: theme.colors.onBackground }}
-          >
-            Real Time Exercise Analysis
-          </Text>
-        </View>
+        <TopHeader>
+          Real Time Exercise Analysis
+        </TopHeader>
         <ScrollView>
           <Text style={{ color: theme.colors.onBackground }}>
             Loading TensorFlow.js and model...
@@ -335,7 +331,7 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
             icon="arrow-left"
             mode="outlined"
             onPress={() => navigation.goBack()}
-            style={{ marginTop: 20, marginBottom: 20, marginRight: 10 }}
+            style={{ marginVertical: 20, marginRight: 10 }}
           >
             Go back
           </Button>
@@ -347,17 +343,10 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
       // Note that you don't need to specify `cameraTextureWidth` and
       // `cameraTextureHeight` prop in `TensorCamera` below.
       <SafeAreaView style={{ ...globalStyles.container }}>
+        <TopHeader>
+          Real Time Exercise Analysis
+        </TopHeader>
         <ScrollView>
-          <View style={globalStyles.textBackground}>
-            <Text
-              style={{
-                ...globalStyles.title,
-                color: theme.colors.onBackground,
-              }}
-            >
-              Real Time Exercise Analysis
-            </Text>
-          </View>
           <View
             style={
               isPortrait()
@@ -374,6 +363,7 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
               resizeWidth={getOutputTensorWidth()}
               resizeHeight={getOutputTensorHeight()}
               resizeDepth={3}
+
               rotation={getTextureRotationAngleInDegrees()}
               onReady={handleCameraStream}
               useCustomShadersToResize={false} // or true, depending on your needs
@@ -389,7 +379,7 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
               icon="arrow-left"
               mode="outlined"
               onPress={() => navigation.goBack()}
-              style={{ marginTop: 20, marginBottom: 20, marginHorizontal: 100 }}
+              style={{ marginVertical: 20, marginHorizontal: 80 }}
             >
               Go back
             </Button>
@@ -405,13 +395,15 @@ const styles = StyleSheet.create({
     position: "relative",
     width: CAM_PREVIEW_WIDTH,
     height: CAM_PREVIEW_HEIGHT,
-    marginTop: Dimensions.get("window").height / 2 - CAM_PREVIEW_HEIGHT / 2,
+    borderRadius: 25,
+    zIndex: 2
   },
   containerLandscape: {
     position: "relative",
     width: CAM_PREVIEW_HEIGHT,
     height: CAM_PREVIEW_WIDTH,
-    marginLeft: Dimensions.get("window").height / 2 - CAM_PREVIEW_HEIGHT / 2,
+    borderRadius: 25,
+    zIndex: 2
   },
   loadingMsg: {
     position: "absolute",
@@ -437,20 +429,15 @@ const styles = StyleSheet.create({
     left: 10,
     width: 80,
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, .7)",
-    borderRadius: 2,
+    backgroundColor: "rgba(255, 255, 255, .6)",
+    borderRadius: 10,
     padding: 8,
     zIndex: 20,
   },
   cameraTypeSwitcher: {
     position: "absolute",
-    top: 10,
-    right: 10,
-    width: 180,
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, .7)",
-    borderRadius: 2,
-    padding: 8,
+    bottom: 5,
+    right: 40,
     zIndex: 20,
   },
 });
