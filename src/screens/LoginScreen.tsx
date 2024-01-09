@@ -6,7 +6,6 @@ import {
   useTheme,
   TextInput,
   Checkbox,
-  ActivityIndicator,
 } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectAuthState, loginUser } from "../features/auth";

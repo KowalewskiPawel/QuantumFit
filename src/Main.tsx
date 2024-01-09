@@ -50,7 +50,7 @@ const MainScreen = ({ theme }) => {
 
   return (
     <NavigationContainer theme={theme} ref={navigationRef}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar />
       <Stack.Navigator
         initialRouteName="Entry"
         screenOptions={{

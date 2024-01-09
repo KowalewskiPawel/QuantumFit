@@ -65,7 +65,9 @@ export const RegisterScreenBody = ({ navigation }) => {
         mode="outlined"
         value={height}
         onChangeText={setHeight}
+        keyboardType='numeric'
         error={isError}
+        maxLength={3}
         label="Height (cm)"
         placeholder="Height (cm)"
         style={{ width: "100%", marginBottom: 20 }}
@@ -74,6 +76,8 @@ export const RegisterScreenBody = ({ navigation }) => {
         mode="outlined"
         value={weight}
         onChangeText={setWeight}
+        keyboardType='numeric'
+        maxLength={3}
         error={isError}
         placeholder="Weight (kg)"
         label="Weight (kg)"
@@ -82,6 +86,8 @@ export const RegisterScreenBody = ({ navigation }) => {
       <TextInput
         mode="outlined"
         value={yearOfBirth}
+        keyboardType='numeric'
+        maxLength={4}
         onChangeText={setYearOfBirth}
         error={isError}
         placeholder="Year of Birth"

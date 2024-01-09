@@ -37,6 +37,31 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
+  function validateBodyAnalysisObject(data: any): string | null {
+    const requiredFields = [
+      "current",
+      "target",
+      "additionalInfo",
+      "bodyPartsThatNeedImprovement",
+    ];
+    for (const field of requiredFields) {
+      if (!data.hasOwnProperty(field)) {
+        return `Error: Missing field '${field}' in the body analysis object`;
+      }
+    }
+
+    const nestedFields = ["bodyFat", "weight"];
+    for (const section of ["current", "target"]) {
+      for (const field of nestedFields) {
+        if (!data[section].hasOwnProperty(field)) {
+          return `Error: Missing field '${field}' in the '${section}' section of the body analysis object`;
+        }
+      }
+    }
+
+    return null;
+  }
+
   const fetchAnalysis = async () => {
     setIsFetchingGeminiResponse(true);
     setErrorFetchingGeminiResponse("");
@@ -57,9 +82,23 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         prompt: bodyAnalysisPrompt,
         photos: bodyPhotos,
       });
+
+      if (!message.includes("```json")) {
+        throw new Error(
+          `Something went wrong while fetching your body analysis.
+          Gemini API response: ${message}`
+        );
+      }
+
       const parsedText = JSON.parse(
         message.split("```json")[1].split("```")[0]
       );
+
+      const validationError = validateBodyAnalysisObject(parsedText);
+
+      if (validationError) {
+        throw new Error(validationError);
+      }
       setGeminiResponse(parsedText);
     } catch (error) {
       if (error.message) {
@@ -74,11 +113,15 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     }
   };
 
+  const cancelAndResetPhotos = () => {
+      dispatch(resetBodyPhotosState());
+        navigation.navigate("MainMenu");
+  };
+
   const handleComplete = () => {
     // Disabled for now
     // TODO: Remove photos from storage after analysis
     // dispatch(deletePhotos());
-    dispatch(resetBodyPhotosState());
     dispatch(
       updateUserInfo({
         currentBodyFat: geminiResponse.current.bodyFat,
@@ -99,37 +142,25 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     }
   }, [loading]);
 
-  if (!geminiResponse || isFetchingGeminiResponse) {
-    return (
-      <SafeAreaView style={{ ...styles.container }}>
-        <TopHeader>Body Analysis</TopHeader>
-        <View style={localStyles.loadingScreen}>
-          <Text style={{ marginBottom: 30 }} variant="headlineMedium">
-            Analyzing your body
-          </Text>
-          <LoadingSpinner />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   if (errorFetchingGeminiResponse) {
     return (
       <SafeAreaView style={{ ...styles.container }}>
         <TopHeader>Body Analysis</TopHeader>
-        <View style={localStyles.loadingScreen}>
-          <Text
-            style={{ marginBottom: 30, color: theme.colors.error }}
-            variant="headlineMedium"
-          >
-            {errorFetchingGeminiResponse}
-          </Text>
-        </View>
-        <StackRow>
+        <ScrollView>
+          <View style={localStyles.loadingScreen}>
+            <Text
+              style={{ marginBottom: 30, color: theme.colors.error }}
+              variant="bodyMedium"
+            >
+              {errorFetchingGeminiResponse}
+            </Text>
+          </View>
+        </ScrollView>
+        <StackRow style={{ position: "absolute", width: "100%", bottom: 0 }}>
           <Button
             mode="contained"
             disabled={isFetchingGeminiResponse}
-            onPress={handleComplete}
+            onPress={cancelAndResetPhotos}
             style={{
               marginTop: 20,
               marginBottom: 20,
@@ -148,6 +179,20 @@ export const BodyAnalysisScreen = ({ navigation }) => {
             Re-analyze
           </Button>
         </StackRow>
+      </SafeAreaView>
+    );
+  }
+
+  if (!geminiResponse && isFetchingGeminiResponse) {
+    return (
+      <SafeAreaView style={{ ...styles.container }}>
+        <TopHeader>Body Analysis</TopHeader>
+        <View style={localStyles.loadingScreen}>
+          <Text style={{ marginBottom: 30 }} variant="headlineMedium">
+            Analyzing your body
+          </Text>
+          <LoadingSpinner />
+        </View>
       </SafeAreaView>
     );
   }
@@ -178,7 +223,6 @@ export const BodyAnalysisScreen = ({ navigation }) => {
             >
               <Text
                 style={{
-                  ...styles.subtitleUpperCase,
                   alignSelf: "flex-start",
                   color: theme.colors.onBackground,
                 }}
@@ -207,7 +251,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     color: theme.colors.onBackground,
                   }}
                 >
-                  {Math.floor(geminiResponse?.current.bodyFat)}%
+                  {Math.floor(geminiResponse?.current?.bodyFat)}%
                 </Text>
               </StackRow>
               <StackRow
@@ -247,7 +291,6 @@ export const BodyAnalysisScreen = ({ navigation }) => {
             >
               <Text
                 style={{
-                  ...styles.subtitleUpperCase,
                   alignSelf: "flex-start",
                   color: theme.colors.onBackground,
                 }}
@@ -276,7 +319,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     color: theme.colors.onBackground,
                   }}
                 >
-                  {Math.floor(geminiResponse?.target.bodyFat)}%
+                  {Math.floor(geminiResponse?.target?.bodyFat)}%
                 </Text>
               </StackRow>
               <StackRow
@@ -300,7 +343,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
                     color: theme.colors.onBackground,
                   }}
                 >
-                  {`${Math.floor(geminiResponse?.target.weight) || "0"}kg`}
+                  {`${Math.floor(geminiResponse?.target?.weight) || "0"}kg`}
                 </Text>
               </StackRow>
             </Surface>
@@ -316,15 +359,17 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         }}
         elevation={4}
       >
-        <Text
-          variant="bodyMedium"
-          style={{
-            ...styles.textBackground,
-            color: theme.colors.onBackground,
-          }}
-        >
-          {geminiResponse?.additionalInfo}
-        </Text>
+        <ScrollView>
+          <Text
+            variant="bodyMedium"
+            style={{
+              ...styles.textBackground,
+              color: theme.colors.onBackground,
+            }}
+          >
+            {geminiResponse?.additionalInfo}
+          </Text>
+        </ScrollView>
       </Surface>
       <StackRow>
         <Button
