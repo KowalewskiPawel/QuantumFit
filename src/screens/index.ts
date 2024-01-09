@@ -19,4 +19,4 @@ export { UpdateScreenBody } from "./UpdateScreenBody";
 export { UpdateScreenLifestyle } from "./UpdateScreenLifestyle";
 export { UpdateScreenAim } from "./UpdateScreenAim";
 export { ExerciseAnalysisScreen } from "./ExerciseAnalysisScreen";
-export { GoogleFitScreen } from "./GoogleFitScreen";
+export { DailyGoalScreen } from "./DailyGoalScreen";

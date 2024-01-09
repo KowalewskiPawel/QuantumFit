@@ -125,9 +125,9 @@ export const MainMenuScreen = ({ navigation }) => {
             marginBottom: 20,
             backgroundColor: theme.colors.primary,
           }}
-          onPress={() => navigation.navigate("GoogleFit")}
+          onPress={() => navigation.navigate("DailyGoal")}
         >
-          Google Fit
+          Daily Goal
         </Button>
       </View>
       <Portal>
