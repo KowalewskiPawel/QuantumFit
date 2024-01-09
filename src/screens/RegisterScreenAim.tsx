@@ -12,7 +12,7 @@ import { AIMS } from "../consts/aims";
 export const RegisterScreenAim = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const registerStore = useAppSelector(selectRegisterState);
-  const [selectedAim, setSelectedAim] = useState(registerStore.aim || "");
+  const [selectedAim, setSelectedAim] = useState(registerStore?.aim || "");
   const [selectedExerciseFrequency, setSelectedExerciseFrequency] = useState(
     registerStore.exerciseFrequency || 1
   );
@@ -54,7 +54,7 @@ export const RegisterScreenAim = ({ navigation }) => {
         </Text>
         <Text variant="displaySmall" style={{ textAlign: "center" }}>{selectedExerciseFrequency}</Text>
         <Slider
-          style={{ width: 250, height: 20, marginTop: 10, marginBottom: 10, marginHorizontal: 'auto' }}
+          style={{ width: '90%', height: 20, marginTop: 10, marginBottom: 10, marginHorizontal: 'auto' }}
           minimumValue={1}
           maximumValue={7}
           value={selectedExerciseFrequency}

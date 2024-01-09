@@ -17,7 +17,6 @@ export const RegisterScreenEntry = ({ navigation }) => {
     registerStore.password || ""
   );
   const [isError, setIsError] = useState(false);
-  const theme = useTheme();
 
   const validateRegistration = () => {
     if (password !== passwordRepeat || !username || !email || !password) {

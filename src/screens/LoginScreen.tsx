@@ -6,7 +6,6 @@ import {
   useTheme,
   TextInput,
   Checkbox,
-  ActivityIndicator,
 } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { selectAuthState, loginUser } from "../features/auth";
@@ -19,8 +18,8 @@ import { loadTrainingsInfo } from "../features/trainings";
 
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("pawel@aaaaaa.pl");
+  const [password, setPassword] = useState("pawel1234");
   const [rememberUser, setRememberUser] = useState(true);
   const { token, loading, error } = useAppSelector(selectAuthState);
   const theme = useTheme();
