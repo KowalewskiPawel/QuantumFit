@@ -9,7 +9,7 @@ import {
   updateUserInfo,
 } from "../features/user";
 import { useAppDispatch, useAppSelector } from "../app/store";
-import { LoadingSpinner, StackRow } from "../components";
+import { LoadingSpinner, StackRow, TopHeader } from "../components";
 import { getEstimateBodyFatAndTargetPrompt } from "../prompts/bodyAnalysis";
 import { selectBodyPhotosState } from "../features/bodyPhotos";
 import apiClient from "../api/apiClient";
@@ -102,24 +102,12 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   if (!geminiResponse || isFetchingGeminiResponse) {
     return (
       <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text
-              style={{
-                ...styles.title,
-                color: theme.colors.onBackground,
-                marginBottom: 40,
-              }}
-            >
-              Body Analysis
-            </Text>
-          </View>
-          <View style={localStyles.loadingScreen}>
-            <Text style={{ marginBottom: 30 }} variant="headlineMedium">
-              Analyzing your body
-            </Text>
-            <LoadingSpinner />
-          </View>
+        <TopHeader>Body Analysis</TopHeader>
+        <View style={localStyles.loadingScreen}>
+          <Text style={{ marginBottom: 30 }} variant="headlineMedium">
+            Analyzing your body
+          </Text>
+          <LoadingSpinner />
         </View>
       </SafeAreaView>
     );
@@ -128,279 +116,240 @@ export const BodyAnalysisScreen = ({ navigation }) => {
   if (errorFetchingGeminiResponse) {
     return (
       <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text
-              style={{
-                ...styles.title,
-                color: theme.colors.onBackground,
-                marginBottom: 40,
-              }}
-            >
-              Body Analysis
-            </Text>
-          </View>
-          <View style={localStyles.loadingScreen}>
-            <Text
-              style={{ marginBottom: 30, color: theme.colors.error }}
-              variant="headlineMedium"
-            >
-              {errorFetchingGeminiResponse}
-            </Text>
-          </View>
-          <StackRow>
-            <Button
-              mode="contained"
-              disabled={isFetchingGeminiResponse}
-              onPress={handleComplete}
-              style={{
-                marginTop: 20,
-                marginBottom: 20,
-                marginRight: 20,
-                marginLeft: "auto",
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              mode="contained"
-              disabled={isFetchingGeminiResponse}
-              onPress={fetchAnalysis}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
-            >
-              Re-analyze
-            </Button>
-          </StackRow>
+        <TopHeader>Body Analysis</TopHeader>
+        <View style={localStyles.loadingScreen}>
+          <Text
+            style={{ marginBottom: 30, color: theme.colors.error }}
+            variant="headlineMedium"
+          >
+            {errorFetchingGeminiResponse}
+          </Text>
         </View>
+        <StackRow>
+          <Button
+            mode="contained"
+            disabled={isFetchingGeminiResponse}
+            onPress={handleComplete}
+            style={{
+              marginTop: 20,
+              marginBottom: 20,
+              marginRight: 20,
+              marginLeft: "auto",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            mode="contained"
+            disabled={isFetchingGeminiResponse}
+            onPress={fetchAnalysis}
+            style={{ marginVertical: 20, marginRight: "auto" }}
+          >
+            Re-analyze
+          </Button>
+        </StackRow>
       </SafeAreaView>
     );
   }
 
   return (
-    <ScrollView>
-      <SafeAreaView style={{ ...styles.container }}>
-        <View>
-          <View style={styles.textBackground}>
-            <Text
-              style={{
-                ...styles.title,
-                color: theme.colors.onBackground,
-                marginBottom: 40,
-              }}
-            >
-              Body Analysis
-            </Text>
+    <SafeAreaView style={{ ...styles.container }}>
+      <TopHeader>Body Analysis</TopHeader>
+      <View style={{ flex: 1 }}>
+        <StackRow style={{ flex: 1 }}>
+          <View style={{ flex: 2 }}>
+            <Image
+              contentFit="contain"
+              source={AnalysePosture}
+              style={{ width: "auto", height: 300 }}
+            />
           </View>
-          <View>
-            <StackRow>
-              <View style={{ flex: 2 }}>
-                <Image
-                  contentFit="contain"
-                  source={AnalysePosture}
-                  style={{ width: "auto", height: 300 }}
-                />
-              </View>
-              <View style={{ flex: 3, marginLeft: 12 }}>
-                <Surface
-                  mode={"flat"}
-                  style={{
-                    backgroundColor: theme.colors.background,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: theme.colors.tertiary,
-                    padding: 12,
-                    marginBottom: 32,
-                    marginHorizontal: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      ...styles.subtitleUpperCase,
-                      alignSelf: "flex-start",
-                      color: theme.colors.onBackground,
-                    }}
-                  >
-                    Current
-                  </Text>
-                  <StackRow
-                    style={{
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      marginBottom: 8,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...styles.secondarySubtitleUppercase,
-                        color: theme.colors.onBackground,
-                        marginRight: 4,
-                      }}
-                    >
-                      Body Fat:
-                    </Text>
-                    <Text
-                      style={{
-                        ...styles.bigUnits,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      {Math.floor(geminiResponse?.current.bodyFat)}%
-                    </Text>
-                  </StackRow>
-                  <StackRow
-                    style={{
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...styles.secondarySubtitleUppercase,
-                        color: theme.colors.onBackground,
-                        marginRight: 4,
-                      }}
-                    >
-                      Weight:
-                    </Text>
-                    <Text
-                      style={{
-                        ...styles.bigUnits,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      {`${Math.floor(geminiResponse?.current.weight) || "0"}kg`}
-                    </Text>
-                  </StackRow>
-                </Surface>
-                <Surface
-                  mode={"flat"}
-                  style={{
-                    backgroundColor: theme.colors.background,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: theme.colors.tertiary,
-                    padding: 12,
-                    marginHorizontal: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      ...styles.subtitleUpperCase,
-                      alignSelf: "flex-start",
-                      color: theme.colors.onBackground,
-                    }}
-                  >
-                    Target
-                  </Text>
-                  <StackRow
-                    style={{
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      marginBottom: 8,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...styles.secondarySubtitleUppercase,
-                        color: theme.colors.onBackground,
-                        marginRight: 4,
-                      }}
-                    >
-                      Body Fat:
-                    </Text>
-                    <Text
-                      style={{
-                        ...styles.bigUnits,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      {Math.floor(geminiResponse?.target.bodyFat)}%
-                    </Text>
-                  </StackRow>
-                  <StackRow
-                    style={{
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        ...styles.secondarySubtitleUppercase,
-                        color: theme.colors.onBackground,
-                        marginRight: 4,
-                      }}
-                    >
-                      Weight:
-                    </Text>
-                    <Text
-                      style={{
-                        ...styles.bigUnits,
-                        color: theme.colors.onBackground,
-                      }}
-                    >
-                      {`${Math.floor(geminiResponse?.target.weight) || "0"}kg`}
-                    </Text>
-                  </StackRow>
-                </Surface>
-              </View>
-            </StackRow>
-            <Text
-              style={{
-                ...styles.subtitleUpperCase,
-                alignSelf: "flex-start",
-                color: theme.colors.onBackground,
-                marginTop: 24,
-                marginBottom: 12,
-                marginLeft: 40,
-              }}
-            >
-              Additional info
-            </Text>
+          <View style={{ flex: 3, marginLeft: 20 }}>
             <Surface
+              mode={"flat"}
               style={{
-                ...styles.surface,
-                marginBottom: 20,
-                backgroundColor: theme.colors.backdrop,
-                marginHorizontal: 40,
+                backgroundColor: theme.colors.background,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: theme.colors.tertiary,
+                padding: 12,
+                marginBottom: 32,
               }}
-              elevation={4}
             >
               <Text
                 style={{
-                  ...styles.textBackground,
+                  ...styles.subtitleUpperCase,
+                  alignSelf: "flex-start",
                   color: theme.colors.onBackground,
                 }}
               >
-                {geminiResponse?.additionalInfo}
+                Current
               </Text>
+              <StackRow
+                style={{
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  marginBottom: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    ...styles.secondarySubtitleUppercase,
+                    color: theme.colors.onBackground,
+                    marginRight: 4,
+                  }}
+                >
+                  Body Fat:
+                </Text>
+                <Text
+                  style={{
+                    ...styles.bigUnits,
+                    color: theme.colors.onBackground,
+                  }}
+                >
+                  {Math.floor(geminiResponse?.current.bodyFat)}%
+                </Text>
+              </StackRow>
+              <StackRow
+                style={{
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Text
+                  style={{
+                    ...styles.secondarySubtitleUppercase,
+                    color: theme.colors.onBackground,
+                    marginRight: 4,
+                  }}
+                >
+                  Weight:
+                </Text>
+                <Text
+                  style={{
+                    ...styles.bigUnits,
+                    color: theme.colors.onBackground,
+                  }}
+                >
+                  {`${Math.floor(geminiResponse?.current.weight) || "0"}kg`}
+                </Text>
+              </StackRow>
             </Surface>
-          </View>
-          <StackRow>
-            <Button
-              mode="contained"
-              disabled={isFetchingGeminiResponse}
-              onPress={handleComplete}
+            <Surface
+              mode={"flat"}
               style={{
-                marginTop: 20,
-                marginBottom: 20,
-                marginRight: 20,
-                marginLeft: "auto",
+                backgroundColor: theme.colors.background,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: theme.colors.tertiary,
+                padding: 12,
               }}
             >
-              Complete
-            </Button>
-            <Button
-              mode="contained"
-              disabled={isFetchingGeminiResponse}
-              onPress={fetchAnalysis}
-              style={{ marginTop: 20, marginBottom: 20, marginRight: "auto" }}
-            >
-              Re-analyze
-            </Button>
-          </StackRow>
-        </View>
-      </SafeAreaView>
-    </ScrollView>
+              <Text
+                style={{
+                  ...styles.subtitleUpperCase,
+                  alignSelf: "flex-start",
+                  color: theme.colors.onBackground,
+                }}
+              >
+                Target
+              </Text>
+              <StackRow
+                style={{
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  marginBottom: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    ...styles.secondarySubtitleUppercase,
+                    color: theme.colors.onBackground,
+                    marginRight: 4,
+                  }}
+                >
+                  Body Fat:
+                </Text>
+                <Text
+                  style={{
+                    ...styles.bigUnits,
+                    color: theme.colors.onBackground,
+                  }}
+                >
+                  {Math.floor(geminiResponse?.target.bodyFat)}%
+                </Text>
+              </StackRow>
+              <StackRow
+                style={{
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Text
+                  style={{
+                    ...styles.secondarySubtitleUppercase,
+                    color: theme.colors.onBackground,
+                    marginRight: 4,
+                  }}
+                >
+                  Weight:
+                </Text>
+                <Text
+                  style={{
+                    ...styles.bigUnits,
+                    color: theme.colors.onBackground,
+                  }}
+                >
+                  {`${Math.floor(geminiResponse?.target.weight) || "0"}kg`}
+                </Text>
+              </StackRow>
+            </Surface>
+          </View>
+        </StackRow>
+      </View>
+      <Surface
+        style={{
+          ...styles.surface,
+          marginTop: 32,
+          marginBottom: 20,
+          backgroundColor: theme.colors.backdrop,
+        }}
+        elevation={4}
+      >
+        <Text
+          variant="bodyMedium"
+          style={{
+            ...styles.textBackground,
+            color: theme.colors.onBackground,
+          }}
+        >
+          {geminiResponse?.additionalInfo}
+        </Text>
+      </Surface>
+      <StackRow>
+        <Button
+          mode="contained"
+          disabled={isFetchingGeminiResponse}
+          onPress={handleComplete}
+          style={{
+            marginTop: 20,
+            marginBottom: 20,
+            marginRight: 20,
+            marginLeft: "auto",
+          }}
+        >
+          Complete
+        </Button>
+        <Button
+          mode="contained"
+          disabled={isFetchingGeminiResponse}
+          onPress={fetchAnalysis}
+          style={{ marginVertical: 20, marginRight: "auto" }}
+        >
+          Re-analyze
+        </Button>
+      </StackRow>
+    </SafeAreaView>
   );
 };
 

@@ -8,6 +8,8 @@ import {
 } from "@env";
 import { getFirestore, getDoc, setDoc, doc, updateDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -21,6 +23,7 @@ import {
   deleteObject,
   getDownloadURL,
 } from "firebase/storage";
+import { Platform } from "react-native";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -35,16 +38,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const fbStorage = getStorage();
 const db = getFirestore(app);
-const auth = getAuth(app);
 
-// const auth = initializeAuth(fbApp, {
-//   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-// });
-/**
- *
- * @param {*} uri
- * @param {*} name
- */
+// Right now this implementation works only with mobile pratforms, 
+// to use it correctly we need to utilize `react-native-firebase` library, but this would require resignation from expo go app
+
+// uncomment this line if you want to use expo go app on web
+// const auth = getAuth(app);
+
+// uncomment this line if you want to use expo go app on mobile 
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
+
+
 const uploadToFirebase = async (uri, name, isPhoto, onProgress) => {
   const fetchResponse = await fetch(uri);
   const theBlob = await fetchResponse.blob();
