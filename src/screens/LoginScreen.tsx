@@ -18,8 +18,8 @@ import { loadTrainingsInfo } from "../features/trainings";
 
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const [email, setEmail] = useState("pawel@aaaaaa.pl");
-  const [password, setPassword] = useState("pawel1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberUser, setRememberUser] = useState(true);
   const { token, loading, error } = useAppSelector(selectAuthState);
   const theme = useTheme();
