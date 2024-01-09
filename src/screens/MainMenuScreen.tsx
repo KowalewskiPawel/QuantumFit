@@ -46,13 +46,9 @@ export const MainMenuScreen = ({ navigation }) => {
     return (
       <SafeAreaView style={{ ...styles.container }}>
         <View>
-          <View style={styles.textBackground}>
-            <Text style={{ ...styles.title, color: theme.colors.onBackground }}>
-              Loading...
-            </Text>
-            <Image source={LogoEntry} style={{ width: 200, height: 200 }} />
-            <LoadingSpinner />
-          </View>
+          <TopHeader>Loading...</TopHeader>
+          <Image source={LogoEntry} style={{ width: 200, height: 200, alignSelf: 'center' }} />
+          <LoadingSpinner sx={{marginVertical: 40}} size={60} />
         </View>
       </SafeAreaView>
     );
@@ -93,13 +89,23 @@ export const MainMenuScreen = ({ navigation }) => {
         >
           Exercise Analysis
         </Button>
-        <Button
+        {/* <Button
           mode="contained"
           style={{
             marginBottom: 20,
             backgroundColor: theme.colors.primary,
           }}
           onPress={() => navigation.navigate("RealTimeExerciseAnalysis")}
+        >
+          Tensorflow
+        </Button> */}
+        <Button
+          mode="contained"
+          style={{
+            marginBottom: 20,
+            backgroundColor: theme.colors.primary,
+          }}
+          onPress={() => navigation.navigate("RealTimeExerciseSelector")}
         >
           Tensorflow
         </Button>

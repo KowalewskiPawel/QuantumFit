@@ -1,5 +1,4 @@
 import {
-  Text,
   View,
   SafeAreaView,
   ScrollView,
@@ -7,7 +6,7 @@ import {
   Dimensions,
   StyleSheet,
 } from "react-native";
-import { Button, IconButton, MD3Colors, useTheme } from "react-native-paper";
+import { Button, IconButton, Text, useTheme } from "react-native-paper";
 import { styles as globalStyles } from "../styles/globalStyles";
 import React, { useEffect, useState, useRef } from "react";
 
@@ -220,15 +219,17 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
             (y / getOutputTensorHeight()) *
             (isPortrait() ? CAM_PREVIEW_HEIGHT : CAM_PREVIEW_WIDTH);
           return (
-            <Circle
-              key={`skeletonkp_${k.name}`}
-              cx={cx}
-              cy={cy}
-              r="6"
-              strokeWidth="1"
-              // fill="rgba(0, 200, 0, 0.6)"
-              stroke="rgba(0, 200, 0, 0.4)"
-            />
+            <Svg>
+              <Circle
+                key={`skeletonkp_${k.name}`}
+                cx={cx}
+                cy={cy}
+                r="6"
+                strokeWidth="2"
+                fill="rgba(0, 200, 0, 0.0)"
+                stroke={theme.colors.tertiary}
+              />
+            </Svg>
           );
         });
 
@@ -241,21 +242,21 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
   const renderFps = () => {
     return (
       <View style={styles.fpsContainer}>
-        <Text>FPS: {fps}</Text>
-        <Text>Squats: {squatCount}</Text>
+        <Text style={{ color: theme.colors.background }}>FPS: {fps}</Text>
+        <Text style={{ color: theme.colors.background }}>Squats: {squatCount}</Text>
       </View>
     );
   };
 
   const renderCameraTypeSwitcher = () => {
     return (
-        <IconButton
+      <IconButton
         style={styles.cameraTypeSwitcher}
-          icon="camera-flip-outline"
-          iconColor="black"
-          onPress={handleSwitchCameraType}
-          containerColor="rgba(255, 255, 255, 0.6)"
-        />
+        icon="camera-flip-outline"
+        iconColor="black"
+        onPress={handleSwitchCameraType}
+        containerColor="rgba(255, 255, 255, 0.6)"
+      />
     );
   };
 
@@ -321,10 +322,17 @@ export const RealTimeExerciseAnalysisScreen = ({ navigation }) => {
           Real Time Exercise Analysis
         </TopHeader>
         <ScrollView>
-          <Text style={{ color: theme.colors.onBackground }}>
-            Loading TensorFlow.js and model...
+          <Text
+            variant="titleMedium"
+            style={{
+              color: theme.colors.onBackground, alignSelf: 'center',
+              marginHorizontal: 'auto',
+              marginVertical: 40
+            }}
+          >
+            Loading Tensors and AI models...
           </Text>
-          <LoadingSpinner />
+          <LoadingSpinner size={60} />
         </ScrollView>
         <View>
           <Button
