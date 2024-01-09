@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     fontFamily: "Roboto-Black",
+    marginHorizontal: 20
   },
 
   backgroundImage: {
