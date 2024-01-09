@@ -21,3 +21,4 @@ export { UpdateScreenAim } from "./UpdateScreenAim";
 export { ExerciseAnalysisScreen } from "./ExerciseAnalysisScreen";
 export { RealTimeExerciseAnalysisScreen } from "./RealTimeExerciseAnalysisScreen";
 export { RealTimeExerciseSelectorScreen } from "./RealTimeExerciseSelectorScreen";
+export { DailyGoalScreen } from "./DailyGoalScreen";
