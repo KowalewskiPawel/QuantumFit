@@ -113,11 +113,15 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     }
   };
 
+  const cancelAndResetPhotos = () => {
+      dispatch(resetBodyPhotosState());
+        navigation.navigate("MainMenu");
+  };
+
   const handleComplete = () => {
     // Disabled for now
     // TODO: Remove photos from storage after analysis
     // dispatch(deletePhotos());
-    dispatch(resetBodyPhotosState());
     dispatch(
       updateUserInfo({
         currentBodyFat: geminiResponse.current.bodyFat,
@@ -142,19 +146,21 @@ export const BodyAnalysisScreen = ({ navigation }) => {
     return (
       <SafeAreaView style={{ ...styles.container }}>
         <TopHeader>Body Analysis</TopHeader>
-        <View style={localStyles.loadingScreen}>
-          <Text
-            style={{ marginBottom: 30, color: theme.colors.error }}
-            variant="headlineMedium"
-          >
-            {errorFetchingGeminiResponse}
-          </Text>
-        </View>
-        <StackRow>
+        <ScrollView>
+          <View style={localStyles.loadingScreen}>
+            <Text
+              style={{ marginBottom: 30, color: theme.colors.error }}
+              variant="bodyMedium"
+            >
+              {errorFetchingGeminiResponse}
+            </Text>
+          </View>
+        </ScrollView>
+        <StackRow style={{ position: "absolute", width: "100%", bottom: 0 }}>
           <Button
             mode="contained"
             disabled={isFetchingGeminiResponse}
-            onPress={handleComplete}
+            onPress={cancelAndResetPhotos}
             style={{
               marginTop: 20,
               marginBottom: 20,
@@ -353,15 +359,17 @@ export const BodyAnalysisScreen = ({ navigation }) => {
         }}
         elevation={4}
       >
-        <Text
-          variant="bodyMedium"
-          style={{
-            ...styles.textBackground,
-            color: theme.colors.onBackground,
-          }}
-        >
-          {geminiResponse?.additionalInfo}
-        </Text>
+        <ScrollView>
+          <Text
+            variant="bodyMedium"
+            style={{
+              ...styles.textBackground,
+              color: theme.colors.onBackground,
+            }}
+          >
+            {geminiResponse?.additionalInfo}
+          </Text>
+        </ScrollView>
       </Surface>
       <StackRow>
         <Button
