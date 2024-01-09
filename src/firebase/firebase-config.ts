@@ -38,7 +38,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const fbStorage = getStorage();
 const db = getFirestore(app);
+
+// Right now this implementation works only with mobile pratforms, 
+// to use it correctly we need to utilize `react-native-firebase` library, but this would require resignation from expo go app
+
+// uncomment this line if you want to use expo go app on web
 // const auth = getAuth(app);
+
+// uncomment this line if you want to use expo go app on mobile 
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
