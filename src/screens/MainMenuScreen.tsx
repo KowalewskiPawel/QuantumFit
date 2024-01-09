@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, SafeAreaView } from "react-native";
 import { Image } from "expo-image";
-import {
-  Button,
-  Dialog,
-  Portal,
-  useTheme,
-} from "react-native-paper";
+import { Button, Dialog, Portal, useTheme } from "react-native-paper";
 import { styles } from "../styles/globalStyles";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { loadUserInfo, selectUserState } from "../features/user";
@@ -47,8 +42,11 @@ export const MainMenuScreen = ({ navigation }) => {
       <SafeAreaView style={{ ...styles.container }}>
         <View>
           <TopHeader>Loading...</TopHeader>
-          <Image source={LogoEntry} style={{ width: 200, height: 200, alignSelf: 'center' }} />
-          <LoadingSpinner sx={{marginVertical: 40}} size={60} />
+          <Image
+            source={LogoEntry}
+            style={{ width: 200, height: 200, alignSelf: "center" }}
+          />
+          <LoadingSpinner sx={{ marginVertical: 40 }} size={60} />
         </View>
       </SafeAreaView>
     );
@@ -56,14 +54,24 @@ export const MainMenuScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ ...styles.container }}>
-      <TopHeader>
-        Hello {userState.username}
-      </TopHeader>
+      <TopHeader>Hello {userState.username}</TopHeader>
       <View style={{ alignItems: "center", width: "100%", height: 200 }}>
-        <Image contentFit="contain" source={LogoEntry} style={{ width: 200, height: 200 }} />
+        <Image
+          contentFit="contain"
+          source={LogoEntry}
+          style={{ width: 200, height: 200 }}
+        />
       </View>
-      <View style={{ flex: 1, flexDirection: 'column', rowGap: 20, justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          rowGap: 20,
+          justifyContent: "center",
+        }}
+      >
         <Button
+          icon="dumbbell"
           mode="contained"
           onPress={shouldOpenMyTrainings}
         >
@@ -71,12 +79,14 @@ export const MainMenuScreen = ({ navigation }) => {
         </Button>
         <Button
           mode="contained"
+          icon="food-apple-outline"
           onPress={shouldOpenMyDiet}
         >
           My Diet
         </Button>
         <Button
           mode="contained"
+          icon="human-male-height"
           onPress={() =>
             navigation.navigate("BodyAnalysisPictureScreen", { side: "front" })
           }
@@ -85,33 +95,36 @@ export const MainMenuScreen = ({ navigation }) => {
         </Button>
         <Button
           mode="contained"
+          icon="medal-outline"
           onPress={() => navigation.navigate("ExerciseAnalysis")}
         >
           Exercise Analysis
         </Button>
-        {/* <Button
-          mode="contained"
-          style={{
-            marginBottom: 20,
-            backgroundColor: theme.colors.primary,
-          }}
-          onPress={() => navigation.navigate("RealTimeExerciseAnalysis")}
-        >
-          Tensorflow
-        </Button> */}
         <Button
           mode="contained"
+          icon="google-fit"
           style={{
-            marginBottom: 20,
+            backgroundColor: theme.colors.primary,
+          }}
+          onPress={() => navigation.navigate("DailyGoal")}
+        >
+          Daily Goal
+        </Button>
+        <Button
+          mode="contained"
+          icon="weight-lifter"
+          style={{
             backgroundColor: theme.colors.primary,
           }}
           onPress={() => navigation.navigate("RealTimeExerciseSelector")}
         >
-          Tensorflow
+          AI Assisted Real Time Exercise
         </Button>
         <Button
           mode="contained"
+          icon="heart-settings-outline"
           style={{
+            marginTop: 20,
             marginBottom: 20,
             backgroundColor: theme.colors.primary,
           }}
