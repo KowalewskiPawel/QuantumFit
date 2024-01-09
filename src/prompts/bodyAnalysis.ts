@@ -23,9 +23,15 @@ export const getEstimateBodyFatAndTargetPrompt = (
   gymExperience: number,
 ) => `
 Please follow strictly the requirements below, and always output the results in the JSON format.
+Based on the information provided, and photos of my body.
+
+If none of the provided photos are the full body photos, please ask me to provide one and return error message!
+If only some of the provided photos are the full body photos, please mention this in the additional information part.
+
 Express the fat level in number as a percentage.
 Suggest a target body fat level for me.
 Suggest a target weight for me.
+Suggest a target daily calories intake for me.
 Add additional information about my body,
 such as what parts of the body look good and what parts of the body need improvement.
 The additional information should be a string.
@@ -50,6 +56,7 @@ Return the response in the following JSON format and ensure that it's parsable w
     target: {
         bodyFat: number,
         weight: number,
+        caloriesIntake: number,
     },
     additionalInfo: string,
     bodyPartsThatNeedImprovement: string[],
