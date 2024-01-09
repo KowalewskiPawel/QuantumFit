@@ -50,7 +50,11 @@ export const DailyGoalScreen = ({ navigation }) => {
           weight
         ),
       });
-      setAiComment(message);
+      if (message.length === 0) {
+        setAiComment("No comment generated. Please try again later.");
+      } else {
+        setAiComment(message);
+      }
     } catch (error) {
       if (error.message) {
         setAiComment(error.message);
