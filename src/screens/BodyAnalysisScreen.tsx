@@ -50,7 +50,7 @@ export const BodyAnalysisScreen = ({ navigation }) => {
       }
     }
 
-    const nestedFields = ["bodyFat", "weight", "caloriesIntake"];
+    const nestedFields = ["bodyFat", "weight"];
     for (const section of ["current", "target"]) {
       for (const field of nestedFields) {
         if (!data[section].hasOwnProperty(field)) {
