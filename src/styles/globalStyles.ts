@@ -43,8 +43,9 @@ export const styles = StyleSheet.create({
     textAlign: "center", // Center the text
     fontWeight: "900", // Extra bold font weight
     letterSpacing: 2, // Spacing out the letters for a more refined appearance
-    textShadowOffset: { width: 2, height: 2 }, // Positioning of the text shadow
-    textShadowRadius: 3, // Blurring the shadow for a softer look
+    // TODO: Investigate the shadow issue
+    // textShadowOffset: { width: 2, height: 2 }, // Positioning of the text shadow
+    // textShadowRadius: 3, // Blurring the shadow for a softer look
     marginBottom: 10, // Space below the title
   },
 
