@@ -50,11 +50,7 @@ const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 
-/**
- *
- * @param {*} uri
- * @param {*} name
- */
+
 const uploadToFirebase = async (uri, name, isPhoto, onProgress) => {
   const fetchResponse = await fetch(uri);
   const theBlob = await fetchResponse.blob();
