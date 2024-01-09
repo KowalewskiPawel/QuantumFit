@@ -29,6 +29,7 @@ import {
   ExerciseAnalysisScreen,
   RealTimeExerciseAnalysisScreen,
   RealTimeExerciseSelectorScreen,
+  DailyGoalScreen,
 } from "./screens";
 import { withTheme } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "./app/store";
@@ -75,6 +76,7 @@ const MainScreen = ({ theme }) => {
         <Stack.Screen name="MainMenu" component={MainMenuScreen} />
         <Stack.Screen name="BodyAnalysis" component={BodyAnalysisScreen} />
         <Stack.Screen name="MyTrainings" component={MyTrainingsScreen} />
+        <Stack.Screen name="DailyGoal" component={DailyGoalScreen} />
         <Stack.Screen name="MyDiet" component={MyDietScreen} />
         <Stack.Screen name="DietPreferences" component={DietAdjustmentScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
